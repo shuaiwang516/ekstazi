@@ -31,7 +31,7 @@ public class JUnit5ExtensionCFT implements ClassFileTransformer {
         @Override
         public void visitEnd() {
             if (!hasExtendWithAnnotation) {
-                AnnotationVisitor av = this.visitAnnotation("Lorg/junit/jupiter/api/extension/ExtendWith;", false);
+                AnnotationVisitor av = this.visitAnnotation("Lorg/junit/jupiter/api/extension/ExtendWith;", true);
                 av = av.visitArray("value");
                 av.visitEnd();
                 hasExtendWithAnnotation = true;
