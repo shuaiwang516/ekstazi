@@ -118,11 +118,11 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         boolean isForkMode = isForkMode(surefirePlugin);
         // Include agent to be used during test run.
         Log.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
-        if (Config.JUNIT5_INSERTION_ENABLED_V) {
-            addJavaAgent(Config.AgentMode.JUNIT5INSERTION);
-        } else if (Config.JUNIT5_EXTENSION_ENABLED_V) {
-            addJavaAgent(Config.AgentMode.JUNIT5EXTENSION);
-        } else {
+        try {
+            addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? Config.AgentMode.JUNIT5EXTENSION :
+                    (isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT));
+        } catch (IOException e) {
+            Log.e("Junit5 Agent failed to check - use Junit4 instead");
             addJavaAgent(isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
         }
 
