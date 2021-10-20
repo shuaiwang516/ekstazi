@@ -55,6 +55,9 @@ public final class CoverageMonitor {
     /** Is the program running on Unix machine */
     private static final boolean IS_UNIX;
 
+    /** Junit5 apiguardian API that need to be filtered out */
+    private static final String JUNIT5_APIGUARDIAN = "org/apiguardian";
+
     /** Collected urls */
     private static final Set<String> sURLs = new HashSet<String>();
 
@@ -359,6 +362,12 @@ public final class CoverageMonitor {
                 return true;
             }
         }
+
+        // Filter apiguardian class in Junit5 mode.
+        if (externalForm.contains(JUNIT5_APIGUARDIAN)) {
+            return true;
+        }
+
         return false;
     }
 }
