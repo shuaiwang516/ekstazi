@@ -228,13 +228,12 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             //Log.d2f("pom file path = " + pomPath);
             BufferedReader br = new BufferedReader(new FileReader(pomPath));
             String line;
-            Boolean isJunit5 = false;
             while((line = br.readLine()) != null) {
                 if (line.contains("<groupId>org.junit.jupiter</groupId>")) {
-                    isJunit5 = true;
+                    return true;
                 }
             }
-            return isJunit5;
+            return false;
         } catch (IOException e) {
             return false;
         }
