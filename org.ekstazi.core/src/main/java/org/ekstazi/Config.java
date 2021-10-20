@@ -108,8 +108,10 @@ public final class Config {
                             return JUNIT5INSERTION;
                         } else if (text.equalsIgnoreCase(JUNIT5EXTENSION.name()) ||
                                 (text.equalsIgnoreCase(JUNIT.name()) && JUNIT5_EXTENSION_ENABLED_V)) {
+                            Log.d2f("Return JUNIT5_extension");
                             return JUNIT5EXTENSION;
                         }
+                        Log.d2f("Return " + b.name());
                         return b;
                     }
                 }
@@ -118,7 +120,7 @@ public final class Config {
         }
     }
 
-    @Opt(desc = "JUnit5")
+    @Opt(desc = "JUnit5-Insertion")
     public static Boolean JUNIT5_INSERTION_ENABLED_V = false;
     protected static final String JUNIT5_ENABLED_N = "junit5.insertion.enabled";
 
@@ -282,8 +284,11 @@ public final class Config {
         Properties homeProperties = getProperties(userHomeDir);
         File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
         Properties userProperties = getProperties(userDir);
+        Log.d2f("Load home properties");
         loadProperties(homeProperties);
+        Log.d2f("Load user properties");
         loadProperties(userProperties);
+        Log.d2f("Load command properties");
         loadProperties(commandProperties);
         // Init Log before any print of config/debug.
         Log.init(DEBUG_MODE_V == DebugMode.SCREEN || DEBUG_MODE_V == DebugMode.EVERYWHERE,

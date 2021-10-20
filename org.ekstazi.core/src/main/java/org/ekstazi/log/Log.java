@@ -36,6 +36,8 @@ public final class Log {
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
 
+    private static Boolean myLogEnabled = false;
+
     public static void initScreen() {
         init(true, false, null);
     }
@@ -155,6 +157,8 @@ public final class Log {
     }
 
     public static void d2f (String s) {
+        if (!myLogEnabled)
+            return;
         try {
             FileWriter fw = new FileWriter("Shuai_debug.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -167,6 +171,8 @@ public final class Log {
     }
 
     public static void d2f (List<String> list) {
+        if (!myLogEnabled)
+            return;
         try {
             FileWriter fw = new FileWriter("Shuai_debug.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);

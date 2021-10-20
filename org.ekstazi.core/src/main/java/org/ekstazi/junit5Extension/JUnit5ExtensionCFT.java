@@ -72,15 +72,15 @@ public class JUnit5ExtensionCFT implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         if (className.contains("Test") &&
                 !className.contains("org/apache/tools/ant") &&
-                !className.contains("maven") &&
-                !className.contains("junit") && !className.contains("jupiter") &&
-                !className.contains("opentest4j") &&
-                !className.contains("ekstazi")) {
+                !className.contains("org/apache/maven") &&
+                !className.contains("org/junit") &&
+                !className.contains("org/opentest4j") &&
+                !className.contains("org/ekstazi")) {
             ClassReader classReader = new ClassReader(classfileBuffer);
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             ExtensionClassVisitor visitor = new ExtensionClassVisitor(classWriter);
             classReader.accept(visitor, 0);
-            Log.write("/Users/alenwang/Documents/xlab/junit5_demo/Shuai_debug" + count++ + ".class", classWriter.toByteArray());
+            //Log.write("/Users/alenwang/Documents/xlab/junit5_demo/Shuai_debug" + count++ + ".class", classWriter.toByteArray());
             return classWriter.toByteArray();
         }
         return null;

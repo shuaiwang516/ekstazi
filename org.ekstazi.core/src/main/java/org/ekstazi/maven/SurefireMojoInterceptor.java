@@ -16,6 +16,7 @@
 
 package org.ekstazi.maven;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,19 +156,8 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     private static void updateArgLine(Object mojo) throws Exception {
-        Config.AgentMode junitMode = isOneVMPerClass(mojo) ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT;
-        // Hard-code Junit5_extension for debug here.
-        junitMode = Config.AgentMode.JUNIT5EXTENSION;
-        /*
-        I will not update JUnit5 here, because ekstazi will load userProperties later,
-        so here Config.JUNIT5_ENABLED_V is always default value - false.
-         */
-//        if (Config.JUNIT5_ENABLED_V) {
-//            Log.d2f("Junit5 is set to enabled");
-//            junitMode = Config.AgentMode.JUNIT5;
-//        } else {
-//            Log.d2f("Junit5 hasn't been set successfully.");
-//        }
+        Config.AgentMode junitMode = isJupiterInPom() ? Config.AgentMode.JUNIT5EXTENSION :
+                (isOneVMPerClass(mojo) ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
         String currentArgLine = (String) getField(ARGLINE_FIELD, mojo);
         String newArgLine = makeArgLine(mojo, junitMode, currentArgLine);
         setField(ARGLINE_FIELD, mojo, newArgLine);
@@ -228,6 +218,24 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         } catch (NoSuchMethodException ex) {
             // Nothing: earlier versions (before 2.13) of surefire did
             // not have reuseForks.
+            return false;
+        }
+    }
+
+    private static boolean isJupiterInPom() throws Exception {
+        try {
+            String pomPath = new java.io.File(".").getCanonicalPath().concat("/pom.xml");
+            //Log.d2f("pom file path = " + pomPath);
+            BufferedReader br = new BufferedReader(new FileReader(pomPath));
+            String line;
+            Boolean isJunit5 = false;
+            while((line = br.readLine()) != null) {
+                if (line.contains("<groupId>org.junit.jupiter</groupId>")) {
+                    isJunit5 = true;
+                }
+            }
+            return isJunit5;
+        } catch (IOException e) {
             return false;
         }
     }
