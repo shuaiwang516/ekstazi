@@ -103,14 +103,14 @@ public final class Config {
             if (text != null) {
                 for (AgentMode b : AgentMode.values()) {
                     if (text.equalsIgnoreCase(b.name())) {
-                        if (text.equalsIgnoreCase(JUNIT5INSERTION.name()) ||
-                                (text.equalsIgnoreCase(JUNIT.name()) && JUNIT5_INSERTION_ENABLED_V)) {
-                            return JUNIT5INSERTION;
-                        } else if (text.equalsIgnoreCase(JUNIT5EXTENSION.name()) ||
-                                (text.equalsIgnoreCase(JUNIT.name()) && JUNIT5_EXTENSION_ENABLED_V)) {
-                            Log.d2f("Return JUNIT5_extension");
-                            return JUNIT5EXTENSION;
-                        }
+//                        if (text.equalsIgnoreCase(JUNIT5INSERTION.name()) ||
+//                                (text.equalsIgnoreCase(JUNIT.name()) && JUNIT5_INSERTION_ENABLED_V)) {
+//                            return JUNIT5INSERTION;
+//                        } else if (text.equalsIgnoreCase(JUNIT5EXTENSION.name()) ||
+//                                (text.equalsIgnoreCase(JUNIT.name()) && JUNIT5_EXTENSION_ENABLED_V)) {
+//                            Log.d2f("Return JUNIT5_extension");
+//                            return JUNIT5EXTENSION;
+//                        }
                         Log.d2f("Return " + b.name());
                         return b;
                     }

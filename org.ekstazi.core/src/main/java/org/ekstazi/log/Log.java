@@ -36,7 +36,7 @@ public final class Log {
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
 
-    private static Boolean myLogEnabled = false;
+    private static Boolean myLogEnabled = true;
 
     public static void initScreen() {
         init(true, false, null);
