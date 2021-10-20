@@ -364,7 +364,7 @@ public final class CoverageMonitor {
             }
         }
 
-        // Filter apiguardian class in Junit5 mode.
+        // Filter apiguardian and opentest4J in Junit5 mode.
         if (externalForm.contains(JUNIT5_APIGUARDIAN) || externalForm.contains(JUNIT5_OPENTEST4J)) {
             return true;
         }
