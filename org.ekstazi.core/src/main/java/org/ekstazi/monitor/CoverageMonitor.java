@@ -55,10 +55,6 @@ public final class CoverageMonitor {
     /** Is the program running on Unix machine */
     private static final boolean IS_UNIX;
 
-    /** Junit5 apiguardian API that need to be filtered out */
-    private static final String JUNIT5_APIGUARDIAN = "org/apiguardian";
-    private static final String JUNIT5_OPENTEST4J = "org/opentest4j";
-
     /** Collected urls */
     private static final Set<String> sURLs = new HashSet<String>();
 
@@ -364,10 +360,6 @@ public final class CoverageMonitor {
             }
         }
 
-        // Filter apiguardian and opentest4J in Junit5 mode.
-        if (externalForm.contains(JUNIT5_APIGUARDIAN) || externalForm.contains(JUNIT5_OPENTEST4J)) {
-            return true;
-        }
         return false;
     }
 }
