@@ -25,6 +25,10 @@ public class JUnit5ForkCFT implements ClassFileTransformer {
             return new Junit5ForkMethodVisitor(super.visitMethod(access, name, desc, signature, exceptions));
         }
 
+        @Override
+        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+            return null;
+        }
 
         private static class Junit5ForkMethodVisitor extends MethodVisitor {
             public Junit5ForkMethodVisitor (MethodVisitor mv) {
