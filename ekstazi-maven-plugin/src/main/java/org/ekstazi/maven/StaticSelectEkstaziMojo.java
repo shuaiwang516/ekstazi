@@ -92,7 +92,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
     }
 
     public void execute() throws MojoExecutionException {
-        Log.d2f("StaticSelectEkstaziMojo.java line 103");
+        //Log.d2f("StaticSelectEkstaziMojo.java line 103");
         // Check if user explicitly requested to not use Ekstazi in
         // this run.
         if (getSkipme()) {
@@ -117,7 +117,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
         boolean isForkMode = isForkMode(surefirePlugin);
         // Include agent to be used during test run.
-        Log.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
+        //Log.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
         try {
             addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? (isForkMode ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                     (isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT));

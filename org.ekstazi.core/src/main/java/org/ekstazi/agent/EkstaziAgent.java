@@ -125,7 +125,7 @@ public class EkstaziAgent {
      */
     public static void agentmain(String options, Instrumentation instrumentation) {
         if (Config.X_ENABLED_V) {
-            Log.d2f("agentmain");
+            //Log.d2f("agentmain");
             //Thread.dumpStack();
             Config.preLoadConfig();
             init(instrumentation);

@@ -270,11 +270,11 @@ public final class Config {
         Properties homeProperties = getProperties(userHomeDir);
         File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
         Properties userProperties = getProperties(userDir);
-        Log.d2f("Load home properties");
+        //Log.d2f("Load home properties");
         loadProperties(homeProperties);
-        Log.d2f("Load user properties");
+        //Log.d2f("Load user properties");
         loadProperties(userProperties);
-        Log.d2f("Load command properties");
+        //Log.d2f("Load command properties");
         loadProperties(commandProperties);
         // Init Log before any print of config/debug.
         Log.init(DEBUG_MODE_V == DebugMode.SCREEN || DEBUG_MODE_V == DebugMode.EVERYWHERE,
@@ -553,7 +553,7 @@ public final class Config {
                 String[] keyValue = opt.split("=");
                 if (keyValue.length != 2) throw new RuntimeException("Incorrect argument: " + opt);
                 properties.put(keyValue[0], keyValue[1]);
-                Log.d2f("Key = " + keyValue[0] + " value = " + keyValue[1]);
+                //Log.d2f("Key = " + keyValue[0] + " value = " + keyValue[1]);
             }
         }
         return properties;

@@ -39,7 +39,7 @@ import org.ekstazi.util.FileUtil;
 public class RestoreEkstaziMojo extends AbstractEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
-        Log.d2f("RestoreEkstaziMojo.java line 42");
+        //Log.d2f("RestoreEkstaziMojo.java line 42");
         if (getSkipme()) {
             getLog().info("Ekstazi is skipped.");
             return;

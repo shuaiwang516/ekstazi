@@ -42,7 +42,7 @@ import org.ekstazi.log.Log;
 public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
-        Log.d2f("DynamicSelectEkstaziMojo.java line 45");
+        //Log.d2f("DynamicSelectEkstaziMojo.java line 45");
         if (getSkipme()) {
             getLog().info("Ekstazi is skipped.");
             return;
