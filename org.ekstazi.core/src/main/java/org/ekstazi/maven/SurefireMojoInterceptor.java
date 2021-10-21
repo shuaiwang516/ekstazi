@@ -156,7 +156,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     private static void updateArgLine(Object mojo) throws Exception {
-        Config.AgentMode junitMode = isJupiterInPom() ? Config.AgentMode.JUNIT5EXTENSION :
+        Config.AgentMode junitMode = isJupiterInPom() ? (isOneVMPerClass(mojo) ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                 (isOneVMPerClass(mojo) ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
         String currentArgLine = (String) getField(ARGLINE_FIELD, mojo);
         String newArgLine = makeArgLine(mojo, junitMode, currentArgLine);

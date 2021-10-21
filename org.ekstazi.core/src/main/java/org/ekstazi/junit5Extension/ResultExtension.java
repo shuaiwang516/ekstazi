@@ -8,7 +8,7 @@ import java.util.Optional;
 public class ResultExtension implements TestWatcher {
     @Override
     public void testFailed(ExtensionContext extensionContext, Throwable throwable) {
-        Junit5FailureFlag.isTestFailed = true;
+        Junit5Helper.isTestFailed = true;
     }
 
     @Override

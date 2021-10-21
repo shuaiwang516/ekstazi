@@ -181,6 +181,7 @@ public final class Ekstazi {
         boolean isEnabled = establishIfEnabled();
         // Return if not enabled or code should not be instrumented.
         if (!isEnabled || !Config.X_INSTRUMENT_CODE_V || isEkstaziSystemClassLoader()) {
+            Log.d2f("In Ekstazi.java - line 184 For fork mode test, return isEnabled: " + isEnabled + " X_INSTRUMENT_CODE_V = " + Config.X_INSTRUMENT_CODE_V);
             return isEnabled;
         }
 

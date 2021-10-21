@@ -96,6 +96,7 @@ public final class Config {
         JUNIT,
         JUNIT5INSERTION,
         JUNIT5EXTENSION,
+        JUNIT5FORK,
         JUNITFORK,
         SCALATEST;
 

@@ -1,7 +1,6 @@
 package org.ekstazi.junit5Extension;
 
 import org.ekstazi.Ekstazi;
-import org.ekstazi.log.Log;
 import org.ekstazi.monitor.CoverageMonitor;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -22,7 +21,7 @@ public class CoverageExtension implements BeforeAllCallback, AfterAllCallback {
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
         if (mURLs != null) CoverageMonitor.addURLs(mURLs);
-        Ekstazi.inst().endClassCoverage(mClassName, Junit5FailureFlag.isTestFailed);
+        Ekstazi.inst().endClassCoverage(mClassName, Junit5Helper.isTestFailed);
         System.out.println("End Coverage :" + mClassName);
     }
 }

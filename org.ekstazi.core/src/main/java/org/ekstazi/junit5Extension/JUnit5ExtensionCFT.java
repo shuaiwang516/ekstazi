@@ -8,6 +8,8 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
+import static org.ekstazi.junit5Extension.Junit5Helper.isTestClassTransformNeeded;
+
 public class JUnit5ExtensionCFT implements ClassFileTransformer {
     private static int count = 0;
 
@@ -70,12 +72,7 @@ public class JUnit5ExtensionCFT implements ClassFileTransformer {
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        if (className.contains("Test") &&
-                !className.contains("org/apache/tools/ant") &&
-                !className.contains("org/apache/maven") &&
-                !className.contains("org/junit") &&
-                !className.contains("org/opentest4j") &&
-                !className.contains("org/ekstazi")) {
+        if (isTestClassTransformNeeded(className)) {
             ClassReader classReader = new ClassReader(classfileBuffer);
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             ExtensionClassVisitor visitor = new ExtensionClassVisitor(classWriter);

@@ -27,6 +27,7 @@ import org.ekstazi.io.FileRecorder;
 import org.ekstazi.junit.JUnitCFT;
 import org.ekstazi.junit5.JUnit5CFT;
 import org.ekstazi.junit5Extension.JUnit5ExtensionCFT;
+import org.ekstazi.junit5Extension.JUnit5ForkCFT;
 import org.ekstazi.log.Log;
 import org.ekstazi.maven.MavenCFT;
 
@@ -96,6 +97,9 @@ public class EkstaziAgent {
             Log.d2f("JUNIT5_Extension is enabled");
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initJUni5ExtensionMode(instrumentation);
+        } else if (Config.MODE_V == Config.AgentMode.JUNIT5FORK) {
+            Log.d2f("JUNIT5 Fork is enabled");
+            initJUnit5ForkMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT) {
             Log.d2f("JUNIT4 is enabled");
             //Thread.dumpStack();
@@ -191,6 +195,13 @@ public class EkstaziAgent {
 
     private static void initJUni5ExtensionMode(Instrumentation instrumentation) {
         instrumentation.addTransformer(new JUnit5ExtensionCFT(), false);
+    }
+
+    private static void initJUnit5ForkMode(Instrumentation instrumentation) {
+        Config.X_INSTRUMENT_CODE_V = false;
+        instrumentation.addTransformer(new JUnit5ExtensionCFT(), false);
+        instrumentation.addTransformer(new CollectLoadedCFT(), false);
+        instrumentation.addTransformer(new JUnit5ForkCFT(), false);
     }
 
 

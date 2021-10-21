@@ -119,7 +119,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         // Include agent to be used during test run.
         Log.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
         try {
-            addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? Config.AgentMode.JUNIT5EXTENSION :
+            addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? (isForkMode ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                     (isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT));
         } catch (IOException e) {
             Log.e("Junit5 Agent failed to check - use Junit4 instead");
