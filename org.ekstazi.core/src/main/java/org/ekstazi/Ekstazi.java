@@ -63,6 +63,7 @@ public final class Ekstazi {
      * Constructor.
      */
     private Ekstazi() {
+        Config.preLoadConfig();
         this.mIsEnabled = initAndReportSuccess();
         Log.d("Tool enabled for this run/VM: " + mIsEnabled);
         this.mTestLock = new ReentrantLock();
@@ -108,6 +109,7 @@ public final class Ekstazi {
     public boolean isClassAffected(String className) {
         Log.d("Checking if class affected:", className);
         // Check if failing tests should be run or all tests are forced.
+        Log.d2f("In isClassAffected line 112: className = " + className + " mIsForceall" + mIsForceall);
         if ((wasFailing(className) && mIsForcefailing) || mIsForceall) {
             return true;
         }

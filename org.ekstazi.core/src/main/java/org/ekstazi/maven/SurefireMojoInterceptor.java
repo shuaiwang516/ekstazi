@@ -164,6 +164,11 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     private static void updateExcludes(Object mojo) throws Exception {
+        Log.d2f("check force all");
+        if (Config.FORCE_ALL_V) {
+            return;
+        }
+        Log.d2f("after check force all");
         // Get excludes set by the user (in pom.xml in Surefire).
         List<String> currentExcludes = getListField(EXCLUDES_FIELD, mojo);
         List<String> ekstaziExcludes = new ArrayList<String>(Arrays.asList(System.getProperty(EXCLUDES_INTERNAL_PROP)
@@ -176,8 +181,21 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             // Add default excludes as specified by Surefire if excludes is not provided by the user.
             newExcludes.add("**/*$*");
         }
+        for (String className : newExcludes) {
+            Log.d2f("The class = " + className + " hasn't been removed due to fail");
+            if (wasFailing(className) && Config.FORCE_FAILING_V) {
+                newExcludes.remove(className);
+                Log.d2f("The class = " + className + " has been removed due to fail");
+            }
+        }
         Log.d2f(newExcludes);
         setField(EXCLUDES_FIELD, mojo, newExcludes);
+    }
+
+    private static boolean wasFailing(String className) {
+        File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        File outcomeFile = new File(testResultsDir, className);
+        return outcomeFile.exists();
     }
 
     /**

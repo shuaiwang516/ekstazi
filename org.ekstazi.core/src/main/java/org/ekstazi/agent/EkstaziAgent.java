@@ -123,6 +123,7 @@ public class EkstaziAgent {
         if (Config.X_ENABLED_V) {
             Log.d2f("agentmain");
             //Thread.dumpStack();
+            Config.preLoadConfig();
             init(instrumentation);
             instrumentation.addTransformer(new MavenCFT(), true);
             instrumentMaven(instrumentation);
