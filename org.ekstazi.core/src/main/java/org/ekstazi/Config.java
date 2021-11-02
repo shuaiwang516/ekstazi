@@ -95,6 +95,8 @@ public final class Config {
         MULTI,
         JUNIT,
         JUNITFORK,
+        JUNIT5EXTENSION,
+        JUNIT5FORK,
         SCALATEST;
         
         public static AgentMode fromString(String text) {

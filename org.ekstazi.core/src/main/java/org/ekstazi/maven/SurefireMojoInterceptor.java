@@ -16,6 +16,9 @@
 
 package org.ekstazi.maven;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +155,8 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     private static void updateArgLine(Object mojo) throws Exception {
-        Config.AgentMode junitMode = isOneVMPerClass(mojo) ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT;
+        Config.AgentMode junitMode = isJupiterInPom() ? (isOneVMPerClass(mojo) ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
+                (isOneVMPerClass(mojo) ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
         String currentArgLine = (String) getField(ARGLINE_FIELD, mojo);
         String newArgLine = makeArgLine(mojo, junitMode, currentArgLine);
         setField(ARGLINE_FIELD, mojo, newArgLine);
@@ -211,6 +215,23 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         } catch (NoSuchMethodException ex) {
             // Nothing: earlier versions (before 2.13) of surefire did
             // not have reuseForks.
+            return false;
+        }
+    }
+
+    public static boolean isJupiterInPom() throws IOException {
+        try {
+            String pomPath = new java.io.File(".").getCanonicalPath().concat("/pom.xml");
+            //Log.d2f("pom file path = " + pomPath);
+            BufferedReader br = new BufferedReader(new FileReader(pomPath));
+            String line;
+            while((line = br.readLine()) != null) {
+                if (line.contains("<groupId>org.junit.jupiter</groupId>")) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (IOException e) {
             return false;
         }
     }
