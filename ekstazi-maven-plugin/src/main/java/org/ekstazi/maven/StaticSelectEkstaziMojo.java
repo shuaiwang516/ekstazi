@@ -46,6 +46,7 @@ import org.ekstazi.Config;
 import org.ekstazi.agent.EkstaziAgent;
 import org.ekstazi.check.AffectedChecker;
 import org.ekstazi.Names;
+import org.ekstazi.log.Log;
 import org.ekstazi.util.Types;
 import org.ekstazi.util.FileUtil;
 
@@ -123,8 +124,13 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
         boolean isForkMode = isForkMode(surefirePlugin);
         // Include agent to be used during test run.
-        addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? (isForkMode ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
+        try {
+            addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? (isForkMode ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                     (isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT));
+        } catch (IOException e) {
+            Log.e("Junit5 Agent failed to check - use Junit4 instead");
+            addJavaAgent(isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
+        }
 
         List<String> nonAffectedClasses = computeNonAffectedClasses();
         // Append excludes list to "excludesFile".
