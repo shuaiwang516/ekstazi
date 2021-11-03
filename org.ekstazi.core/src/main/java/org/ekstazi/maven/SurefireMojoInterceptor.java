@@ -227,6 +227,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     private static boolean wasFailing(String className) {
+        className = className.replace(".java", "").replace("/", ".");
         File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
         File outcomeFile = new File(testResultsDir, className);
         return outcomeFile.exists();
