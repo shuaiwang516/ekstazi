@@ -89,8 +89,4 @@ public class ConfigListener {
             addConfig(name, value);
         }
     }
-
-    public static void writeDependency() {
-
-    }
 }
