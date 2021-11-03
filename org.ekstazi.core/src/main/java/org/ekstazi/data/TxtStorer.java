@@ -25,7 +25,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.ekstazi.log.Log;
@@ -44,6 +46,9 @@ public class TxtStorer extends Storer {
 
     /** Character between path and hash */
     protected static final String SEPARATOR = " _ ";
+
+    /** Character between Configuration Name and Value */
+    protected static final String CONFIG_SEPARATOR = " , ";
 
     /** Length of the separator (to avoid invoking length() many times) */
     protected static final int SEPARATOR_LEN = SEPARATOR.length();
@@ -154,7 +159,7 @@ public class TxtStorer extends Storer {
     // STORE
 
     @Override
-    protected final void extendedSave(FileOutputStream fos, Set<RegData> hashes) {
+    protected final void extendedSave(FileOutputStream fos, Set<RegData> hashes, Map<String, String> configMap) {
         Writer pw = new BufferedWriter(createWriter(fos));
         try {
             // Print magic sequence (print separate to avoid new Strings).
@@ -168,6 +173,9 @@ public class TxtStorer extends Storer {
                 printLine(state, pw, regDatum.getURLExternalForm(), regDatum.getHash());
                 // printLine(state, pw, "# Hello", "World!");
                 // throw new RuntimeException();
+            }
+            for (Map.Entry<String, String> configEntry : configMap.entrySet()) {
+                printConfigLine(pw, configEntry.getKey(), configEntry.getValue());
             }
             //Log.d2f("Log in TxtStorer.java line 172");
         } catch (IOException ex) {
@@ -190,6 +198,13 @@ public class TxtStorer extends Storer {
         pw.write(externalForm);
         pw.write(SEPARATOR);
         pw.write(hash);
+        pw.write('\n');
+    }
+
+    protected void printConfigLine(Writer pw, String configName, String configValue) throws IOException {
+        pw.write(configName);
+        pw.write(CONFIG_SEPARATOR);
+        pw.write(configValue);
         pw.write('\n');
     }
 
@@ -218,13 +233,17 @@ public class TxtStorer extends Storer {
         TxtStorer storer = new TxtStorer();
         // Small test to measure time to write to file.
         Set<RegData> hashes = new HashSet<RegData>();
+        Map<String, String> configMap = new HashMap<>();
         for (int i = 0; i < 1000; i++) {
             hashes.add(new RegData("a", i + "*"));
+        }
+        for (int i = 0; i < 1000; i++) {
+            configMap.put(i + "th_Config", i + "th_Value");
         }
         long begin = System.currentTimeMillis();
         for (long i = 0; i < maxIter; i++) {
             FileOutputStream fos = new FileOutputStream("AAAA");
-            storer.extendedSave(fos, hashes);
+            storer.extendedSave(fos, hashes, configMap);
             fos.close();
         }
         System.out.println(System.currentTimeMillis() - begin);

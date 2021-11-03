@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import org.ekstazi.Config;
@@ -111,20 +112,20 @@ public abstract class Storer {
     /**
      * Saves regression data.
      */
-    public final void save(String dirName, String fullName, Set<RegData> hashes) {
+    public final void save(String dirName, String fullName, Set<RegData> hashes, Map<String, String> configMap) {
         // @Research(if statement).
         if (!Config.X_DEPENDENCIES_SAVE_V) {
             return;
         }
         // Ensure that the directory for coverage exists.
         new File(dirName).mkdirs();
-        save(openFileWrite(dirName, fullName, fullName, null), hashes);
+        save(openFileWrite(dirName, fullName, fullName, null), hashes, configMap);
     }
 
     /**
      * Saves regression data.
      */
-    public final void save(String dirName, String className, String methodName, Set<RegData> regData) {
+    public final void save(String dirName, String className, String methodName, Set<RegData> regData, Map<String, String> configMap) {
         // @Research(if statement).
         if (!Config.X_DEPENDENCIES_SAVE_V) {
             return;
@@ -133,7 +134,7 @@ public abstract class Storer {
         new File(dirName).mkdir();
         String fullName = className + '.' + methodName;
         //Log.d2f("Log in Storer.java line 135: " + fullName);
-        save(openFileWrite(dirName, fullName, className, methodName), regData);
+        save(openFileWrite(dirName, fullName, className, methodName), regData, configMap);
     }
 
     /**
@@ -155,7 +156,7 @@ public abstract class Storer {
      * @param hashes
      *            Regression info as mapping URL(ExternalForm)->hash.
      */
-    protected abstract void extendedSave(FileOutputStream fos, Set<RegData> hashes);
+    protected abstract void extendedSave(FileOutputStream fos, Set<RegData> hashes, Map<String, String> configMap);
 
     // INTERNAL
 
@@ -167,11 +168,11 @@ public abstract class Storer {
         }
     }
 
-    private final void save(FileOutputStream fos, Set<RegData> hashes) {
+    private final void save(FileOutputStream fos, Set<RegData> hashes, Map<String, String> configMap) {
         //Log.d2f("Log in Storer.java line 171");
         if (fos != null) {
             //Log.d2f("Log in Storer.java line 173");
-            extendedSave(fos, hashes);
+            extendedSave(fos, hashes, configMap);
         }
     }
 

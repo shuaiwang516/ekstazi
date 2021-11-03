@@ -19,14 +19,13 @@ package org.ekstazi.data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.ekstazi.Config;
+import org.ekstazi.configAware.ConfigListener;
 import org.ekstazi.hash.Hasher;
 import org.ekstazi.log.Log;
 import org.ekstazi.monitor.CoverageMonitor;
@@ -182,6 +181,9 @@ public final class DependencyAnalyzer {
         // Clean previously collected coverage.
         CoverageMonitor.clean();
 
+        // Clean previously configuration collection.
+        ConfigListener.clean();
+
         // Check if test is included (note that we do not record info).
         if (!isIncluded(fullMethodName)) {
             return true;
@@ -277,7 +279,9 @@ public final class DependencyAnalyzer {
             //Log.d2f("Hash entry added here!");
             regData.add(new RegData(entry.getKey(), entry.getValue()));
         }
-        mStorer.save(mRootDir, className, methodName, regData);
+        //Config-aware mapping information
+        Map<String, String> configMap = ConfigListener.sortConfigMap();
+        mStorer.save(mRootDir, className, methodName, regData, configMap);
         //Log.d2f("endCoverage and save to file: " + mRootDir + " class name = "
         //        + className + " method name = " + methodName + " regData = " + regData);
         // Clean monitor after the test finished the execution

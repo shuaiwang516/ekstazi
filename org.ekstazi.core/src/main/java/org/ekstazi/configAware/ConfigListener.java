@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * This class instruments Listener methods to monitor configuration loading.
  */
-public class APIListener {
+public class ConfigListener {
     /** Exercised configuration <name, value> pairs */
     private static final Map<String, String> sConfigMap = new HashMap<String, String>();
 
@@ -58,10 +58,11 @@ public class APIListener {
     }
 
     /**
-     *
+     * In the dependency file, Configuration <name, value> are sorted by key
+     * to make comparing config-diff easier.
      * @return Configuration Map sorted by key
      */
-    private static Map<String, String> sortedConfigMap() {
+    public static Map<String, String> sortConfigMap() {
         try {
             sLock.lock();
             Map<String, String> sortedMap = new HashMap<String, String>();
@@ -73,5 +74,23 @@ public class APIListener {
         } finally {
             sLock.unlock();
         }
+    }
+
+    // Touch method
+
+    /**
+     * Software's Configuration APIs invoke this method to collect
+     * exercised configuration.
+     * @param name Configuration name that used by get/set config-API
+     * @param value Configuration value that used by get/set config-API
+     */
+    public static void recordConfig(String name, String value) {
+        if (name != null && value != null && !name.equals("") && !value.equals("")) {
+            addConfig(name, value);
+        }
+    }
+
+    public static void writeDependency() {
+
     }
 }
