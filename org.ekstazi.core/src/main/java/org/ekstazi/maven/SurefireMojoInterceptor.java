@@ -16,6 +16,7 @@
 
 package org.ekstazi.maven;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +160,9 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
     
     private static void updateExcludes(Object mojo) throws Exception {
+        if (Config.FORCE_ALL_V) {
+            return;
+        }
         // Get excludes set by the user (in pom.xml in Surefire).
         List<String> currentExcludes = getListField(EXCLUDES_FIELD, mojo);
         List<String> ekstaziExcludes = new ArrayList<String>(Arrays.asList(System.getProperty(EXCLUDES_INTERNAL_PROP)
@@ -169,6 +173,13 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         } else {
             // Add default excludes as specified by Surefire if excludes is not provided by the user.
             newExcludes.add("**/*$*");
+        }
+        for (String className : newExcludes) {
+            //Log.d2f("The class = " + className + " hasn't been removed due to fail");
+            if (wasFailing(className) && Config.FORCE_FAILING_V) {
+                newExcludes.remove(className);
+                //Log.d2f("The class = " + className + " has been removed due to fail");
+            }
         }
         setField(EXCLUDES_FIELD, mojo, newExcludes);
     }
@@ -213,5 +224,11 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             // not have reuseForks.
             return false;
         }
+    }
+
+    private static boolean wasFailing(String className) {
+        File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        File outcomeFile = new File(testResultsDir, className);
+        return outcomeFile.exists();
     }
 }

@@ -63,6 +63,7 @@ public final class Ekstazi {
      * Constructor.
      */
     private Ekstazi() {
+        Config.preLoadConfig();
         this.mIsEnabled = initAndReportSuccess();
         Log.d("Tool enabled for this run/VM: " + mIsEnabled);
         this.mTestLock = new ReentrantLock();

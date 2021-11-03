@@ -99,6 +99,7 @@ public class EkstaziAgent {
      */
     public static void agentmain(String options, Instrumentation instrumentation) {
         if (Config.X_ENABLED_V) {
+            Config.preLoadConfig();
             init(instrumentation);
             instrumentation.addTransformer(new MavenCFT(), true);
             instrumentMaven(instrumentation);

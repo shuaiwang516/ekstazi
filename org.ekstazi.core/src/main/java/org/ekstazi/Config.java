@@ -344,6 +344,16 @@ public final class Config {
         Log.c(key, value);
     }
 
+    public static void preLoadConfig() {
+        String userHome = getUserHome();
+        File userHomeDir = new File(userHome, Names.EKSTAZI_CONFIG_FILE);
+        Properties homeProperties = getProperties(userHomeDir);
+        File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
+        Properties userProperties = getProperties(userDir);
+        loadProperties(homeProperties);
+        loadProperties(userProperties);
+    }
+
     protected static void loadProperties(Properties props) {
         ROOT_DIR_V = getURIString(props, ROOT_DIR_N, ROOT_DIR_V);
         MODE_V = AgentMode.fromString(getString(props, MODE_N, MODE_V.toString()));
