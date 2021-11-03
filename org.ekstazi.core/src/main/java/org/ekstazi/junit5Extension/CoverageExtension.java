@@ -15,13 +15,11 @@ public class CoverageExtension implements BeforeAllCallback, AfterAllCallback {
         CoverageMonitor.clean();
         mURLs = CoverageMonitor.getURLs();
         Ekstazi.inst().beginClassCoverage(mClassName);
-        System.out.println("Start Coverage :" + mClassName);
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
         if (mURLs != null) CoverageMonitor.addURLs(mURLs);
         Ekstazi.inst().endClassCoverage(mClassName, Junit5Helper.isTestFailed);
-        System.out.println("End Coverage :" + mClassName);
     }
 }
