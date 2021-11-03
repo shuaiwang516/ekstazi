@@ -44,21 +44,17 @@ public class JUnit5ForkCFT implements ClassFileTransformer {
 
     private static Boolean isDepdencyFileExist(String className) {
         String filePath = Config.ROOT_DIR_V + "/" + className.replace("/", ".") + ".clz";
-        //Log.d2f("isDepdencyFileExist -> filePath = " + filePath);
         File file = new File(filePath);
-        //Log.d2f("isDepdencyFileExist -> exist = " + file.exists());
         return file.exists();
     }
 
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         if (isTestClassTransformNeeded(className) && !Ekstazi.inst().isClassAffected(className.replace("/", ".")) && isDepdencyFileExist(className)) {
-            //Log.d2f("Forked transform = " + className);
             ClassReader classReader = new ClassReader(classfileBuffer);
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             Junit5ForkClassVisitor visitor = new Junit5ForkClassVisitor(classWriter);
             classReader.accept(visitor, 0);
-            //Log.write("/Users/alenwang/Documents/xlab/zookeeper/zookeeper-server/Shuai_debug.class", classWriter.toByteArray());
             return classWriter.toByteArray();
         }
         return null;

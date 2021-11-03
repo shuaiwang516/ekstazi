@@ -222,7 +222,6 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     public static boolean isJupiterInPom() throws IOException {
         try {
             String pomPath = new java.io.File(".").getCanonicalPath().concat("/pom.xml");
-            //Log.d2f("pom file path = " + pomPath);
             BufferedReader br = new BufferedReader(new FileReader(pomPath));
             String line;
             while((line = br.readLine()) != null) {
