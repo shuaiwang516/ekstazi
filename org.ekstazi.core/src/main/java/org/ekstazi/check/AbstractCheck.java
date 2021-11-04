@@ -45,7 +45,8 @@ abstract class AbstractCheck {
     public abstract void includeAffected(Set<String> affectedClasses);
 
     protected boolean isAffected(String dirName, String className, String methodName) {
-        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName));
+        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName))
+                || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName));
     }
 
     protected boolean isAffectedByReg(Set<RegData> regData) {
@@ -80,7 +81,7 @@ abstract class AbstractCheck {
     }
 
     /**
-     *
+     * Check if the configuration has changed.
      */
     private boolean hasConfigChanged(Map<String, String> configMap) {
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();

@@ -19,6 +19,7 @@ package org.ekstazi.check;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.ekstazi.data.RegData;
@@ -34,13 +35,15 @@ final class MethodCheck extends AbstractCheck {
     static class TestAbs {
         private boolean mIsAffected;
         private final Set<RegData> mRegData;
+        private final Map<String, String> mConfigMap;
         private final String mFileName;
         private final String mFileDir;
         private final String mClassName;
         
-        public TestAbs(boolean isAffected, Set<RegData> regData, String fileName, String fileDir, String className) {
+        public TestAbs(boolean isAffected, Set<RegData> regData, Map<String, String> configMap, String fileName, String fileDir, String className) {
             this.mIsAffected = isAffected;
             this.mRegData = regData;
+            this.mConfigMap = configMap;
             this.mFileName = fileName;
             this.mFileDir = fileDir;
             this.mClassName = className;
@@ -49,6 +52,7 @@ final class MethodCheck extends AbstractCheck {
         public boolean isAffected() { return mIsAffected; }
         public void setAffected(boolean b) { mIsAffected = b; }
         public Set<RegData> getRegData() { return mRegData; }
+        public Map<String, String> getConfigMap() {return mConfigMap; }
         public String getFileName() { return mFileName; }
         public String getFileDir() { return mFileDir; }
         public String getClassName() { return mClassName; }
@@ -77,11 +81,12 @@ final class MethodCheck extends AbstractCheck {
             className = fileName.substring(0, index);
             String methodName = fileName.substring(index + 1);
             boolean isAffected = isAffected(fileDir, className, methodName);
-            mTests.add(new TestAbs(isAffected, mStorer.loadRegData(fileDir, className, methodName), fileName, fileDir, className));
+            mTests.add(new TestAbs(isAffected, mStorer.loadRegData(fileDir, className, methodName), mStorer.loadConfigData(fileDir, className, methodName), fileName, fileDir, className));
         }
         return className;
     }
-    
+
+    //TODO: Do we need to check this method for config-aware? NOT SURE!!!
     @Override
     public void includeAffected(Set<String> affectedClasses) {
         // Check if affected tests are really affected.
@@ -96,10 +101,13 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
-                    new File(aTest.getFileDir(), aTest.getFileName()).delete();
-                    // We remove flag that the test is affected not to include class later.
-                    aTest.setAffected(false);
-                    continue out;
+                    boolean isConfigDiff = checkForConfigDiff(aTest);
+                    if (!isConfigDiff) {
+                        new File(aTest.getFileDir(), aTest.getFileName()).delete();
+                        // We remove flag that the test is affected not to include class later.
+                        aTest.setAffected(false);
+                        continue out;
+                    }
                 }
             }
         }
@@ -107,6 +115,10 @@ final class MethodCheck extends AbstractCheck {
         for (TestAbs test : affectedTests) {
             if (test.isAffected()) affectedClasses.add(test.getClassName());
         }
+    }
+
+    private boolean checkForConfigDiff(TestAbs aTest) {
+        return isAffectedByConfig(aTest.mConfigMap);
     }
     
     private boolean checkForDifferences(TestAbs affected, TestAbs nonAffected) {
