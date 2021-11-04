@@ -19,6 +19,7 @@ package org.ekstazi.check;
 import java.util.Map;
 import java.util.Set;
 
+import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.data.RegData;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
@@ -82,6 +83,14 @@ abstract class AbstractCheck {
      *
      */
     private boolean hasConfigChanged(Map<String, String> configMap) {
+        Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
+        for(Map.Entry<String, String> entry : userConfig.entrySet()) {
+            String uKey = entry.getKey();
+            String uValue = entry.getValue();
+            if (configMap.containsKey(uKey) && !configMap.get(uKey).equals(uValue)) {
+                return true;
+            }
+        }
         return false;
     }
 }

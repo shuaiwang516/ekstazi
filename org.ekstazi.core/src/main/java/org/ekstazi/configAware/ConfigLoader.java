@@ -15,6 +15,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class ConfigLoader {
     private static final Map<String, String > sExercisedConfigMap = new HashMap<String, String>();
 
+    public static Map<String, String> getUserConfigMap() {
+        return sExercisedConfigMap;
+    }
 
     /**
      *  Load user's configuration file
@@ -91,6 +94,7 @@ public class ConfigLoader {
         }
     }
 
+    // For simply test
     public static void main(String args[]) {
         load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-kms/src/main/conf/kms-site.xml");
         for(Map.Entry<String, String> entry : sExercisedConfigMap.entrySet()) {
