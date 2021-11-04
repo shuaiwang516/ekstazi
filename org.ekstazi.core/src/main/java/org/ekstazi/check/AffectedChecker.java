@@ -28,9 +28,11 @@ import java.util.Set;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
+import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.data.DependencyAnalyzer;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
+import org.ekstazi.log.Log;
 
 /**
  * Checks all files in coverage directory based on configuration and print the
@@ -201,6 +203,7 @@ public class AffectedChecker {
         }
 
         // Find affected test classes.
+        ConfigLoader.loadConfigFromFile();
         includeAffected(allClasses, affectedClasses, getSortedFiles(depsDir));
 
         // Find test classes that are not affected.
@@ -280,6 +283,7 @@ public class AffectedChecker {
      * Find all non affected classes.
      */
     private static void includeAffected(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles) {
+        //Log.d2f("line284: includeAffected");
         Storer storer = Config.createStorer();
         Hasher hasher = Config.createHasher();
 

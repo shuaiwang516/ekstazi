@@ -139,6 +139,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
+            //Log.d2f("line142: findNonAffectedClasses");
             nonAffectedClasses = AffectedChecker.findNonAffectedClasses(parentdir, getRootDirOption());
 
             // Do not exclude recently failing tests if appropriate

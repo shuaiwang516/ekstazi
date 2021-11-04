@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.data.RegData;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
@@ -89,6 +90,7 @@ final class MethodCheck extends AbstractCheck {
     //TODO: Do we need to check this method for config-aware? NOT SURE!!!
     @Override
     public void includeAffected(Set<String> affectedClasses) {
+        //Log.d2f("line92: includeAffected");
         // Check if affected tests are really affected.
         List<TestAbs> affectedTests = getAffectedTests(mTests);
         List<TestAbs> nonAffectedTests = getNonAffectedTests(mTests);
@@ -118,7 +120,7 @@ final class MethodCheck extends AbstractCheck {
     }
 
     private boolean checkForConfigDiff(TestAbs aTest) {
-        return isAffectedByConfig(aTest.mConfigMap);
+        return isAffectedByConfig(aTest.mConfigMap, aTest.mClassName);
     }
     
     private boolean checkForDifferences(TestAbs affected, TestAbs nonAffected) {

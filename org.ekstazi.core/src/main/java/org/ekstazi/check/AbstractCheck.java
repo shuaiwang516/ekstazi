@@ -23,6 +23,7 @@ import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.data.RegData;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
+import org.ekstazi.log.Log;
 
 abstract class AbstractCheck {
 
@@ -45,16 +46,17 @@ abstract class AbstractCheck {
     public abstract void includeAffected(Set<String> affectedClasses);
 
     protected boolean isAffected(String dirName, String className, String methodName) {
+        //Log.d2f("line49: Compare diff!");
         return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName))
-                || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName));
+                || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), className);
     }
 
     protected boolean isAffectedByReg(Set<RegData> regData) {
         return regData == null || regData.size() == 0 || hasHashChanged(regData);
     }
 
-    protected boolean isAffectedByConfig(Map<String, String> configMap) {
-        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap);
+    protected boolean isAffectedByConfig(Map<String, String> configMap, String className) {
+        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, className);
     }
 
     /**
@@ -84,12 +86,23 @@ abstract class AbstractCheck {
      * Check if the configuration has changed.
      *
      */
-    private boolean hasConfigChanged(Map<String, String> configMap) {
+    private boolean hasConfigChanged(Map<String, String> configMap, String className) {
+        Log.d2f("Compare configuration diff!");
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
+//        if (userConfig.isEmpty() || userConfig == null) {
+//            Log.d2f("Failed to get user configuration");
+//        } else {
+//            Log.printConfig(userConfig, className);
+//            Log.printConfig(configMap, className);
+//        }
         for(Map.Entry<String, String> entry : configMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
+//            if ((userConfig.containsKey(key))){
+//                Log.d2f("Config from last round :<" + key + " " + value + ">; From user: <" + key + " " + value + ">");
+//            }
             if ((userConfig.containsKey(key) && !userConfig.get(key).equals(value))) {
+                Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
                 return true;
             }
         }

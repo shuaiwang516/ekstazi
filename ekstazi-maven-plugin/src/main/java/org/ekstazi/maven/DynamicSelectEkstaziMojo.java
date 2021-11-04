@@ -86,6 +86,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             // Prepare initial list of options and set property.
             System.setProperty(AbstractMojoInterceptor.ARGLINE_INTERNAL_PROP, prepareEkstaziOptions());
             // Find non affected classes and set property.
+            //Log.d2f("line89: computeNonAffectedClasses");
             List<String> nonAffectedClasses = computeNonAffectedClasses();
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PROP, Arrays.toString(nonAffectedClasses.toArray(new String[0])));
         } else {

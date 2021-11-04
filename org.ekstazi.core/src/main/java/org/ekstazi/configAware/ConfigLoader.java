@@ -33,6 +33,8 @@ public class ConfigLoader {
         try {
             is = new FileInputStream(filename);
             parseConfigurationFile(filename, is);
+            //Log.d2f("Configuration file is loaded.");
+            Log.printConfig(sExercisedConfigMap, "loadMethod");
         } catch (IOException e) {
             Log.e("Loading configuration is not successful", e);
             sExercisedConfigMap.clear();
@@ -84,11 +86,18 @@ public class ConfigLoader {
             NodeList nl = doc.getElementsByTagName(tagName);
             for (int i = 0; i < nl.getLength(); i++) {
                 String configName = doc.getElementsByTagName(tagConfigName).item(i).getFirstChild().getNodeValue();
-                String configValue = doc.getElementsByTagName(tagConfigValue).item(i).getFirstChild().getNodeValue();
+                String configValue;
+                try {
+                    configValue = doc.getElementsByTagName(tagConfigValue).item(i).getFirstChild().getNodeValue();
+                } catch (NullPointerException e) {
+                    configValue = "";
+                }
                 sExercisedConfigMap.put(configName, configValue);
                 //System.out.println(configName + " , " + configValue);
             }
         } catch (Exception e) {
+            System.out.println("Loading configuration is not successful:");
+            e.printStackTrace();
             Log.e("Loading configuration is not successful", e);
             sExercisedConfigMap.clear();
         }
@@ -96,9 +105,13 @@ public class ConfigLoader {
 
     // For simply test
     public static void main(String args[]) {
-        load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-kms/src/main/conf/kms-site.xml");
+        //load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-kms/src/main/conf/kms-site.xml");
+        load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml");
+        int count = 0;
         for(Map.Entry<String, String> entry : sExercisedConfigMap.entrySet()) {
+            count += 1;
             System.out.println(entry.getKey() + " , " + entry.getValue());
         }
+        System.out.println(count);
     }
 }

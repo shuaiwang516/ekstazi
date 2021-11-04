@@ -22,6 +22,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Simple logging facility.
@@ -184,6 +185,26 @@ public final class Log {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void printConfig(Map<String, String> userConfig, String fileIndex) {
+        try {
+            FileWriter fw = new FileWriter("config_debug" + fileIndex +".txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            if (userConfig == null || userConfig.isEmpty()) {
+                bw.write("Failed to print empty configuration");
+                bw.newLine();
+            } else {
+                for (Map.Entry<String, String> entry : userConfig.entrySet()) {
+                    bw.write(entry.getKey() + " , " + entry.getValue());
+                    bw.newLine();
+                }
+            }
+            bw.write("=========This is the end===========");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void trace2f () {

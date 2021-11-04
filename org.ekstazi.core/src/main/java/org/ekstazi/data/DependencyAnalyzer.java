@@ -26,6 +26,7 @@ import java.util.TreeSet;
 
 import org.ekstazi.Config;
 import org.ekstazi.configAware.ConfigListener;
+import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.hash.Hasher;
 import org.ekstazi.log.Log;
 import org.ekstazi.monitor.CoverageMonitor;
@@ -94,7 +95,8 @@ public final class DependencyAnalyzer {
     public synchronized boolean isAffected(String name) {
         String fullMethodName = name + "." + COV_EXT;
         Set<RegData> regData = mStorer.loadRegData(mRootDir, name, COV_EXT);
-        boolean isAffected = isAffected(regData);
+        Map<String, String> configMap = mStorer.loadConfigData(mRootDir, name, COV_EXT);
+        boolean isAffected = isAffected(regData) || isAffected(configMap);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -147,7 +149,8 @@ public final class DependencyAnalyzer {
         boolean isAffected = true;
         String fullMethodName = className + "." + CLASS_EXT;
         Set<RegData> regData = mStorer.loadRegData(mRootDir, className, CLASS_EXT);
-        isAffected = isAffected(regData);
+        Map<String, String> configMap = mStorer.loadConfigData(mRootDir, className, CLASS_EXT);
+        isAffected = isAffected(regData) || isAffected(configMap);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -211,7 +214,8 @@ public final class DependencyAnalyzer {
         }
 
         Set<RegData> regData = mStorer.loadRegData(mRootDir, className, methodName);
-        boolean isAffected = isAffected(regData);
+        Map<String, String> configMap = mStorer.loadConfigData(mRootDir, className, methodName);
+        boolean isAffected = isAffected(regData) || isAffected(configMap);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);
         }
@@ -295,6 +299,38 @@ public final class DependencyAnalyzer {
     private boolean isAffected(Set<RegData> regData) {
         return regData == null || regData.size() == 0 || hasHashChanged(regData);
     }
+
+    protected boolean isAffected(Map<String, String> configMap) {
+        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap);
+    }
+
+    /**
+     * Check if the configuration has changed.
+     *
+     */
+    private boolean hasConfigChanged(Map<String, String> configMap) {
+        Log.d2f("Compare configuration diff!");
+        Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
+//        if (userConfig.isEmpty() || userConfig == null) {
+//            Log.d2f("Failed to get user configuration");
+//        } else {
+//            Log.printConfig(userConfig, className);
+//            Log.printConfig(configMap, className);
+//        }
+        for(Map.Entry<String, String> entry : configMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+//            if ((userConfig.containsKey(key))){
+//                Log.d2f("Config from last round :<" + key + " " + value + ">; From user: <" + key + " " + value + ">");
+//            }
+            if ((userConfig.containsKey(key) && !userConfig.get(key).equals(value))) {
+                Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Hashes files and compares with the old hashes. If any hash is different,
