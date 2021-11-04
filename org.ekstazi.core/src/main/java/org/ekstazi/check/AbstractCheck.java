@@ -82,13 +82,14 @@ abstract class AbstractCheck {
 
     /**
      * Check if the configuration has changed.
+     *
      */
     private boolean hasConfigChanged(Map<String, String> configMap) {
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
-        for(Map.Entry<String, String> entry : userConfig.entrySet()) {
-            String uKey = entry.getKey();
-            String uValue = entry.getValue();
-            if (configMap.containsKey(uKey) && !configMap.get(uKey).equals(uValue)) {
+        for(Map.Entry<String, String> entry : configMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if ((userConfig.containsKey(key) && !userConfig.get(key).equals(value))) {
                 return true;
             }
         }
