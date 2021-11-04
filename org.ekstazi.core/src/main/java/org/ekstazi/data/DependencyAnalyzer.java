@@ -93,7 +93,7 @@ public final class DependencyAnalyzer {
 
     public synchronized boolean isAffected(String name) {
         String fullMethodName = name + "." + COV_EXT;
-        Set<RegData> regData = mStorer.load(mRootDir, name, COV_EXT);
+        Set<RegData> regData = mStorer.loadRegData(mRootDir, name, COV_EXT);
         boolean isAffected = isAffected(regData);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
@@ -146,7 +146,7 @@ public final class DependencyAnalyzer {
         }
         boolean isAffected = true;
         String fullMethodName = className + "." + CLASS_EXT;
-        Set<RegData> regData = mStorer.load(mRootDir, className, CLASS_EXT);
+        Set<RegData> regData = mStorer.loadRegData(mRootDir, className, CLASS_EXT);
         isAffected = isAffected(regData);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
@@ -203,14 +203,14 @@ public final class DependencyAnalyzer {
         // We force the execution as the execution may differ and we union
         // the coverage (load the old one and new one will be appended).
         if (mFullTestName2Rerun.containsKey(fullMethodName)) {
-            Set<RegData> regData = mStorer.load(mRootDir, className, methodName);
+            Set<RegData> regData = mStorer.loadRegData(mRootDir, className, methodName);
             // Shuai: Load previous round's coverage to the current Coverage Monitor
             // So that old and new coverage will append to this round.
             CoverageMonitor.addURLs(extractExternalForms(regData));
             return mFullTestName2Rerun.get(fullMethodName);
         }
 
-        Set<RegData> regData = mStorer.load(mRootDir, className, methodName);
+        Set<RegData> regData = mStorer.loadRegData(mRootDir, className, methodName);
         boolean isAffected = isAffected(regData);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);

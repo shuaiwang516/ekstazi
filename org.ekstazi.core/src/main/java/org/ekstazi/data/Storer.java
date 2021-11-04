@@ -97,16 +97,16 @@ public abstract class Storer {
     /**
      * Loads regression data.
      */
-    public final Set<RegData> load(String dirName, String fullName) {
-        return load(openFileRead(dirName, fullName, fullName, null));
+    public final Set<RegData> loadRegData(String dirName, String fullName) {
+        return loadRegData(openFileRead(dirName, fullName, fullName, null));
     }
 
     /**
      * Loads regression data.
      */
-    public final Set<RegData> load(String dirName, String className, String methodName) {
+    public final Set<RegData> loadRegData(String dirName, String className, String methodName) {
         String fullName = className + '.' + methodName;
-        return load(openFileRead(dirName, fullName, className, methodName));
+        return loadRegData(openFileRead(dirName, fullName, className, methodName));
     }
 
     /**
@@ -145,7 +145,9 @@ public abstract class Storer {
      *            Stream that contains regression information.
      * @return Regression data.
      */
-    protected abstract Set<RegData> extendedLoad(FileInputStream fis);
+    protected abstract Set<RegData> extendedLoadRegData(FileInputStream fis);
+
+    protected abstract Map<String, String> extendedLoadConfigMap(FileInputStream fis);
 
     /**
      * Saving regression data to the given stream. Implementation in subclasses
@@ -160,9 +162,9 @@ public abstract class Storer {
 
     // INTERNAL
 
-    private final Set<RegData> load(FileInputStream fis) {
+    private final Set<RegData> loadRegData(FileInputStream fis) {
         if (fis != null) {
-            return extendedLoad(fis);
+            return extendedLoadRegData(fis);
         } else {
             return Collections.emptySet();
         }

@@ -53,6 +53,9 @@ public class TxtStorer extends Storer {
     /** Length of the separator (to avoid invoking length() many times) */
     protected static final int SEPARATOR_LEN = SEPARATOR.length();
 
+    /** Length of the Config_separator (to avoid invoking length() many times) */
+    protected static final int CONFIG_SEPARATOR_LEN = CONFIG_SEPARATOR.length();
+
     /** Indicates that magic sequence should be checked */
     private final boolean mCheckMagicSequence;
 
@@ -86,9 +89,45 @@ public class TxtStorer extends Storer {
     }
 
     // LOAD
+    @Override
+    protected final Map<String, String> extendedLoadConfigMap(FileInputStream fis) {
+        Map<String, String> configMap = new HashMap<String, String>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(createReader(fis));
+            // Check magic sequence.
+            String line;
+            if (isMagicCorrect(br)) {
+                // If magic is correct, load data.
+                Boolean isConfig = false;
+                while (true) {
+                    line = br.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    if (line.equals("Configuration_Name , Configuration_Value")) {
+                        isConfig = true;
+                    }
+                    if (isConfig) {
+                        int sepIndex = line.indexOf(CONFIG_SEPARATOR);
+                        String key = line.substring(0, sepIndex);
+                        String value = line.substring(sepIndex + CONFIG_SEPARATOR_LEN);
+                        configMap.put(key, value);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("Loading coverage not successful", ex);
+            // Make sure that test is rerun.
+            configMap.clear();
+        } finally {
+            FileUtil.closeAndIgnoreExceptions(br);
+        }
+        return configMap;
+    }
 
     @Override
-    protected final Set<RegData> extendedLoad(FileInputStream fis) {
+    protected final Set<RegData> extendedLoadRegData(FileInputStream fis) {
         Set<RegData> regData = new HashSet<RegData>();
         BufferedReader br = null;
         try {
@@ -99,7 +138,7 @@ public class TxtStorer extends Storer {
                 State state = newState();
                 while (true) {
                     String line = br.readLine();        // Shuai: Each line: URL _ ChecksumValues
-                    if (line == null) {
+                    if (line == null || line.equals("Configuration_Name , Configuration_Value")) {
                         break;
                     }
                     RegData regDatum = parseLine(state, line);
