@@ -33,6 +33,7 @@ public class ConfigListener {
 
     private static void clean0() {
         sConfigMap.clear();
+        sConfigMap.put("Configuration Name", "Configuration Value");
     }
 
     /**
@@ -86,6 +87,8 @@ public class ConfigListener {
      */
     public static void recordConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
+            name = name.trim().replaceAll("\\n", "");
+            value = value.trim().replaceAll("\\n", "");
             addConfig(name, value);
         }
     }
