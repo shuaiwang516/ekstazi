@@ -216,6 +216,12 @@ public final class Config {
     /** Name of the file to keep info about run */
     public static final String RUN_INFO_V = createFileNameInCoverageDir(Names.RUN_INFO_FILE_NAME);
 
+    // CONFIGURATION-AWARE
+
+    @Opt(desc = "Configuration file path")
+    public static String CONFIG_FILE_PATH_V;
+    protected static final String CONFIG_FILE_PATH_N = "config.file.path";
+
     // INCLUDE/EXCLUDE
 
     @Opt(desc = "Force execution of all tests.")
@@ -391,6 +397,7 @@ public final class Config {
         DEPENDENCIES_NIO_V = getBoolean(props, DEPENDENCIES_NIO_N, DEPENDENCIES_NIO_V);
         DEPENDENCIES_NIO_INCLUDES_V = getPattern(props, DEPENDENCIES_NIO_INCLUDES_N, DEPENDENCIES_NIO_INCLUDES_V);
         DEPENDENCIES_NIO_EXCLUDES_V = getPattern(props, DEPENDENCIES_NIO_EXCLUDES_N, DEPENDENCIES_NIO_EXCLUDES_V);
+        CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
     }
 
     /**

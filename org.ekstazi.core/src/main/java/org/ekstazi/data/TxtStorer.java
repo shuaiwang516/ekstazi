@@ -96,12 +96,11 @@ public class TxtStorer extends Storer {
         try {
             br = new BufferedReader(createReader(fis));
             // Check magic sequence.
-            String line;
             if (isMagicCorrect(br)) {
                 // If magic is correct, load data.
                 Boolean isConfig = false;
                 while (true) {
-                    line = br.readLine();
+                    String line = br.readLine();
                     if (line == null) {
                         break;
                     }

@@ -16,6 +16,7 @@
 
 package org.ekstazi.check;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.ekstazi.data.RegData;
@@ -43,11 +44,15 @@ abstract class AbstractCheck {
     public abstract void includeAffected(Set<String> affectedClasses);
 
     protected boolean isAffected(String dirName, String className, String methodName) {
-        return isAffected(mStorer.loadRegData(dirName, className, methodName));
+        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName));
     }
 
-    protected boolean isAffected(Set<RegData> regData) {
+    protected boolean isAffectedByReg(Set<RegData> regData) {
         return regData == null || regData.size() == 0 || hasHashChanged(regData);
+    }
+
+    protected boolean isAffectedByConfig(Map<String, String> configMap) {
+        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap);
     }
 
     /**
@@ -71,5 +76,12 @@ abstract class AbstractCheck {
         String newHash = hasher.hashURL(urlExternalForm);
         boolean anyDiff = !newHash.equals(regDatum.getHash());
         return anyDiff;
+    }
+
+    /**
+     *
+     */
+    private boolean hasConfigChanged(Map<String, String> configMap) {
+        return false;
     }
 }

@@ -110,7 +110,23 @@ public abstract class Storer {
     }
 
     /**
-     * Saves regression data.
+     * Loads configuration data
+     */
+    public final Map<String, String> loadConfigData(String dirName, String fullName) {
+        return loadConfigData(openFileRead(dirName, fullName, fullName, null));
+    }
+
+    /**
+     * Loads configuration data
+     */
+    public final Map<String, String> loadConfigData(String dirName, String className, String methodName) {
+        String fullName = className + '.' + methodName;
+        return loadConfigData(openFileRead(dirName, fullName, className, methodName));
+    }
+
+
+    /**
+     * Saves regression data and configuration data.
      */
     public final void save(String dirName, String fullName, Set<RegData> hashes, Map<String, String> configMap) {
         // @Research(if statement).
@@ -123,7 +139,7 @@ public abstract class Storer {
     }
 
     /**
-     * Saves regression data.
+     * Saves regression data and configuration data.
      */
     public final void save(String dirName, String className, String methodName, Set<RegData> regData, Map<String, String> configMap) {
         // @Research(if statement).
@@ -138,7 +154,7 @@ public abstract class Storer {
     }
 
     /**
-     * Loading actual data from the given stream. Implementation in subclasses
+     * Loading actual regression data from the given stream. Implementation in subclasses
      * should have matching load and save methods.
      *
      * @param fis
@@ -147,6 +163,12 @@ public abstract class Storer {
      */
     protected abstract Set<RegData> extendedLoadRegData(FileInputStream fis);
 
+    /**
+     * Loading actual configuration data from the given stream.
+     *
+     * @param fis Stream that contains regression information.
+     * @return Configuration Map
+     */
     protected abstract Map<String, String> extendedLoadConfigMap(FileInputStream fis);
 
     /**
@@ -157,6 +179,8 @@ public abstract class Storer {
      *            Stream that stores regression information.
      * @param hashes
      *            Regression info as mapping URL(ExternalForm)->hash.
+     * @param configMap
+     *            Configuration info as mapping ConfigName->ConfigValue
      */
     protected abstract void extendedSave(FileOutputStream fos, Set<RegData> hashes, Map<String, String> configMap);
 
@@ -167,6 +191,14 @@ public abstract class Storer {
             return extendedLoadRegData(fis);
         } else {
             return Collections.emptySet();
+        }
+    }
+
+    private final Map<String, String> loadConfigData(FileInputStream fis) {
+        if (fis != null) {
+            return extendedLoadConfigMap(fis);
+        } else {
+            return Collections.emptyMap();
         }
     }
 
