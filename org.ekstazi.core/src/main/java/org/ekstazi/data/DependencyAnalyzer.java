@@ -280,7 +280,7 @@ public final class DependencyAnalyzer {
             regData.add(new RegData(entry.getKey(), entry.getValue()));
         }
         //Config-aware mapping information
-        Map<String, String> configMap = ConfigListener.sortConfigMap();
+        Map<String, String> configMap = ConfigListener.getConfigMap();
         mStorer.save(mRootDir, className, methodName, regData, configMap);
         //Log.d2f("endCoverage and save to file: " + mRootDir + " class name = "
         //        + className + " method name = " + methodName + " regData = " + regData);

@@ -174,6 +174,7 @@ public class TxtStorer extends Storer {
                 // printLine(state, pw, "# Hello", "World!");
                 // throw new RuntimeException();
             }
+            printConfigLine(pw, "Configuration_Name", "Configuration_Value");
             for (Map.Entry<String, String> configEntry : configMap.entrySet()) {
                 printConfigLine(pw, configEntry.getKey(), configEntry.getValue());
             }

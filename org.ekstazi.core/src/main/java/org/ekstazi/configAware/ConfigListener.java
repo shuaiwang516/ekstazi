@@ -33,7 +33,6 @@ public class ConfigListener {
 
     private static void clean0() {
         sConfigMap.clear();
-        sConfigMap.put("Configuration Name", "Configuration Value");
     }
 
     /**
@@ -75,6 +74,10 @@ public class ConfigListener {
         } finally {
             sLock.unlock();
         }
+    }
+
+    public static Map<String, String> getConfigMap() {
+        return sConfigMap;
     }
 
     // Touch method
