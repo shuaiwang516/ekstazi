@@ -16,6 +16,9 @@ public class ConfigLoader {
     private static final Map<String, String > sExercisedConfigMap = new HashMap<String, String>();
 
     public static Map<String, String> getUserConfigMap() {
+        if (sExercisedConfigMap.isEmpty() || sExercisedConfigMap == null){
+            loadConfigFromFile();
+        }
         return sExercisedConfigMap;
     }
 
@@ -40,9 +43,10 @@ public class ConfigLoader {
             is = new FileInputStream(filename);
             parseConfigurationFile(filename, is);
             //Log.d2f("Configuration file is loaded.");
-            Log.printConfig(sExercisedConfigMap, "loadMethod");
+            Log.printConfig(sExercisedConfigMap, "-loadMethod");
         } catch (IOException e) {
             Log.e("Loading configuration is not successful", e);
+            Log.d2f("Loading configuration is not successful" + e);
             sExercisedConfigMap.clear();
         } finally {
             FileUtil.closeAndIgnoreExceptions(is);
@@ -95,15 +99,14 @@ public class ConfigLoader {
                 String configValue;
                 try {
                     configValue = doc.getElementsByTagName(tagConfigValue).item(i).getFirstChild().getNodeValue();
-                } catch (NullPointerException e) {
+                } catch (Exception e) {
                     configValue = "";
                 }
                 sExercisedConfigMap.put(configName, configValue);
                 //System.out.println(configName + " , " + configValue);
             }
         } catch (Exception e) {
-            System.out.println("Loading configuration is not successful:");
-            e.printStackTrace();
+            Log.d2f("Loading configuration is not successful: " + e.getStackTrace());
             Log.e("Loading configuration is not successful", e);
             sExercisedConfigMap.clear();
         }
@@ -112,7 +115,7 @@ public class ConfigLoader {
     // For simply test
     public static void main(String args[]) {
         //load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-kms/src/main/conf/kms-site.xml");
-        load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml");
+        load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default-ekstazi.xml");
         int count = 0;
         for(Map.Entry<String, String> entry : sExercisedConfigMap.entrySet()) {
             count += 1;

@@ -203,7 +203,6 @@ public class AffectedChecker {
         }
 
         // Find affected test classes.
-        ConfigLoader.loadConfigFromFile();
         includeAffected(allClasses, affectedClasses, getSortedFiles(depsDir));
 
         // Find test classes that are not affected.
