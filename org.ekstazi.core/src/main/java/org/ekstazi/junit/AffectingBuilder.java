@@ -18,6 +18,7 @@ package org.ekstazi.junit;
 
 import junit.framework.TestCase;
 import org.ekstazi.Ekstazi;
+import org.ekstazi.log.Log;
 import org.junit.internal.builders.AnnotatedBuilder;
 import org.junit.internal.builders.JUnit3Builder;
 import org.junit.internal.builders.JUnit4Builder;
@@ -38,7 +39,7 @@ public class AffectingBuilder extends RunnerBuilder {
         if ((TestCase.class.isAssignableFrom(testClass) ||
                 !testClass.isAnnotationPresent(SuiteClasses.class)) &&
                 !Ekstazi.inst().isClassAffected(testClass.getName())) {
-            System.out.println("In AffectingBuilder.java:line41: -> return affectingRunner!");
+            Log.d2f("In AffectingBuilder.java:line41: -> return affectingRunner!");
             return new AffectingRunner(testClass);
         } else {
             return null;

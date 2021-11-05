@@ -19,6 +19,12 @@ public class ConfigLoader {
         return sExercisedConfigMap;
     }
 
+    public static Boolean hasConfigFile() {
+        String configFileName = Config.CONFIG_FILE_PATH_V;
+        File configFile = new File(configFileName);
+        return configFile.exists();
+    }
+
     /**
      *  Load user's configuration file
      *  TODO: Need to consider different types of configuration files

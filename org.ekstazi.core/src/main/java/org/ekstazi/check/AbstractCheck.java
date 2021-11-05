@@ -88,6 +88,9 @@ abstract class AbstractCheck {
      */
     private boolean hasConfigChanged(Map<String, String> configMap, String className) {
         Log.d2f("Compare configuration diff!");
+        if (!ConfigLoader.hasConfigFile()) {
+            return false;
+        }
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
 //        if (userConfig.isEmpty() || userConfig == null) {
 //            Log.d2f("Failed to get user configuration");
