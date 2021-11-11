@@ -278,6 +278,16 @@ public final class Config {
         printVerbose(userHomeDir, userDir);
     }
 
+    public static void preLoadConfig() {
+        String userHome = getUserHome();
+        File userHomeDir = new File(userHome, Names.EKSTAZI_CONFIG_FILE);
+        Properties homeProperties = getProperties(userHomeDir);
+        File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
+        Properties userProperties = getProperties(userDir);
+        loadProperties(homeProperties);
+        loadProperties(userProperties);
+    }
+
     /**
      * Returns path to user home directory. This method is needed for
      * experiments when we assume that /home/name/ (or similar) is home. Note

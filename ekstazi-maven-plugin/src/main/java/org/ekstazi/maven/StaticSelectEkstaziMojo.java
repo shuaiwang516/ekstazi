@@ -67,16 +67,16 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
      *
      * @since 4.1.0
      */
-    @Parameter(property = "ekstazi.forcefailing", defaultValue = "false")
-    private boolean forcefailing;
+    @Parameter(property = "ekstazi.forcefailing", defaultValue = "null")
+    private String forcefailing;
 
     /**
      * Enable/disable forcing run of all tests.
      *
      * @since 4.3.0
      */
-    @Parameter(property = "ekstazi.forceall", defaultValue = "false")
-    private boolean forceall;
+    @Parameter(property = "ekstazi.forceall", defaultValue = "null")
+    private String forceall;
 
     /**
      * Additional arguments passed to Ekstazi.
@@ -87,11 +87,23 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
     protected String xargs;
 
     public boolean getForcefailing() {
-        return forcefailing;
+        if (forcefailing.toLowerCase().equals("true")) {
+            return true;
+        } else if (forcefailing.toLowerCase().equals("false")) {
+            return false;
+        } else {
+            return Config.FORCE_FAILING_V;
+        }
     }
 
     public boolean getForceall() {
-        return forceall;
+        if (forceall.toLowerCase().equals("true")) {
+            return true;
+        } else if (forceall.toLowerCase().equals("false")) {
+            return false;
+        } else {
+            return Config.FORCE_ALL_V;
+        }
     }
 
     public String getXargs() {
