@@ -53,24 +53,90 @@ public final class Config {
 
     // GENERAL
 
-    @Opt(desc = "Name of the directory that keeps coverage data.")
-    public static String ROOT_DIR_V = rootDirDefault();
-    protected static final String ROOT_DIR_N = "root.dir";
+    /**
+     * Used in dependency compare (get the current dependency)
+     * @return the current dependency data folder name
+     */
+    private static String getCurDirName() {
+        String rootDir = rootDirDefault();
+        int round = getCurRound();
+        return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + round;
+    }
+
+    /**
+     * Used in dependency update (update dependency to the new folder)
+     * @return the updated dependency data folder name
+     */
+    private static String getNextDirName() {
+        String rootDir = rootDirDefault();
+        String configName = Config.CONFIG_FILE_NAME_V;
+        int round = getCurRound() + 1;
+        int maxRound = getMaxRound();
+        if (maxRound > round)
+            return rootDir + "-" + configName + "-Round" + maxRound;
+        return rootDir + "-" + configName + "-Round" + round;
+    }
+
+    private static int getCurRound() {
+        String rootDir = rootDirDefault();
+        String configName = CONFIG_FILE_NAME_V;
+        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File files [] = dir.listFiles();
+        for(File f : files) {
+            if (f.isDirectory() && f.getName().contains(configName)) {
+                String filename = f.getName();
+                return Integer.parseInt(filename.substring(filename.length() - 1));
+            }
+        }
+        return 0;
+    }
+
+    private static int getMaxRound() {
+        String rootDir = rootDirDefault();
+        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File files [] = dir.listFiles();
+        int max = 0;
+        for(File f : files) {
+            if (f.isDirectory() && f.getName().contains("Round")) {
+                String filename = f.getName();
+                int curRound = Integer.parseInt(filename.substring(filename.length() - 1));
+                if (curRound > max) {
+                    max = curRound;
+                }
+            }
+        }
+        return max;
+    }
+
+    //TODO1: Check CUR_DIR_V to replace it with NEXT_DIR_V
+    //TODO2: Also Check SAVE() Function
+    @Opt(desc = "Name of the directory that keeps current coverage data.")
+    public static String CUR_DIR_V = getCurDirName();
+    protected static final String CUR_DIR_N = "root.dir";
+
+    @Opt(desc = "Name of the directory that keeps current coverage data.")
+    public static String NEXT_DIR_V = getNextDirName();
 
     private static String rootDirDefault() {
         return System.getProperty("user.dir") + System.getProperty("file.separator") + Names.EKSTAZI_ROOT_DIR_NAME;
     }
 
     /**
-     * Returns a File that describes .ekstazi directory. Note that the directory
+     * Returns a File that describes .ekstazi-{configName}-Round{i} directory. Note that the directory
      * is not created with this invocation.
      *
      * @param parentDir
      *            Parent directory for .ekstazi directory
-     * @return File that describes .ekstazi directory
+     * @return File that describes .ekstazi-{configName}-Round{i} directory
      */
-    public static File createRootDir(File parentDir) {
-        return new File(parentDir, Names.EKSTAZI_ROOT_DIR_NAME);
+    public static File createCurDir(File parentDir) {
+        return new File(parentDir,
+                Names.EKSTAZI_ROOT_DIR_NAME + "-" + CONFIG_FILE_NAME_V + "-Round" + getCurRound());
+    }
+
+    public static File createNextDir(File parentDir) {
+        return new File(parentDir,
+                Names.EKSTAZI_ROOT_DIR_NAME + "-" + CONFIG_FILE_NAME_V + "-Round" + getMaxRound());
     }
 
     /**
@@ -324,7 +390,7 @@ public final class Config {
     // INTERNAL
 
     private static String createFileNameInCoverageDir(String name) {
-        return ROOT_DIR_V + System.getProperty("file.separator") + name;
+        return CUR_DIR_V + System.getProperty("file.separator") + name;
     }
 
     private static Properties getProperties(File file) {
@@ -373,7 +439,7 @@ public final class Config {
     }
 
     protected static void loadProperties(Properties props) {
-        ROOT_DIR_V = getURIString(props, ROOT_DIR_N, ROOT_DIR_V);
+        CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
         MODE_V = AgentMode.fromString(getString(props, MODE_N, MODE_V.toString()));
         SINGLE_NAME_V = getString(props, SINGLE_NAME_N, SINGLE_NAME_V);
         DEPENDENCIES_FORMAT_V = getString(props, DEPENDENCIES_FORMAT_N, DEPENDENCIES_FORMAT_V);
@@ -587,7 +653,7 @@ public final class Config {
 
     public static Hasher createHasher() {
         return X_SAVE_HASHER_CACHE_V ? new FileCachingHasher(Config.HASH_ALGORITHM_V, Config.CACHE_SIZES_V,
-                Config.HASH_WITHOUT_DEBUGINFO_V, new File(Config.ROOT_DIR_V, "hasher-cache.txt")) : new Hasher(
+                Config.HASH_WITHOUT_DEBUGINFO_V, new File(Config.CUR_DIR_V, "hasher-cache.txt")) : new Hasher(
                 Config.HASH_ALGORITHM_V, Config.CACHE_SIZES_V, Config.HASH_WITHOUT_DEBUGINFO_V);
     }
 

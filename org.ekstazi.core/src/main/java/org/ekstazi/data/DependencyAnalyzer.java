@@ -81,8 +81,8 @@ public final class DependencyAnalyzer {
         this.mExcludes = excludes;
         this.mIncludes = includes;
 
-        this.mCurDir = getCurDirName();
-        this.mNextDir = getNextDirName();
+        this.mCurDir = Config.CUR_DIR_V;
+        this.mNextDir = Config.NEXT_DIR_V;
         //this.mRootDir = Config.ROOT_DIR_V;
         this.mDependenciesAppend = Config.DEPENDENCIES_APPEND_V;
 
@@ -354,60 +354,6 @@ public final class DependencyAnalyzer {
             }
         }
         return false;
-    }
-
-    /**
-     * Used in dependency compare (get the current dependency)
-     * @return the current dependency data folder name
-     */
-    private String getCurDirName() {
-        String rootDir = Config.ROOT_DIR_V;
-        String configName = Config.CONFIG_FILE_NAME_V;
-        int round = getCurRound(rootDir, configName);
-        return rootDir + "-" + configName + "-Round" + round;
-    }
-
-    /**
-     * Used in dependency update (update dependency to the new folder)
-     * @return the updated dependency data folder name
-     */
-    private String getNextDirName() {
-        String rootDir = Config.ROOT_DIR_V;
-        String configName = Config.CONFIG_FILE_NAME_V;
-        int round = getCurRound(rootDir, configName);
-        round = round == 0 ? 0 : round + 1;
-        int maxRound = getMaxRound(rootDir);
-        if (maxRound > round)
-            return rootDir + "-" + configName + "-Round" + maxRound;
-        return rootDir + "-" + configName + "-Round" + round;
-    }
-
-    private int getCurRound(String rootDir, String configName) {
-        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
-        File files [] = dir.listFiles();
-        for(File f : files) {
-            if (f.isDirectory() && f.getName().contains(configName)) {
-                String filename = f.getName();
-                return Integer.parseInt(filename.substring(filename.length() - 1));
-            }
-        }
-        return 0;
-    }
-
-    private int getMaxRound(String rootDir) {
-        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
-        File files [] = dir.listFiles();
-        int max = 0;
-        for(File f : files) {
-            if (f.isDirectory() && f.getName().contains("Round")) {
-                String filename = f.getName();
-                int curRound = Integer.parseInt(filename.substring(filename.length() - 1));
-                if (curRound > max) {
-                    max = curRound;
-                }
-            }
-        }
-        return max;
     }
 
     /**

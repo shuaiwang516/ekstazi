@@ -19,14 +19,12 @@ package org.ekstazi;
 import java.io.File;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.ekstazi.agent.EkstaziAgent;
 import org.ekstazi.data.DependencyAnalyzer;
 import org.ekstazi.dynamic.DynamicEkstazi;
 import org.ekstazi.log.Log;
-import org.ekstazi.monitor.CoverageMonitor;
 import org.ekstazi.research.Research;
 
 /**
@@ -135,7 +133,7 @@ public final class Ekstazi {
     }
 
     private boolean wasFailing(String className) {
-        File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        File testResultsDir = new File(Config.CUR_DIR_V, Names.TEST_RESULTS_DIR_NAME);
         File outcomeFile = new File(testResultsDir, className);
         return outcomeFile.exists();
     }
@@ -144,7 +142,7 @@ public final class Ekstazi {
      * Saves info about the results of running the given test class.
      */
     public void endClassCoverage(String className, boolean isFailOrError) {
-        File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        File testResultsDir = new File(Config.CUR_DIR_V, Names.TEST_RESULTS_DIR_NAME);
         File outcomeFile = new File(testResultsDir, className);
         if (isFailOrError) {
             // TODO: long names.

@@ -28,11 +28,9 @@ import java.util.Set;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
-import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.data.DependencyAnalyzer;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
-import org.ekstazi.log.Log;
 
 /**
  * Checks all files in coverage directory based on configuration and print the
@@ -111,7 +109,7 @@ public class AffectedChecker {
      */
     public static List<String> findNonAffectedClasses(File parentDir, String options) {
         // Return if Ekstazi directory does not exist.
-        if (!Config.createRootDir(parentDir).exists()) {
+        if (!Config.createCurDir(parentDir).exists()) {
             return Collections.<String>emptyList();
         }
         Config.loadConfig(options, true);
@@ -127,7 +125,7 @@ public class AffectedChecker {
         Set<String> affectedClasses = new HashSet<String>();
         loadConfig(workingDirectory);
         // Find non affected classes.
-        List<String> nonAffectedClasses = findNonAffectedClasses(Config.ROOT_DIR_V, true, allClasses,
+        List<String> nonAffectedClasses = findNonAffectedClasses(Config.CUR_DIR_V, true, allClasses,
                 affectedClasses);
         // Format list to include class names in expected format for Ant and Maven.
         return formatNonAffectedClassesForAntAndMaven(nonAffectedClasses);
@@ -146,7 +144,7 @@ public class AffectedChecker {
      *         latest run
      */
     public static List<String> findRecentlyFailingClasses(File parentDir, String options) {
-        if (!Config.createRootDir(parentDir).exists()) {
+        if (!Config.createCurDir(parentDir).exists()) {
             return Collections.<String>emptyList();
         }
         Config.loadConfig(options, true);
@@ -155,7 +153,7 @@ public class AffectedChecker {
 
     private static List<String> findRecentlyFailingClasses(String workingDirectory) {
         loadConfig(workingDirectory);
-        File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        File testResultsDir = new File(Config.CUR_DIR_V, Names.TEST_RESULTS_DIR_NAME);
         // All files correspond to classes that have been failing.
         List<String> allFailing = new ArrayList<String>();
         if (testResultsDir.exists()) {
@@ -195,8 +193,8 @@ public class AffectedChecker {
             Config.CACHE_SIZES_V = 0;
         }
 
-        Config.ROOT_DIR_V = depsDirName;
-        File depsDir = new File(Config.ROOT_DIR_V);
+        Config.CUR_DIR_V = depsDirName;
+        File depsDir = new File(Config.CUR_DIR_V);
 
         if (checkIfDoesNotExist(depsDir)) {
             return Collections.emptyList();

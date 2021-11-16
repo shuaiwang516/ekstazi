@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
-import org.ekstazi.log.Log;
 
 /**
  * Monitor invoked before Surefire. The purpose of monitoring is to
@@ -194,7 +193,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
 
     private static boolean wasFailing(String className) {
         className = className.replace(".java","").replace("/",".");
-        File testResultsDir = new File(Config.ROOT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        File testResultsDir = new File(Config.CUR_DIR_V, Names.TEST_RESULTS_DIR_NAME);
         File outcomeFile = new File(testResultsDir, className);
         return outcomeFile.exists();
     }

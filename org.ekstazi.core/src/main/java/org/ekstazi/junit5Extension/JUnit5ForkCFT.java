@@ -4,7 +4,6 @@ import org.ekstazi.Config;
 import org.ekstazi.Ekstazi;
 import org.ekstazi.agent.Instr;
 import org.ekstazi.asm.*;
-import org.ekstazi.log.Log;
 
 import java.io.File;
 import java.lang.instrument.ClassFileTransformer;
@@ -43,7 +42,7 @@ public class JUnit5ForkCFT implements ClassFileTransformer {
     }
 
     private static Boolean isDepdencyFileExist(String className) {
-        String filePath = Config.ROOT_DIR_V + "/" + className.replace("/", ".") + ".clz";
+        String filePath = Config.CUR_DIR_V + "/" + className.replace("/", ".") + ".clz";
         //Log.d2f("isDepdencyFileExist -> filePath = " + filePath);
         File file = new File(filePath);
         //Log.d2f("isDepdencyFileExist -> exist = " + file.exists());

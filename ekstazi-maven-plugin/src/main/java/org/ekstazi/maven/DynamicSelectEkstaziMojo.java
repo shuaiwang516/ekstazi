@@ -20,16 +20,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import org.apache.maven.model.Plugin;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.agent.AgentLoader;
-import org.ekstazi.agent.EkstaziAgent;
-import org.ekstazi.log.Log;
 
 /**
  * Implements selection process and integrates with Surefire.  This
@@ -68,10 +64,12 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
      * problems can happen if there is no sufficient permission.
      */
     private void checkIfEkstaziDirCanBeCreated() throws MojoExecutionException {
-        File ekstaziDir = Config.createRootDir(parentdir);
+        File curEkstaziDir = Config.createCurDir(parentdir);
+        File nextEkstaziDir = Config.createNextDir(parentdir);
         // If .ekstazi does not exist and cannot be created, let them
         // know.  (We also remove directory if successfully created.)
-        if (!ekstaziDir.exists() && (!ekstaziDir.mkdirs() || !ekstaziDir.delete())) {
+        if ((!curEkstaziDir.exists() && (!curEkstaziDir.mkdirs() || !curEkstaziDir.delete()))
+            || (curEkstaziDir.exists()) && (!nextEkstaziDir.mkdir() || !nextEkstaziDir.delete())) {
             throw new MojoExecutionException("Cannot create Ekstazi directory in " + parentdir);
         }
     }

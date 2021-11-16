@@ -18,11 +18,9 @@ package org.ekstazi.monitor;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +30,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.ekstazi.Config;
 import org.ekstazi.Names;
 import org.ekstazi.log.Log;
-import org.ekstazi.research.Research;
 import org.ekstazi.util.Types;
 
 /**
@@ -340,7 +337,7 @@ public final class CoverageMonitor {
     private static boolean filterFile(String absolutePath) {
         // Note that we ignore /dev/* files; this was inspired by /dev/random
         // that cannot be hashed as the file has no end :).
-        return (absolutePath.contains(Config.ROOT_DIR_V)
+        return (absolutePath.contains(Config.CUR_DIR_V)
                 || absolutePath.contains("/" + Names.EKSTAZI_ROOT_DIR_NAME)
                 || absolutePath.contains("junitvmwatcher")
                 // || absolutePath.endsWith(".class")

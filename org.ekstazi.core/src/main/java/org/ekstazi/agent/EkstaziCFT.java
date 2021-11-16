@@ -41,7 +41,6 @@ import java.util.Set;
 import java.util.zip.Checksum;
 import java.util.zip.Adler32;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -187,7 +186,7 @@ public final class EkstaziCFT implements ClassFileTransformer {
 
     @Research
     private void saveBank(ClassLoader loader, String className, byte[] classfileBuffer, long checksum) {
-        File file = new File(Config.ROOT_DIR_V + File.separator + Names.INSTRUMENTED_CLASSES_DIR_NAME,
+        File file = new File(Config.CUR_DIR_V + File.separator + Names.INSTRUMENTED_CLASSES_DIR_NAME,
                 Long.toString(checksum));
         try {
             file.getParentFile().mkdirs();
@@ -199,7 +198,7 @@ public final class EkstaziCFT implements ClassFileTransformer {
 
     @Research
     private byte[] checkBank(ClassLoader loader, String className, long checksum) {
-        File file = new File(Config.ROOT_DIR_V + File.separator + Names.INSTRUMENTED_CLASSES_DIR_NAME,
+        File file = new File(Config.CUR_DIR_V + File.separator + Names.INSTRUMENTED_CLASSES_DIR_NAME,
                 Long.toString(checksum));
         if (file.exists()) {
             try {
