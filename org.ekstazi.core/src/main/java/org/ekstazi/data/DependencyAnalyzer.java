@@ -62,8 +62,12 @@ public final class DependencyAnalyzer {
     /** A test (full name) that starts with any element in array is run with Tool */
     private final String[] mIncludes;
 
-    /** root.dir */
-    private final String mRootDir;
+    /** current dir */
+    private final String mCurDir;
+
+    /** next dir */
+    private final String mNextDir;
+
 
     /** dependencies.append */
     private final boolean mDependenciesAppend;
@@ -77,7 +81,9 @@ public final class DependencyAnalyzer {
         this.mExcludes = excludes;
         this.mIncludes = includes;
 
-        this.mRootDir = Config.ROOT_DIR_V;
+        this.mCurDir = getCurDirName();
+        this.mNextDir = getNextDirName();
+        //this.mRootDir = Config.ROOT_DIR_V;
         this.mDependenciesAppend = Config.DEPENDENCIES_APPEND_V;
 
         this.mUrlExternalForm2Modified = new LRUMap<String, Boolean>(cacheSizes);
@@ -94,8 +100,8 @@ public final class DependencyAnalyzer {
 
     public synchronized boolean isAffected(String name) {
         String fullMethodName = name + "." + COV_EXT;
-        Set<RegData> regData = mStorer.loadRegData(mRootDir, name, COV_EXT);
-        Map<String, String> configMap = mStorer.loadConfigData(mRootDir, name, COV_EXT);
+        Set<RegData> regData = mStorer.loadRegData(mCurDir, name, COV_EXT);
+        Map<String, String> configMap = mStorer.loadConfigData(mCurDir, name, COV_EXT);
         boolean isAffected = isAffected(regData) || isAffected(configMap);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
@@ -148,8 +154,8 @@ public final class DependencyAnalyzer {
         }
         boolean isAffected = true;
         String fullMethodName = className + "." + CLASS_EXT;
-        Set<RegData> regData = mStorer.loadRegData(mRootDir, className, CLASS_EXT);
-        Map<String, String> configMap = mStorer.loadConfigData(mRootDir, className, CLASS_EXT);
+        Set<RegData> regData = mStorer.loadRegData(mCurDir, className, CLASS_EXT);
+        Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, CLASS_EXT);
         isAffected = isAffected(regData) || isAffected(configMap);
         //Log.d2f("line154 in isClassAffected: " + isAffected + " configAffecgted = " + isAffected(configMap));
         recordTestAffectedOutcome(fullMethodName, isAffected);
@@ -207,15 +213,15 @@ public final class DependencyAnalyzer {
         // We force the execution as the execution may differ and we union
         // the coverage (load the old one and new one will be appended).
         if (mFullTestName2Rerun.containsKey(fullMethodName)) {
-            Set<RegData> regData = mStorer.loadRegData(mRootDir, className, methodName);
+            Set<RegData> regData = mStorer.loadRegData(mCurDir, className, methodName);
             // Shuai: Load previous round's coverage to the current Coverage Monitor
             // So that old and new coverage will append to this round.
             CoverageMonitor.addURLs(extractExternalForms(regData));
             return mFullTestName2Rerun.get(fullMethodName);
         }
 
-        Set<RegData> regData = mStorer.loadRegData(mRootDir, className, methodName);
-        Map<String, String> configMap = mStorer.loadConfigData(mRootDir, className, methodName);
+        Set<RegData> regData = mStorer.loadRegData(mCurDir, className, methodName);
+        Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, methodName);
         boolean isAffected = isAffected(regData) || isAffected(configMap);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);
@@ -286,7 +292,7 @@ public final class DependencyAnalyzer {
         }
         //Config-aware mapping information
         Map<String, String> configMap = ConfigListener.getConfigMap();
-        mStorer.save(mRootDir, className, methodName, regData, configMap);
+        mStorer.save(mNextDir, className, methodName, regData, configMap);
         //Log.d2f("endCoverage and save to file: " + mRootDir + " class name = "
         //        + className + " method name = " + methodName + " regData = " + regData);
         // Clean monitor after the test finished the execution
@@ -351,6 +357,60 @@ public final class DependencyAnalyzer {
     }
 
     /**
+     * Used in dependency compare (get the current dependency)
+     * @return the current dependency data folder name
+     */
+    private String getCurDirName() {
+        String rootDir = Config.ROOT_DIR_V;
+        String configName = Config.CONFIG_FILE_NAME_V;
+        int round = getCurRound(rootDir, configName);
+        return rootDir + "-" + configName + "-Round" + round;
+    }
+
+    /**
+     * Used in dependency update (update dependency to the new folder)
+     * @return the updated dependency data folder name
+     */
+    private String getNextDirName() {
+        String rootDir = Config.ROOT_DIR_V;
+        String configName = Config.CONFIG_FILE_NAME_V;
+        int round = getCurRound(rootDir, configName);
+        round = round == 0 ? 0 : round + 1;
+        int maxRound = getMaxRound(rootDir);
+        if (maxRound > round)
+            return rootDir + "-" + configName + "-Round" + maxRound;
+        return rootDir + "-" + configName + "-Round" + round;
+    }
+
+    private int getCurRound(String rootDir, String configName) {
+        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File files [] = dir.listFiles();
+        for(File f : files) {
+            if (f.isDirectory() && f.getName().contains(configName)) {
+                String filename = f.getName();
+                return Integer.parseInt(filename.substring(filename.length() - 1));
+            }
+        }
+        return 0;
+    }
+
+    private int getMaxRound(String rootDir) {
+        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File files [] = dir.listFiles();
+        int max = 0;
+        for(File f : files) {
+            if (f.isDirectory() && f.getName().contains("Round")) {
+                String filename = f.getName();
+                int curRound = Integer.parseInt(filename.substring(filename.length() - 1));
+                if (curRound > max) {
+                    max = curRound;
+                }
+            }
+        }
+        return max;
+    }
+
+    /**
      * Hashes file and compares with the old hash. If hashes are different,
      * return true; false otherwise
      */
@@ -376,7 +436,7 @@ public final class DependencyAnalyzer {
             File f = new File(Config.RUN_INFO_V);
             f.getParentFile().mkdirs();
             PrintWriter pw = new PrintWriter(new FileOutputStream(f, true));
-            pw.println(mRootDir + "." + fullMethodName + " " + (isAffected ? "RUN" : "SKIP"));
+            pw.println(mCurDir + "." + fullMethodName + " " + (isAffected ? "RUN" : "SKIP"));
             pw.close();
         } catch (Exception ex) {
             ex.printStackTrace();
