@@ -52,7 +52,7 @@ public class EkstaziPaths {
     }
 
     private static void removeEkstaziDirectory(File dir) {
-        if (dir.getName().equals(Names.EKSTAZI_ROOT_DIR_NAME)) {
+        if (dir.getName().contains(Names.EKSTAZI_ROOT_DIR_NAME)) {
             FileUtil.deleteDirectory(dir);
         } else {
             for (File child : dir.listFiles()) {

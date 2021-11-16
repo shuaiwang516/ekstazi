@@ -31,6 +31,7 @@ import org.ekstazi.Names;
 import org.ekstazi.data.DependencyAnalyzer;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
+import org.ekstazi.log.Log;
 
 /**
  * Checks all files in coverage directory based on configuration and print the
@@ -112,6 +113,7 @@ public class AffectedChecker {
         if (!Config.createCurDir(parentDir).exists()) {
             return Collections.<String>emptyList();
         }
+        Log.d2f("In AffectedChecker line 116: curDir = " + Config.createCurDir(parentDir).getAbsolutePath());
         Config.loadConfig(options, true);
         return findNonAffectedClasses(parentDir.getAbsolutePath());
     }
@@ -125,6 +127,7 @@ public class AffectedChecker {
         Set<String> affectedClasses = new HashSet<String>();
         loadConfig(workingDirectory);
         // Find non affected classes.
+        Log.d2f("In AffectedChecker line 130: Config.CUR_DIR_V = " + Config.CUR_DIR_V);
         List<String> nonAffectedClasses = findNonAffectedClasses(Config.CUR_DIR_V, true, allClasses,
                 affectedClasses);
         // Format list to include class names in expected format for Ant and Maven.

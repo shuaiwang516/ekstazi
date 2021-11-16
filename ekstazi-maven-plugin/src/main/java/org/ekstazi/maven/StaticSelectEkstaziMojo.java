@@ -92,7 +92,8 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
     }
 
     public void execute() throws MojoExecutionException {
-        //Log.d2f("StaticSelectEkstaziMojo.java line 103");
+        MojoLog.d2f("StaticSelectEkstaziMojo.java line 103");
+        //Config.preLoadConfig();
         // Check if user explicitly requested to not use Ekstazi in
         // this run.
         if (getSkipme()) {
@@ -117,7 +118,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
         boolean isForkMode = isForkMode(surefirePlugin);
         // Include agent to be used during test run.
-        //Log.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
+        MojoLog.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
         try {
             addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? (isForkMode ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                     (isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT));
@@ -139,7 +140,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
-            //Log.d2f("line142: findNonAffectedClasses");
+            MojoLog.d2f("line142: findNonAffectedClasses");
             nonAffectedClasses = AffectedChecker.findNonAffectedClasses(parentdir, getRootDirOption());
 
             // Do not exclude recently failing tests if appropriate
@@ -148,6 +149,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
                 List<String> recentlyFailingClasses = AffectedChecker.findRecentlyFailingClasses(parentdir, getRootDirOption());
                 nonAffectedClasses.removeAll(recentlyFailingClasses);
             }
+            MojoLog.d2f("Finish compute Non affected classes");
         }
         return nonAffectedClasses;
     }
@@ -174,7 +176,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
     private String prepareEkstaziOptions(URL agentJarURL, Config.AgentMode junitMode) throws URISyntaxException {
         String agentAbsolutePath = new File(agentJarURL.toURI().getSchemeSpecificPart()).getAbsolutePath();
-        Log.d2f("junitMode = " + junitMode);
+        Log.d2f("prepare Options in StaticSelectEkstaziMojo.java line 177: " + getRootDirOption());
         return "-javaagent:" + agentAbsolutePath + "=mode=" + junitMode +
             ",force.all=" + getForceall() +
             ",force.failing=" + getForcefailing() +

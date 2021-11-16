@@ -78,20 +78,28 @@ public final class Config {
     }
 
     private static int getCurRound() {
+        Log.d2f("In config.java, getCurRound line 81");
+        Config.preLoadConfig();
         String rootDir = rootDirDefault();
         String configName = CONFIG_FILE_NAME_V;
+        Log.d2f("In config.java, getCurRound line 84, configName = " + configName);
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
+        Log.d2f("In config.java, getCurRound line 88");
         for(File f : files) {
+            Log.d2f("In config.java, getCurRound line 88: filename = " + f.getAbsolutePath());
             if (f.isDirectory() && f.getName().contains(configName)) {
                 String filename = f.getName();
+                Log.d2f("In config.java, getCurRound line 92: filename = " + filename);
                 return Integer.parseInt(filename.substring(filename.length() - 1));
             }
         }
+        Log.d2f("In config.java, getCurRound line 93");
         return 0;
     }
 
     private static int getMaxRound() {
+        Log.d2f("In config.java, getCurRound line 98");
         String rootDir = rootDirDefault();
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
@@ -105,6 +113,7 @@ public final class Config {
                 }
             }
         }
+        Log.d2f("In config.java, getCurRound line 112");
         return max;
     }
 
@@ -147,8 +156,11 @@ public final class Config {
      * @return An absolute path (URI.toString) that describes .ekstazi directory
      */
     public static String getRootDirURI(File parentDir) {
-        String pathAsString = parentDir.getAbsolutePath() + System.getProperty("file.separator") + Names.EKSTAZI_ROOT_DIR_NAME;
-        return new File(pathAsString).toURI().toString();
+        //String pathAsString = parentDir.getAbsolutePath() + System.getProperty("file.separator") + Names.EKSTAZI_ROOT_DIR_NAME;
+        //return new File(pathAsString).toURI().toString();
+        File rootDir = createCurDir(parentDir);
+        Log.d2f("In Config.java line 153: rootDir = " + rootDir.getAbsolutePath());
+        return rootDir.toURI().toString();
     }
 
     // AGENT
@@ -288,7 +300,7 @@ public final class Config {
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")
-    public static String CONFIG_FILE_NAME_V;
+    public static String CONFIG_FILE_NAME_V = "core";
     protected static final String CONFIG_FILE_NAME_N = "config.file.name";
 
     // INCLUDE/EXCLUDE
@@ -362,14 +374,31 @@ public final class Config {
 
 
     public static void preLoadConfig() {
+        Log.d2f("Preload Configuration1");
         String userHome = getUserHome();
+        Log.d2f("Preload Configuration2");
         File userHomeDir = new File(userHome, Names.EKSTAZI_CONFIG_FILE);
+        Log.d2f("Preload Configuration3, userHomeDir = " + userHomeDir.getAbsolutePath());
         Properties homeProperties = getProperties(userHomeDir);
+        Log.d2f("Preload Configuration4");
         File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
+        Log.d2f("Preload Configuration5, userDir = " + userDir.getAbsolutePath());
         Properties userProperties = getProperties(userDir);
-        loadProperties(homeProperties);
-        loadProperties(userProperties);
+        Log.d2f("Preload Configuration6");
+        preLoadProperties(homeProperties);
+        Log.d2f("Preload Configuration7");
+        preLoadProperties(userProperties);
+        Log.d2f("Preload Configuration8");
     }
+
+    protected static void preLoadProperties(Properties props) {
+        Log.d2f("preLoadProperties, props = " + props.toString());
+        CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
+        CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
+        CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
+        Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
+    }
+
 
     /**
      * Returns path to user home directory. This method is needed for
@@ -438,14 +467,19 @@ public final class Config {
     }
 
     protected static void loadProperties(Properties props) {
+        Log.d2f("loadProperties, props = " + props.toString());
         CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
+        Log.d2f("463");
         MODE_V = AgentMode.fromString(getString(props, MODE_N, MODE_V.toString()));
         SINGLE_NAME_V = getString(props, SINGLE_NAME_N, SINGLE_NAME_V);
         DEPENDENCIES_FORMAT_V = getString(props, DEPENDENCIES_FORMAT_N, DEPENDENCIES_FORMAT_V);
+        Log.d2f("467");
         HASH_ALGORITHM_V = Hasher.Algorithm.fromString(getString(props, HASH_ALGORITHM_N, HASH_ALGORITHM_V.toString()));
+        Log.d2f("469");
         DEPENDENCIES_INCLUDE_WELLKNOWN_V = getBoolean(props, DEPENDENCIES_INCLUDE_WELLKNOWN_N, DEPENDENCIES_INCLUDE_WELLKNOWN_V);
         X_ENABLED_V = getBoolean(props, X_ENABLED_N, X_ENABLED_V);
         X_LOG_RUNS_V = getBoolean(props, X_LOG_RUNS_N, X_LOG_RUNS_V);
+        Log.d2f("471");
         X_INSTRUMENT_CODE_V = getBoolean(props, X_INSTRUMENT_CODE_N, X_INSTRUMENT_CODE_V);
         X_DEPENDENCIES_SAVE_V = getBoolean(props, X_DEPENDENCIES_SAVE_N, X_DEPENDENCIES_SAVE_V);
         DEBUG_V = getBoolean(props, DEBUG_N, DEBUG_V);
@@ -456,6 +490,7 @@ public final class Config {
         SELECTION_EXCLUDES_V = getArray(props, SELECTION_EXCLUDES_N, SELECTION_EXCLUDES_V);
         SELECTION_INCLUDES_V = getArray(props, SELECTION_INCLUDES_N, SELECTION_INCLUDES_V);
         FORCE_ALL_V = getBoolean(props, FORCE_ALL_N, FORCE_ALL_V);
+        Log.d2f("482");
         FORCE_FAILING_V = getBoolean(props, FORCE_FAILING_N, FORCE_FAILING_V);
         HASH_WITHOUT_DEBUGINFO_V = getBoolean(props, HASH_WITHOUT_DEBUGINFO_N, HASH_WITHOUT_DEBUGINFO_V);
         CACHE_SEEN_CLASSES_V = getBoolean(props, CACHE_SEEN_CLASSES_N, CACHE_SEEN_CLASSES_V);
@@ -466,8 +501,10 @@ public final class Config {
         DEPENDENCIES_NIO_V = getBoolean(props, DEPENDENCIES_NIO_N, DEPENDENCIES_NIO_V);
         DEPENDENCIES_NIO_INCLUDES_V = getPattern(props, DEPENDENCIES_NIO_INCLUDES_N, DEPENDENCIES_NIO_INCLUDES_V);
         DEPENDENCIES_NIO_EXCLUDES_V = getPattern(props, DEPENDENCIES_NIO_EXCLUDES_N, DEPENDENCIES_NIO_EXCLUDES_V);
+        Log.d2f("493");
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
+        Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
     }
 
     /**

@@ -24,8 +24,10 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.maven.plugins.annotations.Parameter;
 import org.ekstazi.Config;
 import org.ekstazi.agent.AgentLoader;
+import org.ekstazi.log.Log;
 
 /**
  * Implements selection process and integrates with Surefire.  This
@@ -37,8 +39,17 @@ import org.ekstazi.agent.AgentLoader;
 @Mojo(name = "select", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES)
 public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
 
+//
+//    @Parameter(property = "ekstazi.configfilename", defaultValue = "core")
+//    private String configfilename;
+//
+//    public String getConfigFileName() {
+//        return configfilename;
+//    }
+
     public void execute() throws MojoExecutionException {
-        //Log.d2f("DynamicSelectEkstaziMojo.java line 45");
+        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 42");
+        //Config.preLoadConfig();
         if (getSkipme()) {
             getLog().info("Ekstazi is skipped.");
             return;
@@ -47,14 +58,17 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             getLog().info("Tests are skipped.");
             return;
         }
+        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 51");
 
         checkIfEkstaziDirCanBeCreated();
 
+        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 55");
         if (isRestoreGoalPresent()) {
             super.execute();
         } else {
             executeThis();
         }
+        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 60");
     }
 
     // INTERNAL
@@ -64,8 +78,10 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
      * problems can happen if there is no sufficient permission.
      */
     private void checkIfEkstaziDirCanBeCreated() throws MojoExecutionException {
+        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 71");
         File curEkstaziDir = Config.createCurDir(parentdir);
         File nextEkstaziDir = Config.createNextDir(parentdir);
+        MojoLog.d2f("in DynamicSelectEkstaziMojo line74: curEkstaziDir = " + curEkstaziDir.getAbsolutePath() + " nextEkstaziDir = " + nextEkstaziDir.getAbsolutePath());
         // If .ekstazi does not exist and cannot be created, let them
         // know.  (We also remove directory if successfully created.)
         if ((!curEkstaziDir.exists() && (!curEkstaziDir.mkdirs() || !curEkstaziDir.delete()))
@@ -84,7 +100,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             // Prepare initial list of options and set property.
             System.setProperty(AbstractMojoInterceptor.ARGLINE_INTERNAL_PROP, prepareEkstaziOptions());
             // Find non affected classes and set property.
-            //Log.d2f("line89: computeNonAffectedClasses");
+            MojoLog.d2f("line89: computeNonAffectedClasses");
             List<String> nonAffectedClasses = computeNonAffectedClasses();
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PROP, Arrays.toString(nonAffectedClasses.toArray(new String[0])));
         } else {
