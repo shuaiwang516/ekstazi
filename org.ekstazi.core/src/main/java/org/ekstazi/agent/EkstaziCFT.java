@@ -186,7 +186,7 @@ public final class EkstaziCFT implements ClassFileTransformer {
 
     @Research
     private void saveBank(ClassLoader loader, String className, byte[] classfileBuffer, long checksum) {
-        File file = new File(Config.CUR_DIR_V + File.separator + Names.INSTRUMENTED_CLASSES_DIR_NAME,
+        File file = new File(Config.NEXT_DIR_V + File.separator + Names.INSTRUMENTED_CLASSES_DIR_NAME,
                 Long.toString(checksum));
         try {
             file.getParentFile().mkdirs();

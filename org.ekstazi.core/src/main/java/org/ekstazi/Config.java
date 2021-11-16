@@ -108,8 +108,7 @@ public final class Config {
         return max;
     }
 
-    //TODO1: Check CUR_DIR_V to replace it with NEXT_DIR_V
-    //TODO2: Also Check SAVE() Function
+    //TODO: Also Check SAVE() Function
     @Opt(desc = "Name of the directory that keeps current coverage data.")
     public static String CUR_DIR_V = getCurDirName();
     protected static final String CUR_DIR_N = "root.dir";
