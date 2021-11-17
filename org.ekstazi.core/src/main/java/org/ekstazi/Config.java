@@ -57,9 +57,9 @@ public final class Config {
      * Used in dependency compare (get the current dependency)
      * @return the current dependency data folder name
      */
-    private static String getCurDirName() {
-        String rootDir = rootDirDefault();
+    public static String getCurDirName() {
         int round = getCurRound();
+        String rootDir = rootDirDefault();
         return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + round;
     }
 
@@ -67,10 +67,10 @@ public final class Config {
      * Used in dependency update (update dependency to the new folder)
      * @return the updated dependency data folder name
      */
-    private static String getNextDirName() {
+    public static String getNextDirName() {
+        int round = getCurRound() + 1;
         String rootDir = rootDirDefault();
         String configName = Config.CONFIG_FILE_NAME_V;
-        int round = getCurRound() + 1;
         int maxRound = getMaxRound();
         if (maxRound > round)
             return rootDir + "-" + configName + "-Round" + maxRound;
@@ -79,7 +79,7 @@ public final class Config {
 
     private static int getCurRound() {
         Log.d2f("In config.java, getCurRound line 81");
-        Config.preLoadConfig();
+        Config.preLoadConfigAware();
         String rootDir = rootDirDefault();
         String configName = CONFIG_FILE_NAME_V;
         Log.d2f("In config.java, getCurRound line 84, configName = " + configName);
@@ -143,8 +143,12 @@ public final class Config {
     }
 
     public static File createNextDir(File parentDir) {
+        int round = getCurRound() + 1;
+        int maxRound = getMaxRound();
+        if (maxRound > round)
+            round = maxRound;
         return new File(parentDir,
-                Names.EKSTAZI_ROOT_DIR_NAME + "-" + CONFIG_FILE_NAME_V + "-Round" + getMaxRound());
+                Names.EKSTAZI_ROOT_DIR_NAME + "-" + CONFIG_FILE_NAME_V + "-Round" + round);
     }
 
     /**
@@ -300,7 +304,7 @@ public final class Config {
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")
-    public static String CONFIG_FILE_NAME_V = "core";
+    public static String CONFIG_FILE_NAME_V;
     protected static final String CONFIG_FILE_NAME_N = "config.file.name";
 
     // INCLUDE/EXCLUDE
@@ -373,7 +377,7 @@ public final class Config {
     }
 
 
-    public static void preLoadConfig() {
+    public static void preLoadConfigAware() {
         Log.d2f("Preload Configuration1");
         String userHome = getUserHome();
         Log.d2f("Preload Configuration2");

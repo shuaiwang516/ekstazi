@@ -49,7 +49,6 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
         MojoLog.d2f("DynamicSelectEkstaziMojo.java line 42");
-        //Config.preLoadConfig();
         if (getSkipme()) {
             getLog().info("Ekstazi is skipped.");
             return;
@@ -84,8 +83,12 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
         MojoLog.d2f("in DynamicSelectEkstaziMojo line74: curEkstaziDir = " + curEkstaziDir.getAbsolutePath() + " nextEkstaziDir = " + nextEkstaziDir.getAbsolutePath());
         // If .ekstazi does not exist and cannot be created, let them
         // know.  (We also remove directory if successfully created.)
+        // !curEkstaziDir.exists()false !curEkstaziDir.mkdirs()true !curEkstaziDir.delete()true curEkstaziDir.exists()true !nextEkstaziDir.mkdir() true !nextEkstaziDir.delete()true
         if ((!curEkstaziDir.exists() && (!curEkstaziDir.mkdirs() || !curEkstaziDir.delete()))
             || (curEkstaziDir.exists()) && (!nextEkstaziDir.mkdir() || !nextEkstaziDir.delete())) {
+            MojoLog.d2f("!curEkstaziDir.exists()" + !curEkstaziDir.exists() + " !curEkstaziDir.mkdirs()" + !curEkstaziDir.mkdirs() + " !curEkstaziDir.delete()"  +
+                    !curEkstaziDir.delete() + " curEkstaziDir.exists()" + curEkstaziDir.exists() + " !nextEkstaziDir.mkdir() " + !nextEkstaziDir.mkdir() +
+                    " !nextEkstaziDir.delete()" + !nextEkstaziDir.delete());
             throw new MojoExecutionException("Cannot create Ekstazi directory in " + parentdir);
         }
     }

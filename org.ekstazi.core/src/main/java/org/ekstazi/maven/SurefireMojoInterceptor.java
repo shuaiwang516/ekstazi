@@ -17,12 +17,16 @@
 package org.ekstazi.maven;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
+import org.ekstazi.log.Log;
 
 /**
  * Monitor invoked before Surefire. The purpose of monitoring is to
@@ -187,8 +191,13 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                 //Log.d2f("The class = " + className + " has been removed due to fail");
             }
         }
-        //Log.d2f(newExcludes);
+        Log.d2f(newExcludes);
         setField(EXCLUDES_FIELD, mojo, newExcludes);
+
+        List<String> copyList = new ArrayList<>();
+        copyList.addAll(newExcludes);
+        copyList.remove("**/*$*");
+        copyFromPrev(copyList);
     }
 
     private static boolean wasFailing(String className) {
@@ -254,6 +263,31 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             return false;
         } catch (IOException e) {
             return false;
+        }
+    }
+
+    public static void copyFromPrev(List<String> copyClassList) throws IOException {
+        File prevDependencyDir = new File(Config.getCurDirName());
+        Log.d2f("In copyFromPrev: prevDependencyDir = " + prevDependencyDir.getAbsolutePath());
+        if (!prevDependencyDir.exists()) {
+            return;
+        } else {
+            Log.d2f("In copyFromPrev: line275 ready to copy file");
+            File nextDependencyDir = new File(Config.getNextDirName());
+            if (nextDependencyDir.mkdir()) {
+                Log.d2f("In copyFromPrev: line286: ready to copy file");
+                for (String className : copyClassList) {
+                    Log.d2f("In copyFromPrev: Move className: " + className);
+                    String fileName = className.trim().replace(".java", ".clz");
+                    Log.d2f("In copyFromPrev: Move File: " + fileName);
+                    Path source = Paths.get(prevDependencyDir.getAbsolutePath(), fileName);
+                    Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
+                    Files.move(source, target);
+                }
+                prevDependencyDir.delete();
+            } else {
+                throw new IOException("Can create new round dependency folder!");
+            }
         }
     }
 }
