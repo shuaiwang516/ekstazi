@@ -22,11 +22,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
 import org.ekstazi.log.Log;
+import org.ekstazi.util.FileUtil;
 
 /**
  * Monitor invoked before Surefire. The purpose of monitoring is to
@@ -267,15 +269,31 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     public static void copyFromPrev(List<String> copyClassList) throws IOException {
+        Config.prepareRound();
         File prevDependencyDir = new File(Config.getCurDirName());
         Log.d2f("In copyFromPrev: prevDependencyDir = " + prevDependencyDir.getAbsolutePath());
-        if (!prevDependencyDir.exists()) {
+        //No non-affected class.
+        boolean noAffectedClass = true;
+        for(String className : copyClassList) {
+            if (className.contains(".java")) {
+                noAffectedClass = false;
+            }
+        }
+        if(noAffectedClass) {
+            Log.d2f("In copyFromPrev: line 283 noAffectedClass");
+            FileUtil.deleteDirectory(prevDependencyDir);
+//            File nextDependencyDir = new File(Config.getNextDirName());
+//            nextDependencyDir.mkdir();
+            return;
+        } else if (!prevDependencyDir.exists()) {
+            Log.d2f("In copyFromPrev: previous Dependency file not exist");
             return;
         } else {
             Log.d2f("In copyFromPrev: line275 ready to copy file");
             File nextDependencyDir = new File(Config.getNextDirName());
             if (nextDependencyDir.mkdir()) {
                 Log.d2f("In copyFromPrev: line286: ready to copy file");
+                Log.d2f("In copyFromPrev: line289: copyClassList.length = " + copyClassList.size());
                 for (String className : copyClassList) {
                     Log.d2f("In copyFromPrev: Move className: " + className);
                     String fileName = className.trim().replace(".java", ".clz");
@@ -284,7 +302,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                     Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
                     Files.move(source, target);
                 }
-                prevDependencyDir.delete();
+                FileUtil.deleteDirectory(prevDependencyDir);
             } else {
                 throw new IOException("Can create new round dependency folder!");
             }

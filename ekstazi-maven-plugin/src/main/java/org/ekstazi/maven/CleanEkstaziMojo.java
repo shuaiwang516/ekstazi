@@ -35,9 +35,15 @@ public class CleanEkstaziMojo extends AbstractEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
         //Log.d2f("CleanEkstaziMojo.java line 37");
-        File dotEkstazi = new File(parentdir, Names.EKSTAZI_ROOT_DIR_NAME);
-        if (dotEkstazi.exists()) {
-            FileUtil.deleteDirectory(dotEkstazi);
+        File fileList[] = parentdir.listFiles();
+        for (File f : fileList) {
+            if (f.isDirectory() && f.getName().contains(Names.EKSTAZI_ROOT_DIR_NAME)) {
+                FileUtil.deleteDirectory(f);
+            }
         }
+//        File dotEkstazi = new File(parentdir, Names.EKSTAZI_ROOT_DIR_NAME);
+//        if (dotEkstazi.exists()) {
+//            FileUtil.deleteDirectory(dotEkstazi);
+//        }
     }
 }

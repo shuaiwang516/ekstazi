@@ -81,8 +81,10 @@ public final class DependencyAnalyzer {
         this.mExcludes = excludes;
         this.mIncludes = includes;
 
-        this.mCurDir = Config.CUR_DIR_V;
-        this.mNextDir = Config.NEXT_DIR_V;
+        Config.prepareRound();
+        this.mCurDir = Config.getCurDirName();
+        this.mNextDir = Config.getNextDirName();
+        Log.d2f("mCurDir = " + this.mCurDir + " mNextDir = " + this.mNextDir);
         //this.mRootDir = Config.ROOT_DIR_V;
         this.mDependenciesAppend = Config.DEPENDENCIES_APPEND_V;
 
@@ -292,7 +294,11 @@ public final class DependencyAnalyzer {
         }
         //Config-aware mapping information
         Map<String, String> configMap = ConfigListener.getConfigMap();
-        mStorer.save(mNextDir, className, methodName, regData, configMap);
+        if (new File(mCurDir).exists()) {
+            mStorer.save(mCurDir, className, methodName, regData, configMap);
+        } else {
+            mStorer.save(mNextDir, className, methodName, regData, configMap);
+        }
         //Log.d2f("endCoverage and save to file: " + mRootDir + " class name = "
         //        + className + " method name = " + methodName + " regData = " + regData);
         // Clean monitor after the test finished the execution

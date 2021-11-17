@@ -51,16 +51,31 @@ public final class Config {
     /** Ensures that we initialize this class only once */
     private static boolean sIsInitialized;
 
+//    public void Config() {
+//        prepareRound();
+//        Log.d2f("Config initialization: curRound = " + curRound + " nextRound = " + nextRound);
+//    }
+
     // GENERAL
+
+    public static int curRound;
+    public static int nextRound;
+
+    public static void prepareRound() {
+        curRound = getCurRound();
+        nextRound = getNextRound();
+        Log.d2f("In prepareRound: curRound = " + curRound + " nextRound = " + nextRound);
+    }
 
     /**
      * Used in dependency compare (get the current dependency)
      * @return the current dependency data folder name
      */
     public static String getCurDirName() {
-        int round = getCurRound();
+        //int round = getCurRound();
         String rootDir = rootDirDefault();
-        return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + round;
+        //return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + round;
+        return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + curRound;
     }
 
     /**
@@ -68,13 +83,22 @@ public final class Config {
      * @return the updated dependency data folder name
      */
     public static String getNextDirName() {
-        int round = getCurRound() + 1;
+        //int round = getCurRound() + 1;
         String rootDir = rootDirDefault();
         String configName = Config.CONFIG_FILE_NAME_V;
         int maxRound = getMaxRound();
+//        if (maxRound > round)
+//            return rootDir + "-" + configName + "-Round" + maxRound;
+//        return rootDir + "-" + configName + "-Round" + round;
+        return rootDir + "-" + configName + "-Round" + nextRound;
+    }
+
+    private static int getNextRound() {
+        int round = getCurRound() + 1;
+        int maxRound = getMaxRound();
         if (maxRound > round)
-            return rootDir + "-" + configName + "-Round" + maxRound;
-        return rootDir + "-" + configName + "-Round" + round;
+            round = maxRound;
+        return round;
     }
 
     private static int getCurRound() {
@@ -99,21 +123,24 @@ public final class Config {
     }
 
     private static int getMaxRound() {
-        Log.d2f("In config.java, getCurRound line 98");
+        Log.d2f("In config.java, getMaxRound line 126");
         String rootDir = rootDirDefault();
+        Log.d2f("In config.java, getMaxRound line 128 rootDir = " + rootDir);
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
-        int max = 0;
+        int max = curRound;
         for(File f : files) {
-            if (f.isDirectory() && f.getName().contains("Round")) {
+            Config.preLoadConfigAware();
+            if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
                 String filename = f.getName();
-                int curRound = Integer.parseInt(filename.substring(filename.length() - 1));
-                if (curRound > max) {
-                    max = curRound;
+                int round = Integer.parseInt(filename.substring(filename.length() - 1));
+                Log.d2f("In config.java, getMaxRound line 137: curRound = " + round);
+                if (round > max) {
+                    max = round;
                 }
             }
         }
-        Log.d2f("In config.java, getCurRound line 112");
+        Log.d2f("In config.java, getMaxRound line 141, maxRound = " + max);
         return max;
     }
 
@@ -163,6 +190,7 @@ public final class Config {
         //String pathAsString = parentDir.getAbsolutePath() + System.getProperty("file.separator") + Names.EKSTAZI_ROOT_DIR_NAME;
         //return new File(pathAsString).toURI().toString();
         File rootDir = createCurDir(parentDir);
+        // rootDir is the full name of the dependency folder, such as "XXX/.ekstazi-default-Round2"
         Log.d2f("In Config.java line 153: rootDir = " + rootDir.getAbsolutePath());
         return rootDir.toURI().toString();
     }
@@ -378,29 +406,15 @@ public final class Config {
 
 
     public static void preLoadConfigAware() {
-        Log.d2f("Preload Configuration1");
-        String userHome = getUserHome();
-        Log.d2f("Preload Configuration2");
-        File userHomeDir = new File(userHome, Names.EKSTAZI_CONFIG_FILE);
-        Log.d2f("Preload Configuration3, userHomeDir = " + userHomeDir.getAbsolutePath());
-        Properties homeProperties = getProperties(userHomeDir);
-        Log.d2f("Preload Configuration4");
         File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
-        Log.d2f("Preload Configuration5, userDir = " + userDir.getAbsolutePath());
         Properties userProperties = getProperties(userDir);
-        Log.d2f("Preload Configuration6");
-        preLoadProperties(homeProperties);
-        Log.d2f("Preload Configuration7");
         preLoadProperties(userProperties);
-        Log.d2f("Preload Configuration8");
     }
 
     protected static void preLoadProperties(Properties props) {
-        Log.d2f("preLoadProperties, props = " + props.toString());
         CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
-        Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
     }
 
 
