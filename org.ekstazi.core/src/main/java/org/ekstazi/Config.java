@@ -63,6 +63,15 @@ public final class Config {
     }
 
     /**
+     *
+     * @return the parent Dir of all .ekstazi-{}-Round{} folder.
+     */
+    public static String getCurRoot() {
+        String rootDir = System.getProperty("user.dir");
+        return rootDir;
+    }
+
+    /**
      * Used in dependency compare (get the current dependency)
      * @return the current dependency data folder name
      */

@@ -199,7 +199,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         List<String> copyDependencyFromPrevList = new ArrayList<>();
         List<String> copyDependencyFromCurRoundList = new ArrayList<>();
         copyDependencyFromPrevList.addAll(ekstaziExcludesFromPrev);
-        copyDependencyFromCurRoundList.addAll(ekstaziExcludesFromCurRound);
+        copyDependencyFromCurRoundList.addAll(ekstaziExcludesFromCurRound);  // classNameWithRound
         copyFromPrev(copyDependencyFromPrevList, copyDependencyFromCurRoundList);
     }
 
@@ -269,44 +269,87 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         }
     }
 
-    public static void copyFromPrev(List<String> copyDependencyFromPrevList, List<String> copyDependencyFromCurRoundList) throws IOException {
+    /**
+     *
+     * @param prevDepList  Dependency data from previous self round
+     * @param curRoundDepList Dependency data in the current round from the others (Class is named with XXXTest.java#.ekstazi-{CONFIG}-Round{i})
+     * @throws IOException
+     */
+    public static void copyFromPrev(List<String> prevDepList, List<String> curRoundDepList) throws IOException {
         Config.prepareRound();
         File prevDependencyDir = new File(Config.getCurDirName());
+        File rootDir = new File(Config.getCurRoot());
         Log.d2f("In copyFromPrev: prevDependencyDir = " + prevDependencyDir.getAbsolutePath());
+        Log.d2f("In copyFromPrev: rootDir = " + rootDir.getAbsolutePath());
         //No non-affected class.
         boolean noNonAffectedClass = true;
-        for(String className : copyDependencyFromPrevList) {
+        boolean prev = false;
+        boolean cur = false;
+        for(String className : prevDepList) {
             if (className.contains(".java")) {
                 noNonAffectedClass = false;
+                prev = true;
+                break;
             }
         }
+        for (String className : curRoundDepList) {
+            if (className.contains(".java")) {
+                noNonAffectedClass = false;
+                cur = true;
+                break;
+            }
+        }
+
         if(noNonAffectedClass) {
-            Log.d2f("In copyFromPrev: line 283 noAffectedClass");
+            Log.d2f("In copyFromPrev: line 302 noAffectedClass");
             File nextDependencyDir = new File(Config.getNextDirName());
             nextDependencyDir.mkdir();
             FileUtil.deleteDirectory(prevDependencyDir);
             return;
-        } else if (!prevDependencyDir.exists()) {
-            Log.d2f("In copyFromPrev: previous Dependency file not exist");
-            return;
-        } else {
-            Log.d2f("In copyFromPrev: line275 ready to copy file");
-            File nextDependencyDir = new File(Config.getNextDirName());
-            if (nextDependencyDir.mkdir()) {
-                Log.d2f("In copyFromPrev: line286: ready to copy file");
-                Log.d2f("In copyFromPrev: line289: copyClassList.length = " + copyDependencyFromPrevList.size());
-                for (String className : copyDependencyFromPrevList) {
-                    Log.d2f("In copyFromPrev: Move className: " + className);
+        }
+
+        File nextDependencyDir = new File(Config.getNextDirName());
+        if (nextDependencyDir.mkdir()) {
+            if (prev && prevDependencyDir.exists()) {
+                Log.d2f("In copyFromPrev: line312: ready to copy file from Previous Round");
+                Log.d2f("In copyFromPrev: line313: prevDepList.size() = " + prevDepList.size());
+                for (String className : prevDepList) {
+                    if (!className.contains(".java")) {
+                        continue;
+                    }
+                    Log.d2f("In copyFromPrev: line 315 From Prev Move className: " + className);
                     String fileName = className.trim().replace(".java", ".clz");
-                    Log.d2f("In copyFromPrev: Move File: " + fileName);
+                    Log.d2f("In copyFromPrev: line 317 From Prev Move File: " + fileName);
                     Path source = Paths.get(prevDependencyDir.getAbsolutePath(), fileName);
                     Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
                     Files.move(source, target);
                 }
                 FileUtil.deleteDirectory(prevDependencyDir);
-            } else {
-                throw new IOException("Can create new round dependency folder!");
             }
+            if (cur) {
+                for (String classNameWithRound : curRoundDepList) {
+                    if (!classNameWithRound.contains(AffectedChecker.ROUND_SEPARATOR)) {
+                        Log.d2f("classNameWithRound not found # separator = " + classNameWithRound);
+                        continue;
+                    }
+                    if (!classNameWithRound.contains(".java")) {
+                        continue;
+                    }
+                    String strList[] = classNameWithRound.trim().split(AffectedChecker.ROUND_SEPARATOR);
+                    String fileName = strList[0].replace(".java", ".clz");
+                    String depDirName = strList[1];
+                    Log.d2f("In copyFromPrev: line 335 From CurRound, ready to Copy File");
+                    File sourceDepDir = new File(rootDir, depDirName);
+                    if (sourceDepDir.exists() && sourceDepDir.isDirectory()) {
+                        Log.d2f("In copyFromPrev: line 338 From CurRound, className = " + fileName + " depDirName = " + depDirName);
+                        Path source = Paths.get(sourceDepDir.getAbsolutePath(), fileName);
+                        Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
+                        Files.copy(source, target);
+                    }
+                }
+            }
+        } else {
+            throw new IOException("Can create new round dependency folder!");
         }
     }
 }
