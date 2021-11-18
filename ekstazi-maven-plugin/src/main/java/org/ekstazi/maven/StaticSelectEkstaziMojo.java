@@ -138,6 +138,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         //List<String> nonAffectedClasses = new ArrayList<String>();
         List<String> nonAffectedClassesFromPrev = new ArrayList();
         List<String> nonAffectedClassesFromCurRound = new ArrayList();
+        List<String> nonAffectedClassesFromCurRoundResult = new ArrayList();
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
@@ -146,13 +147,21 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             Config.prepareRound();
             nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
-
-            for (String classNameWithRound : nonAffectedClassesFromCurRound) {
-                String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
-                if (nonAffectedClassesFromPrev.contains(className)) {
-                    nonAffectedClassesFromCurRound.remove(classNameWithRound);
-                }
+            MojoLog.d2f("line 149: computeNonAffectedClassesForDynamicSelect");
+            //For debug
+            for(String s : nonAffectedClassesFromCurRound) {
+                MojoLog.d2f("line 152: class in nonAffectedClassesFromCurRound: " + s);
             }
+            for (String classNameWithRound : nonAffectedClassesFromCurRound) {
+                MojoLog.d2f("line 151: computeNonAffectedClassesForDynamicSelect, classNameWithRound = " + classNameWithRound);
+                String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
+                MojoLog.d2f("line 153: computeNonAffectedClassesForDynamicSelect, className = " + className);
+                if (!nonAffectedClassesFromPrev.contains(className)) {
+                    nonAffectedClassesFromCurRoundResult.add(classNameWithRound);
+                }
+                MojoLog.d2f("line 156: computeNonAffectedClassesForDynamicSelect");
+            }
+            MojoLog.d2f("line 158: computeNonAffectedClassesForDynamicSelect");
 
             // Do not exclude recently failing tests if appropriate
             // argument is provided.
@@ -161,6 +170,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
                 nonAffectedClassesFromPrev.removeAll(recentlyFailingClasses);
             }
 
+            MojoLog.d2f("line 165: computeNonAffectedClassesForDynamicSelect");
 //            nonAffectedClasses.addAll(nonAffectedClassesFromPrev);
 //            nonAffectedClasses.addAll(nonAffectedClassesFromCurRound);
 //            Collections.sort(nonAffectedClasses);
@@ -168,7 +178,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         }
         List<List<String>> result = new ArrayList<List<String>>();
         result.add(nonAffectedClassesFromPrev);
-        result.add(nonAffectedClassesFromCurRound);
+        result.add(nonAffectedClassesFromCurRoundResult);
         return result;
     }
 

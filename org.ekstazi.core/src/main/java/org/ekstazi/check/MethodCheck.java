@@ -79,7 +79,7 @@ final class MethodCheck extends AbstractCheck {
             // do precise work.
             Log.w("Currently we do not support files that do not contain class names: " + fileName);
         } else {
-            className = fileName.substring(0, index);
+            className = fileName.substring(0, index).trim();
             String methodName = fileName.substring(index + 1);
             boolean isAffected = isAffected(fileDir, className, methodName);
             mTests.add(new TestAbs(isAffected, mStorer.loadRegData(fileDir, className, methodName), mStorer.loadConfigData(fileDir, className, methodName), fileName, fileDir, className));
@@ -118,7 +118,7 @@ final class MethodCheck extends AbstractCheck {
         }
         
         for (TestAbs test : affectedTests) {
-            if (test.isAffected()) affectedClasses.add(test.getClassName());
+            if (test.isAffected()) affectedClasses.add(test.getClassName().trim());
         }
     }
 
@@ -152,7 +152,7 @@ final class MethodCheck extends AbstractCheck {
         }
 
         for (TestAbs test : affectedTests) {
-            if (test.isAffected()) affectedClasses.add(test.getClassName() + AffectedChecker.ROUND_SEPARATOR + curRoundDirName);
+            if (test.isAffected()) affectedClasses.add(test.getClassName().trim() + AffectedChecker.ROUND_SEPARATOR + curRoundDirName);
         }
     }
 

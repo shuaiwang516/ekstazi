@@ -131,11 +131,14 @@ public class AffectedChecker {
             if (checkIfDoesNotExist(depsDir)) {
                 continue;
             }
-
+            Log.d2f("In findNonAffectedClassesFromCurRound, line134");
             // Find affected test classes.
             includeAffectedFromCurRound(allClasses, affectedClasses, getSortedFiles(depsDir), depsDir.getName());
+            Log.d2f("In findNonAffectedClassesFromCurRound, line137");
             nonAffectedClasses.addAll(allClasses);
+            Log.d2f("In findNonAffectedClassesFromCurRound, line139");
             nonAffectedClasses.removeAll(affectedClasses);
+            Log.d2f("In findNonAffectedClassesFromCurRound, line141");
         }
 
         //Remove duplicated redundant class that has same class name but from different dependency folder.
@@ -147,6 +150,7 @@ public class AffectedChecker {
             }
         }
         Collections.sort(nonDuplicatedNonAffectedClasses);
+        Log.d2f("In findNonAffectedClassesFromCurRound, line153");
         return nonDuplicatedNonAffectedClasses;
     }
 
@@ -155,6 +159,7 @@ public class AffectedChecker {
         Storer storer = Config.createStorer();
         Hasher hasher = Config.createHasher();
 
+        Log.d2f("In includeAffectedFromCurRound, line161");
         NameBasedCheck classCheck = Config.DEBUG_MODE_V != Config.DebugMode.NONE ?
                 new DebugNameCheck(storer, hasher, DependencyAnalyzer.CLASS_EXT) :
                 new NameBasedCheck(storer, hasher, DependencyAnalyzer.CLASS_EXT);
@@ -168,6 +173,7 @@ public class AffectedChecker {
             if (file.isDirectory()) {
                 continue;
             }
+            Log.d2f("In includeAffectedFromCurRound, line175");
             if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
                 className = covCheck.includeAll(fileName, dirName);
             } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
@@ -175,19 +181,24 @@ public class AffectedChecker {
             } else {
                 className = methodCheck.includeAll(fileName, dirName);
             }
+            Log.d2f("In includeAffectedFromCurRound, line183");
             // Reset after some time to free space.
             if (prevClassName != null && className != null && !prevClassName.equals(className)) {
                 methodCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
                 methodCheck = new MethodCheck(Config.createStorer(), Config.createHasher());
             }
+            Log.d2f("In includeAffectedFromCurRound, line189");
             if (className != null) {
-                allClasses.add(className + ROUND_SEPARATOR + depsDirName);
-                prevClassName = className;
+                allClasses.add(className.trim() + ROUND_SEPARATOR + depsDirName);
+                prevClassName = className.trim();
             }
+            Log.d2f("In includeAffectedFromCurRound, line194");
         }
+        Log.d2f("In includeAffectedFromCurRound, line196");
         classCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
         covCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
         methodCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
+        Log.d2f("In includeAffectedFromCurRound, line200");
     }
 
 
@@ -284,12 +295,14 @@ public class AffectedChecker {
     }
 
     private static List<String> formatNonAffectedClassesForAntAndMavenWithRound(List<String> nonAffectedClasses) {
+        Log.d2f("In formatNonAffectedClassesForAntAndMavenWithRound, line298");
         List<String> formatted = new ArrayList<String>();
         for (String ClassNameWithRound : nonAffectedClasses) {
             String binClassName = ClassNameWithRound.split(ROUND_SEPARATOR)[0];
             String round = ClassNameWithRound.split(ROUND_SEPARATOR)[1];
             formatted.add(binClassName.replaceAll("\\.", "/") + ".java" + ROUND_SEPARATOR + round);
         }
+        Log.d2f("In formatNonAffectedClassesForAntAndMavenWithRound, line305");
         return formatted;
     }
 
@@ -416,8 +429,8 @@ public class AffectedChecker {
                 methodCheck = new MethodCheck(Config.createStorer(), Config.createHasher());
             }
             if (className != null) {
-                allClasses.add(className);
-                prevClassName = className;
+                allClasses.add(className.trim());
+                prevClassName = className.trim();
             }
         }
         classCheck.includeAffected(affectedClasses);

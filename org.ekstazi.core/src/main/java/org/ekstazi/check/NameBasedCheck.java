@@ -41,7 +41,7 @@ class NameBasedCheck extends AbstractCheck {
 
     @Override
     public String includeAll(String fileName, String fileDir) {
-        String className = removeExtension(fileName, mExtension);
+        String className = removeExtension(fileName, mExtension).trim();
         if (isAffected(fileDir, className, mExtension)) {
             mAffected.add(className);
         }
@@ -56,7 +56,7 @@ class NameBasedCheck extends AbstractCheck {
     @Override
     public void includeAffectedFromCurRound(Set<String> affectedClasses, String curRoundDirName) {
         for(String affected : mAffected) {
-            affectedClasses.add(affected + AffectedChecker.ROUND_SEPARATOR + curRoundDirName);
+            affectedClasses.add(affected.trim() + AffectedChecker.ROUND_SEPARATOR + curRoundDirName);
         }
     }
 

@@ -20,6 +20,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -344,7 +345,9 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                         Log.d2f("In copyFromPrev: line 338 From CurRound, className = " + fileName + " depDirName = " + depDirName);
                         Path source = Paths.get(sourceDepDir.getAbsolutePath(), fileName);
                         Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
-                        Files.copy(source, target);
+                        Log.d2f("In copyFromPrev: line 347 sourcePath = " + source.toAbsolutePath() + " targetPath = " + target.toAbsolutePath());
+                        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                        Log.d2f("In copyFromPrev: line 349 Finished!!! From CurRound, className = " + fileName + " depDirName = " + depDirName);
                     }
                 }
             }
