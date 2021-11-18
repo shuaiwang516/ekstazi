@@ -103,13 +103,16 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
+                    Log.d2f("In includeAffected line106: checkForConfigDiff");
                     boolean isConfigDiff = checkForConfigDiff(aTest);
+                    Log.d2f("In includeAffected line108: After checkForConfigDiff");
                     if (!isConfigDiff) {
                         new File(aTest.getFileDir(), aTest.getFileName()).delete();
                         // We remove flag that the test is affected not to include class later.
                         aTest.setAffected(false);
                         continue out;
                     }
+                    Log.d2f("In includeAffected line115: After checkForConfigDiff");
                 }
             }
         }
@@ -134,13 +137,16 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
+                    Log.d2f("In includeAffectedFromCurRound line137: checkForConfigDiff");
                     boolean isConfigDiff = checkForConfigDiff(aTest);
+                    Log.d2f("In includeAffectedFromCurRound line139: After checkForConfigDiff");
                     if (!isConfigDiff) {
                         new File(aTest.getFileDir(), aTest.getFileName()).delete();
                         // We remove flag that the test is affected not to include class later.
                         aTest.setAffected(false);
                         continue out;
                     }
+                    Log.d2f("In includeAffectedFromCurRound line146: checkForConfigDiff");
                 }
             }
         }

@@ -207,7 +207,7 @@ public final class Config {
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
         for(File f : files) {
-            if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
+            if (f.isDirectory() && f.getName().contains("Round" + nextRound) && !f.getName().contains(CONFIG_FILE_NAME_V)) {
                 dirs.add(f);
             }
         }
