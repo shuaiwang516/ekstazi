@@ -273,17 +273,17 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         File prevDependencyDir = new File(Config.getCurDirName());
         Log.d2f("In copyFromPrev: prevDependencyDir = " + prevDependencyDir.getAbsolutePath());
         //No non-affected class.
-        boolean noAffectedClass = true;
+        boolean noNonAffectedClass = true;
         for(String className : copyClassList) {
             if (className.contains(".java")) {
-                noAffectedClass = false;
+                noNonAffectedClass = false;
             }
         }
-        if(noAffectedClass) {
+        if(noNonAffectedClass) {
             Log.d2f("In copyFromPrev: line 283 noAffectedClass");
+            File nextDependencyDir = new File(Config.getNextDirName());
+            nextDependencyDir.mkdir();
             FileUtil.deleteDirectory(prevDependencyDir);
-//            File nextDependencyDir = new File(Config.getNextDirName());
-//            nextDependencyDir.mkdir();
             return;
         } else if (!prevDependencyDir.exists()) {
             Log.d2f("In copyFromPrev: previous Dependency file not exist");
