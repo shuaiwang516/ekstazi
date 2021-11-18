@@ -28,10 +28,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileOutputStream;
 
-import java.util.Properties;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
+import java.util.*;
 
 import java.net.URL;
 import java.net.URISyntaxException;
@@ -127,7 +124,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             addJavaAgent(isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
         }
 
-        List<String> nonAffectedClasses = computeNonAffectedClasses();
+        List<String> nonAffectedClasses = computeNonAffectedClassesForStaticSelect();
         // Append excludes list to "excludesFile".
         checkParametersInFileMode(surefirePlugin);
         appendExcludesListToExcludesFile(surefirePlugin, nonAffectedClasses);
@@ -135,25 +132,85 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
     // INTERNAL
 
-    protected List<String> computeNonAffectedClasses() {
-        List<String> nonAffectedClasses = new ArrayList();
+    //TODO: 1. For dynamic - pass the name with round and modify the code in maven/SurefireMojoInterceptor;
+    //TODO: 2. For static - create a new compute method;
+    protected List<List<String>> computeNonAffectedClassesForDynamicSelect() {
+        //List<String> nonAffectedClasses = new ArrayList<String>();
+        List<String> nonAffectedClassesFromPrev = new ArrayList();
+        List<String> nonAffectedClassesFromCurRound = new ArrayList();
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
             // Parent dir is ".ekstazi-{}-{}"'s parent dir.
             MojoLog.d2f("line144: findNonAffectedClasses, parentDir = " + parentdir + " getRootDirOption() = " + getRootDirOption() );
             Config.prepareRound();
-            nonAffectedClasses = AffectedChecker.findNonAffectedClasses(parentdir, getRootDirOption());
+            nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
+            nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
+
+            for (String classNameWithRound : nonAffectedClassesFromCurRound) {
+                String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
+                if (nonAffectedClassesFromPrev.contains(className)) {
+                    nonAffectedClassesFromCurRound.remove(classNameWithRound);
+                }
+            }
 
             // Do not exclude recently failing tests if appropriate
             // argument is provided.
             if (getForcefailing()) {
                 List<String> recentlyFailingClasses = AffectedChecker.findRecentlyFailingClasses(parentdir, getRootDirOption());
-                nonAffectedClasses.removeAll(recentlyFailingClasses);
+                nonAffectedClassesFromPrev.removeAll(recentlyFailingClasses);
             }
+
+//            nonAffectedClasses.addAll(nonAffectedClassesFromPrev);
+//            nonAffectedClasses.addAll(nonAffectedClassesFromCurRound);
+//            Collections.sort(nonAffectedClasses);
             MojoLog.d2f("Finish compute Non affected classes");
         }
-        return nonAffectedClasses;
+        List<List<String>> result = new ArrayList<List<String>>();
+        result.add(nonAffectedClassesFromPrev);
+        result.add(nonAffectedClassesFromCurRound);
+        return result;
+    }
+
+    protected List<String> computeNonAffectedClassesForStaticSelect() {
+        List<String> nonAffectedClasses = new ArrayList<String>();
+        List<String> nonAffectedClassesFromPrev = new ArrayList();
+        List<String> nonAffectedClassesFromCurRound = new ArrayList();
+        if (!getForceall()) {
+            // Create excludes list; we assume that all files are in
+            // the parentdir.
+            // Parent dir is ".ekstazi-{}-{}"'s parent dir.
+            MojoLog.d2f("line144: findNonAffectedClasses, parentDir = " + parentdir + " getRootDirOption() = " + getRootDirOption() );
+            Config.prepareRound();
+            nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
+            nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
+
+            for (String classNameWithRound : nonAffectedClassesFromCurRound) {
+                String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
+                if (nonAffectedClassesFromPrev.contains(className)) {
+                    nonAffectedClassesFromCurRound.remove(classNameWithRound);
+                }
+            }
+
+            // Do not exclude recently failing tests if appropriate
+            // argument is provided.
+            if (getForcefailing()) {
+                List<String> recentlyFailingClasses = AffectedChecker.findRecentlyFailingClasses(parentdir, getRootDirOption());
+                nonAffectedClassesFromPrev.removeAll(recentlyFailingClasses);
+            }
+
+            nonAffectedClasses.addAll(nonAffectedClassesFromPrev);
+            for (String classNameWithRound : nonAffectedClassesFromCurRound) {
+                String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
+                if(!nonAffectedClasses.contains(className)) {
+                    nonAffectedClasses.add(className);
+                }
+            }
+            Collections.sort(nonAffectedClasses);
+
+            MojoLog.d2f("Finish compute Non affected classes");
+        }
+        return nonAffectedClassesFromPrev;
     }
 
 

@@ -62,6 +62,8 @@ public class AffectedChecker {
     /** Forces cache use */
     private static final String FORCE_CACHE_USE = "--force-cache-use";
 
+    public static final String ROUND_SEPARATOR = "@";
+
     /**
      * The user has to specify directory that keep coverage and optionally
      * mode that should be used to print non affected classes.
@@ -92,11 +94,102 @@ public class AffectedChecker {
             Config.loadConfig();
         }
 
-        List<String> nonAffectedClasses = findNonAffectedClasses(coverageDirName, forceCacheUse, allClasses, affectedClasses);
+        List<String> nonAffectedClasses = findNonAffectedClassesFromPrev(coverageDirName, forceCacheUse, allClasses, affectedClasses);
 
         // Print non affected classes.
         printNonAffectedClasses(allClasses, affectedClasses, nonAffectedClasses, mode);
     }
+
+    public static List<String> findNonAffectedClassesFromCurRound(File parentDir, String options) {
+        // Return if there is no other dependency data in the same round.
+        List<File> sameRoundDirs = Config.getSameRoundDirName();
+        if (sameRoundDirs.size() == 0) {
+            return Collections.<String>emptyList();
+        }
+        Config.loadConfig(options, true);
+        return findNonAffectedClassesFromCurRound(parentDir.getAbsolutePath(), sameRoundDirs);
+    }
+
+    private static List<String> findNonAffectedClassesFromCurRound(String workingDirectory, List<File> sameRoundDirs) {
+        loadConfig(workingDirectory);
+
+        Log.d2f("In AffectedChecker line 130: Config.CUR_DIR_V = " + Config.CUR_DIR_V);
+        List<String> nonAffectedClasses = findNonAffectedClassesFromCurRound(true, sameRoundDirs);
+        return formatNonAffectedClassesForAntAndMavenWithRound(nonAffectedClasses);
+    }
+
+    private static List<String> findNonAffectedClassesFromCurRound(boolean forceCacheUse, List<File> sameRoundDirs) {
+        if (!forceCacheUse) {
+            Config.CACHE_SIZES_V = 0;
+        }
+
+        Set<String> allClasses = new HashSet<String>();
+        Set<String> affectedClasses = new HashSet<String>();
+        List<String> nonAffectedClasses = new ArrayList<>();
+        for (File depsDir : sameRoundDirs) {
+            Log.d2f("In findNonAffectedClassesFromCurRound, depsDir name = " + depsDir.getName());
+            if (checkIfDoesNotExist(depsDir)) {
+                continue;
+            }
+
+            // Find affected test classes.
+            includeAffectedFromCurRound(allClasses, affectedClasses, getSortedFiles(depsDir), depsDir.getName());
+            nonAffectedClasses.addAll(allClasses);
+            nonAffectedClasses.removeAll(affectedClasses);
+        }
+
+        //Remove duplicated redundant class that has same class name but from different dependency folder.
+        List<String> nonDuplicatedNonAffectedClasses = new ArrayList<>();
+        for(String classNameWithRound : nonAffectedClasses) {
+            String className = classNameWithRound.split(ROUND_SEPARATOR)[0];
+            if(!nonDuplicatedNonAffectedClasses.contains(className)){
+                nonDuplicatedNonAffectedClasses.add(classNameWithRound);
+            }
+        }
+        Collections.sort(nonDuplicatedNonAffectedClasses);
+        return nonDuplicatedNonAffectedClasses;
+    }
+
+    private static void includeAffectedFromCurRound(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles, String depsDirName) {
+        //Log.d2f("line284: includeAffected");
+        Storer storer = Config.createStorer();
+        Hasher hasher = Config.createHasher();
+
+        NameBasedCheck classCheck = Config.DEBUG_MODE_V != Config.DebugMode.NONE ?
+                new DebugNameCheck(storer, hasher, DependencyAnalyzer.CLASS_EXT) :
+                new NameBasedCheck(storer, hasher, DependencyAnalyzer.CLASS_EXT);
+        NameBasedCheck covCheck = new NameBasedCheck(storer, hasher, DependencyAnalyzer.COV_EXT);
+        MethodCheck methodCheck = new MethodCheck(storer, hasher);
+        String prevClassName = null;
+        for (File file : sortedFiles) {
+            String fileName = file.getName();
+            String dirName = file.getParent();
+            String className = null;
+            if (file.isDirectory()) {
+                continue;
+            }
+            if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
+                className = covCheck.includeAll(fileName, dirName);
+            } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
+                className = classCheck.includeAll(fileName, dirName);
+            } else {
+                className = methodCheck.includeAll(fileName, dirName);
+            }
+            // Reset after some time to free space.
+            if (prevClassName != null && className != null && !prevClassName.equals(className)) {
+                methodCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
+                methodCheck = new MethodCheck(Config.createStorer(), Config.createHasher());
+            }
+            if (className != null) {
+                allClasses.add(className + ROUND_SEPARATOR + depsDirName);
+                prevClassName = className;
+            }
+        }
+        classCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
+        covCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
+        methodCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
+    }
+
 
     /**
      * Finds the list of non-affected test classes. This method is intented to
@@ -108,27 +201,27 @@ public class AffectedChecker {
      *            Ekstazi options
      * @return List of non-affected test classes.
      */
-    public static List<String> findNonAffectedClasses(File parentDir, String options) {
+    public static List<String> findNonAffectedClassesFromPrev(File parentDir, String options) {
         // Return if Ekstazi directory does not exist.
         if (!Config.createCurDir(parentDir).exists()) {
             return Collections.<String>emptyList();
         }
         Log.d2f("In AffectedChecker line 116: curDir = " + Config.createCurDir(parentDir).getAbsolutePath());
         Config.loadConfig(options, true);
-        return findNonAffectedClasses(parentDir.getAbsolutePath());
+        return findNonAffectedClassesFromPrev(parentDir.getAbsolutePath());
     }
 
     /**
      * Returns list of non affected classes as discovered from the given
      * directory with dependencies.
      */
-    private static List<String> findNonAffectedClasses(String workingDirectory) {
+    private static List<String> findNonAffectedClassesFromPrev(String workingDirectory) {
         Set<String> allClasses = new HashSet<String>();
         Set<String> affectedClasses = new HashSet<String>();
         loadConfig(workingDirectory);
         // Find non affected classes.
         Log.d2f("In AffectedChecker line 130: Config.CUR_DIR_V = " + Config.CUR_DIR_V);
-        List<String> nonAffectedClasses = findNonAffectedClasses(Config.CUR_DIR_V, true, allClasses,
+        List<String> nonAffectedClasses = findNonAffectedClassesFromPrev(Config.CUR_DIR_V, true, allClasses,
                 affectedClasses);
         // Format list to include class names in expected format for Ant and Maven.
         return formatNonAffectedClassesForAntAndMaven(nonAffectedClasses);
@@ -190,8 +283,18 @@ public class AffectedChecker {
         return formatted;
     }
 
-    private static List<String> findNonAffectedClasses(String depsDirName, boolean forceCacheUse, Set<String> allClasses,
-                                                       Set<String> affectedClasses) {
+    private static List<String> formatNonAffectedClassesForAntAndMavenWithRound(List<String> nonAffectedClasses) {
+        List<String> formatted = new ArrayList<String>();
+        for (String ClassNameWithRound : nonAffectedClasses) {
+            String binClassName = ClassNameWithRound.split(ROUND_SEPARATOR)[0];
+            String round = ClassNameWithRound.split(ROUND_SEPARATOR)[1];
+            formatted.add(binClassName.replaceAll("\\.", "/") + ".java" + ROUND_SEPARATOR + round);
+        }
+        return formatted;
+    }
+
+    private static List<String> findNonAffectedClassesFromPrev(String depsDirName, boolean forceCacheUse, Set<String> allClasses,
+                                                               Set<String> affectedClasses) {
         if (!forceCacheUse) {
             Config.CACHE_SIZES_V = 0;
         }
@@ -204,7 +307,7 @@ public class AffectedChecker {
         }
 
         // Find affected test classes.
-        includeAffected(allClasses, affectedClasses, getSortedFiles(depsDir));
+        includeAffectedFromPrev(allClasses, affectedClasses, getSortedFiles(depsDir));
 
         // Find test classes that are not affected.
         List<String> nonAffectedClasses = new ArrayList<String>(new HashSet<String>(allClasses));
@@ -282,7 +385,7 @@ public class AffectedChecker {
     /**
      * Find all non affected classes.
      */
-    private static void includeAffected(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles) {
+    private static void includeAffectedFromPrev(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles) {
         //Log.d2f("line284: includeAffected");
         Storer storer = Config.createStorer();
         Hasher hasher = Config.createHasher();

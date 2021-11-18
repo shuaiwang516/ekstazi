@@ -119,6 +119,37 @@ final class MethodCheck extends AbstractCheck {
         }
     }
 
+    @Override
+    public void includeAffectedFromCurRound(Set<String> affectedClasses, String curRoundDirName) {
+        //Log.d2f("line92: includeAffected");
+        // Check if affected tests are really affected.
+        List<TestAbs> affectedTests = getAffectedTests(mTests);
+        List<TestAbs> nonAffectedTests = getNonAffectedTests(mTests);
+
+        out: for (int i = 0; i < affectedTests.size(); i++) {
+            TestAbs aTest = affectedTests.get(i);
+            for (int j = 0; j < nonAffectedTests.size(); j++) {
+                TestAbs naTest = nonAffectedTests.get(j);
+                // If hash for any dependency between affected and non affected
+                // differs, we should remove affected file.
+                boolean anyDiff = checkForDifferences(aTest, naTest);
+                if (anyDiff) {
+                    boolean isConfigDiff = checkForConfigDiff(aTest);
+                    if (!isConfigDiff) {
+                        new File(aTest.getFileDir(), aTest.getFileName()).delete();
+                        // We remove flag that the test is affected not to include class later.
+                        aTest.setAffected(false);
+                        continue out;
+                    }
+                }
+            }
+        }
+
+        for (TestAbs test : affectedTests) {
+            if (test.isAffected()) affectedClasses.add(test.getClassName() + AffectedChecker.ROUND_SEPARATOR + curRoundDirName);
+        }
+    }
+
     private boolean checkForConfigDiff(TestAbs aTest) {
         return isAffectedByConfig(aTest.mConfigMap, aTest.mClassName);
     }

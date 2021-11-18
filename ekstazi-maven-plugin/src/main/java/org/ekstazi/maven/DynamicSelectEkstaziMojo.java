@@ -24,10 +24,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.maven.plugins.annotations.Parameter;
 import org.ekstazi.Config;
 import org.ekstazi.agent.AgentLoader;
-import org.ekstazi.log.Log;
 
 /**
  * Implements selection process and integrates with Surefire.  This
@@ -103,9 +101,13 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             // Prepare initial list of options and set property.
             System.setProperty(AbstractMojoInterceptor.ARGLINE_INTERNAL_PROP, prepareEkstaziOptions());
             // Find non affected classes and set property.
-            MojoLog.d2f("line89: computeNonAffectedClasses");
-            List<String> nonAffectedClasses = computeNonAffectedClasses();
-            System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PROP, Arrays.toString(nonAffectedClasses.toArray(new String[0])));
+            MojoLog.d2f("line104: computeNonAffectedClasses");
+            List<List<String>> nonAffectedClassesList = computeNonAffectedClassesForDynamicSelect();
+            List<String> nonAffectedClassesFromPrev = nonAffectedClassesList.get(0);
+            List<String> nonAffectedClassesFromCurRound = nonAffectedClassesList.get(1);
+            MojoLog.d2f("line106: After computeNonAffectedClasses");
+            System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PREV_PROP, Arrays.toString(nonAffectedClassesFromPrev.toArray(new String[0])));
+            System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_CURROUND_PROP, Arrays.toString(nonAffectedClassesFromCurRound.toArray(new String[0])));
         } else {
             throw new MojoExecutionException("Ekstazi cannot attach to the JVM, please specify Ekstazi 'restore' explicitly.");
         }

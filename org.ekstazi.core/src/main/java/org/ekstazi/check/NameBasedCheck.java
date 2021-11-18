@@ -53,6 +53,13 @@ class NameBasedCheck extends AbstractCheck {
         affectedClasses.addAll(mAffected);
     }
 
+    @Override
+    public void includeAffectedFromCurRound(Set<String> affectedClasses, String curRoundDirName) {
+        for(String affected : mAffected) {
+            affectedClasses.add(affected + AffectedChecker.ROUND_SEPARATOR + curRoundDirName);
+        }
+    }
+
     /**
      * Removes extension (and preceding dot if present) from the given string.
      * 

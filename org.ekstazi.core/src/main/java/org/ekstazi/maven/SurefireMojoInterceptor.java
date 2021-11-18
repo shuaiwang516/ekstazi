@@ -22,11 +22,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
+import org.ekstazi.check.AffectedChecker;
 import org.ekstazi.log.Log;
 import org.ekstazi.util.FileUtil;
 
@@ -169,16 +169,23 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     }
 
     private static void updateExcludes(Object mojo) throws Exception {
-        //Log.d2f("check force all");
-        if (Config.FORCE_ALL_V) {
-            return;
-        }
-        //Log.d2f("after check force all");
         // Get excludes set by the user (in pom.xml in Surefire).
         List<String> currentExcludes = getListField(EXCLUDES_FIELD, mojo);
-        List<String> ekstaziExcludes = new ArrayList<String>(Arrays.asList(System.getProperty(EXCLUDES_INTERNAL_PROP)
+        List<String> ekstaziExcludesFromPrev = new ArrayList<String>(Arrays.asList(System.getProperty(EXCLUDES_INTERNAL_PREV_PROP)
                 .replace("[", "").replace("]", "").split(",")));
-        List<String> newExcludes = ekstaziExcludes;
+        List<String> ekstaziExcludesFromCurRound = new ArrayList<String>(Arrays.asList(System.getProperty(EXCLUDES_INTERNAL_CURROUND_PROP)
+                .replace("[", "").replace("]", "").split(",")));
+        List<String> ekstaziExcludesFromCurRoundWithoutRound = new ArrayList<>();
+        for(String classNameWithRound : ekstaziExcludesFromCurRound) {
+            String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
+            ekstaziExcludesFromCurRoundWithoutRound.add(className);
+        }
+
+        List<String> newExcludes = ekstaziExcludesFromPrev;
+
+        if (ekstaziExcludesFromCurRoundWithoutRound.size() != 0) {
+            newExcludes.addAll(ekstaziExcludesFromCurRoundWithoutRound);
+        }
 
         if (currentExcludes != null) {
             newExcludes.addAll(currentExcludes);
@@ -186,20 +193,14 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             // Add default excludes as specified by Surefire if excludes is not provided by the user.
             newExcludes.add("**/*$*");
         }
-        for (String className : newExcludes) {
-            //Log.d2f("The class = " + className + " hasn't been removed due to fail");
-            if (wasFailing(className) && Config.FORCE_FAILING_V) {
-                newExcludes.remove(className);
-                //Log.d2f("The class = " + className + " has been removed due to fail");
-            }
-        }
         Log.d2f(newExcludes);
         setField(EXCLUDES_FIELD, mojo, newExcludes);
 
-        List<String> copyList = new ArrayList<>();
-        copyList.addAll(newExcludes);
-        copyList.remove("**/*$*");
-        copyFromPrev(copyList);
+        List<String> copyDependencyFromPrevList = new ArrayList<>();
+        List<String> copyDependencyFromCurRoundList = new ArrayList<>();
+        copyDependencyFromPrevList.addAll(ekstaziExcludesFromPrev);
+        copyDependencyFromCurRoundList.addAll(ekstaziExcludesFromCurRound);
+        copyFromPrev(copyDependencyFromPrevList, copyDependencyFromCurRoundList);
     }
 
     private static boolean wasFailing(String className) {
@@ -268,13 +269,13 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         }
     }
 
-    public static void copyFromPrev(List<String> copyClassList) throws IOException {
+    public static void copyFromPrev(List<String> copyDependencyFromPrevList, List<String> copyDependencyFromCurRoundList) throws IOException {
         Config.prepareRound();
         File prevDependencyDir = new File(Config.getCurDirName());
         Log.d2f("In copyFromPrev: prevDependencyDir = " + prevDependencyDir.getAbsolutePath());
         //No non-affected class.
         boolean noNonAffectedClass = true;
-        for(String className : copyClassList) {
+        for(String className : copyDependencyFromPrevList) {
             if (className.contains(".java")) {
                 noNonAffectedClass = false;
             }
@@ -293,8 +294,8 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             File nextDependencyDir = new File(Config.getNextDirName());
             if (nextDependencyDir.mkdir()) {
                 Log.d2f("In copyFromPrev: line286: ready to copy file");
-                Log.d2f("In copyFromPrev: line289: copyClassList.length = " + copyClassList.size());
-                for (String className : copyClassList) {
+                Log.d2f("In copyFromPrev: line289: copyClassList.length = " + copyDependencyFromPrevList.size());
+                for (String className : copyDependencyFromPrevList) {
                     Log.d2f("In copyFromPrev: Move className: " + className);
                     String fileName = className.trim().replace(".java", ".clz");
                     Log.d2f("In copyFromPrev: Move File: " + fileName);

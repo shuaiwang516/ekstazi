@@ -21,12 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.ekstazi.data.DependencyAnalyzer;
@@ -193,6 +188,24 @@ public final class Config {
         // rootDir is the full name of the dependency folder, such as "XXX/.ekstazi-default-Round2"
         Log.d2f("In Config.java line 153: rootDir = " + rootDir.getAbsolutePath());
         return rootDir.toURI().toString();
+    }
+
+    public static List<File> getSameRoundDirName() {
+        Config.preLoadConfigAware();
+        Log.d2f("In getSameRoundDirName, curRound = " + curRound + " nextRound = " + nextRound);
+        List<File> dirs = new ArrayList<>();
+        String rootDir = rootDirDefault();
+        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File files [] = dir.listFiles();
+        for(File f : files) {
+            if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
+                dirs.add(f);
+            }
+        }
+        if (dirs.size() == 0) {
+            return Collections.<File>emptyList();
+        }
+        return dirs;
     }
 
     // AGENT

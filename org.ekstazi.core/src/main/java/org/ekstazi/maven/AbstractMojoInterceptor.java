@@ -37,7 +37,10 @@ public abstract class AbstractMojoInterceptor {
     /** Property key used to pass argLine from plugin to interceptor */
     public static final String ARGLINE_INTERNAL_PROP = "ekstazi.argline.internal";
     /** Property key used to pass excludes list from plugin to interceptor */
-    public static final String EXCLUDES_INTERNAL_PROP = "ekstazi.excludes.internal";
+    public static final String EXCLUDES_INTERNAL_PREV_PROP = "ekstazi.excludes.internal.prev";
+
+    /** Property key used to pass excludes list from plugin to interceptor */
+    public static final String EXCLUDES_INTERNAL_CURROUND_PROP = "ekstazi.excludes.internal.curround";
 
     /** getLog method in Mojo */
     private static final String GET_LOG_METHOD = "getLog";

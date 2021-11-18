@@ -22,9 +22,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import java.util.List;
 
-import org.ekstazi.Config;
-import org.ekstazi.log.Log;
-
 /**
  * The ultimate goal for this Mojo is to predict execution time.  At
  * the moment this Mojo only prints classes that are not being
@@ -41,7 +38,7 @@ public class PredictEkstaziMojo extends StaticSelectEkstaziMojo {
         // Prepare initial list of options and set property.
         System.setProperty(AbstractMojoInterceptor.ARGLINE_INTERNAL_PROP, prepareEkstaziOptions());
         // Find non affected classes and print.
-        List<String> nonAffectedClasses = computeNonAffectedClasses();
+        List<String> nonAffectedClasses = computeNonAffectedClassesForStaticSelect();
         for (String name : nonAffectedClasses) {
             getLog().info(NON_AFFECTED_PREFIX + " " + name);
         }

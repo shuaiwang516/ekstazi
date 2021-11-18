@@ -45,6 +45,8 @@ abstract class AbstractCheck {
 
     public abstract void includeAffected(Set<String> affectedClasses);
 
+    public abstract void includeAffectedFromCurRound(Set<String> affectedClasses, String curRoundDirName);
+
     protected boolean isAffected(String dirName, String className, String methodName) {
         //Log.d2f("line49: Compare diff!");
         return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName))
