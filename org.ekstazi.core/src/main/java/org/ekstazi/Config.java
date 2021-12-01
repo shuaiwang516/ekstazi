@@ -354,7 +354,7 @@ public final class Config {
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")
-    public static String CONFIG_FILE_NAME_V;
+    public static String CONFIG_FILE_NAME_V = "NonSetConfigFile";
     protected static final String CONFIG_FILE_NAME_N = "config.file.name";
 
     // INCLUDE/EXCLUDE
