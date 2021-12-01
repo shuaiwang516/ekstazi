@@ -130,11 +130,15 @@ public final class Config {
         Log.d2f("In config.java, getMaxRound line 126");
         String rootDir = rootDirDefault();
         Log.d2f("In config.java, getMaxRound line 128 rootDir = " + rootDir);
+        Log.d2f("In config.java, CONFIG_FILE_NAME_V = " + CONFIG_FILE_NAME_V);
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
         int max = curRound;
         for(File f : files) {
             Config.preLoadConfigAware();
+            if(CONFIG_FILE_NAME_V == null) {
+                CONFIG_FILE_NAME_V = "NonSetConfigFile";
+            }
             if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
                 String filename = f.getName();
                 int round = Integer.parseInt(filename.substring(filename.length() - 1));
@@ -350,7 +354,7 @@ public final class Config {
     // CONFIGURATION-AWARE
 
     @Opt(desc = "Configuration file path")
-    public static String CONFIG_FILE_PATH_V;
+    public static String CONFIG_FILE_PATH_V = "NonSetConfigFilePath";
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")

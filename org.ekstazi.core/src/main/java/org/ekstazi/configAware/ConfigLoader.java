@@ -22,8 +22,11 @@ public class ConfigLoader {
         return sExercisedConfigMap;
     }
 
-    public static Boolean hasConfigFile() {
-        String configFileName = Config.CONFIG_FILE_PATH_V;
+    public static Boolean hasConfigFile(String configFileName) {
+        //String configFileName = Config.CONFIG_FILE_PATH_V;
+        if (configFileName.isEmpty() || configFileName == null) {
+            return false;
+        }
         File configFile = new File(configFileName);
         return configFile.exists();
     }
@@ -39,6 +42,9 @@ public class ConfigLoader {
 
     private static void load0(String filename) {
         InputStream is = null;
+        if (!hasConfigFile(filename)) {
+            return;
+        }
         try {
             is = new FileInputStream(filename);
             parseConfigurationFile(filename, is);
