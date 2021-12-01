@@ -12,7 +12,10 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ConfigListener {
     /** Exercised configuration <name, value> pairs */
-    private static final Map<String, String> sConfigMap = new HashMap<String, String>();
+    private static final Map<String, String> sGetConfigMap = new HashMap<String, String>();
+
+    /** configuration pairs that from set() API */
+    private static final Map<String, String> sSetConfigMap = new HashMap<String, String>();
 
     /** Lock for this listener */
     private static final ReentrantLock sLock = new ReentrantLock();
@@ -32,7 +35,8 @@ public class ConfigListener {
     }
 
     private static void clean0() {
-        sConfigMap.clear();
+        sGetConfigMap.clear();
+        sSetConfigMap.clear();
     }
 
     /**
@@ -40,20 +44,42 @@ public class ConfigListener {
      * @param configName Exercised configuration name;
      * @param configValue Exercised configuration value;
      */
-    public static void addConfig(String configName, String configValue) {
+    public static void addGetConfig(String configName, String configValue) {
         try {
             sLock.lock();
-            addConfig0(configName, configValue);
+            addGetConfig0(configName, configValue);
         } finally {
             sLock.unlock();
         }
     }
 
-    private static void addConfig0(String configName, String configValue) {
-        if (sConfigMap.containsKey(configName)) {
-            sConfigMap.replace(configName, configValue);
+    private static void addGetConfig0(String configName, String configValue) {
+        if (sGetConfigMap.containsKey(configName)) {
+            sGetConfigMap.replace(configName, configValue);
         } else {
-            sConfigMap.put(configName, configValue);
+            sGetConfigMap.put(configName, configValue);
+        }
+    }
+
+    /**
+     * Add the set configuration into collected info.
+     * @param configName set configuration name;
+     * @param configValue set configuration value;
+     */
+    public static void addSetConfig(String configName, String configValue) {
+        try {
+            sLock.lock();
+            addSetConfig0(configName, configValue);
+        } finally {
+            sLock.unlock();
+        }
+    }
+
+    private static void addSetConfig0(String configName, String configValue) {
+        if (sSetConfigMap.containsKey(configName)) {
+            sSetConfigMap.replace(configName, configValue);
+        } else {
+            sSetConfigMap.put(configName, configValue);
         }
     }
 
@@ -66,9 +92,9 @@ public class ConfigListener {
         try {
             sLock.lock();
             Map<String, String> sortedMap = new HashMap<String, String>();
-            SortedSet<String> keys = new TreeSet<>(sConfigMap.keySet());
+            SortedSet<String> keys = new TreeSet<>(sGetConfigMap.keySet());
             for (String key : keys) {
-                sortedMap.put(key, sConfigMap.get(key));
+                sortedMap.put(key, sGetConfigMap.get(key));
             }
             return sortedMap;
         } finally {
@@ -77,7 +103,15 @@ public class ConfigListener {
     }
 
     public static Map<String, String> getConfigMap() {
-        return sConfigMap;
+        // Remove those configuration pairs that hardcoded in the unit tests.
+        if (!sSetConfigMap.isEmpty() && !sGetConfigMap.isEmpty()) {
+            for (Map.Entry<String, String> setEntry : sSetConfigMap.entrySet()) {
+                if (sGetConfigMap.containsKey(setEntry.getKey())) {
+                    sGetConfigMap.remove(setEntry.getKey());
+                }
+            }
+        }
+        return sGetConfigMap;
     }
 
     // Touch method
@@ -88,11 +122,20 @@ public class ConfigListener {
      * @param name Configuration name that used by get/set config-API
      * @param value Configuration value that used by get/set config-API
      */
-    public static void recordConfig(String name, String value) {
+    public static void recordGetConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
             name = name.trim().replaceAll("\\n", "");
             value = value.trim().replaceAll("\\n", "");
-            addConfig(name, value);
+            addGetConfig(name, value);
         }
     }
+
+    public static void recordSetConfig(String name, String value) {
+        if (name != null && value != null && !name.equals("") && !value.equals("")) {
+            name = name.trim().replaceAll("\\n", "");
+            value = value.trim().replaceAll("\\n", "");
+            addSetConfig(name, value);
+        }
+    }
+
 }
