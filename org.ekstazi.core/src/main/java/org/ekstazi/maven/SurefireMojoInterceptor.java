@@ -337,7 +337,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                         continue;
                     }
                     String strList[] = classNameWithRound.trim().split(AffectedChecker.ROUND_SEPARATOR);
-                    String fileName = strList[0].replace(".java", ".clz");
+                    String fileName = strList[0].replace(".java", ".clz").replace("/", ".");
                     String depDirName = strList[1];
                     Log.d2f("In copyFromPrev: line 335 From CurRound, ready to Copy File");
                     File sourceDepDir = new File(rootDir, depDirName);
