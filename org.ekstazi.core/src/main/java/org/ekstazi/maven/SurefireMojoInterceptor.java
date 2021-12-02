@@ -315,7 +315,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                 Log.d2f("In copyFromPrev: line312: ready to copy file from Previous Round");
                 Log.d2f("In copyFromPrev: line313: prevDepList.size() = " + prevDepList.size());
                 for (String className : prevDepList) {
-                    if (!className.contains(".java")) {
+                    if (!className.contains(".java") || className.contains("**")) {
                         continue;
                     }
                     Log.d2f("In copyFromPrev: line 315 From Prev Move className: " + className);
@@ -333,7 +333,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                         Log.d2f("classNameWithRound not found # separator = " + classNameWithRound);
                         continue;
                     }
-                    if (!classNameWithRound.contains(".java")) {
+                    if (!classNameWithRound.contains(".java") || classNameWithRound.contains("**")) {
                         continue;
                     }
                     String strList[] = classNameWithRound.trim().split(AffectedChecker.ROUND_SEPARATOR);
