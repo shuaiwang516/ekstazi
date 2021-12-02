@@ -319,7 +319,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                         continue;
                     }
                     Log.d2f("In copyFromPrev: line 315 From Prev Move className: " + className);
-                    String fileName = className.trim().replace(".java", ".clz");
+                    String fileName = className.trim().replace(".java", ".clz").replace("/", ".");
                     Log.d2f("In copyFromPrev: line 317 From Prev Move File: " + fileName);
                     Path source = Paths.get(prevDependencyDir.getAbsolutePath(), fileName);
                     Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
