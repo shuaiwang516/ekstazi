@@ -323,27 +323,30 @@ public final class DependencyAnalyzer {
      *
      */
     private boolean hasConfigChanged(Map<String, String> configMap) {
-        //Log.d2f("Compare configuration diff!");
+        Log.d2f("Compare configuration diff!");
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
-        if (userConfig.isEmpty() || userConfig == null) {
+        if (userConfig == null) {
             Log.d2f("Failed to get user configuration");
-            return false;
+            return true;
         }
-//        else {
-//            Log.printConfig(userConfig, className);
-//            Log.printConfig(configMap, className);
-//        }
+
+        // For every configuration pairs, compare with user's setting.
         for(Map.Entry<String, String> entry : configMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-//            if ((userConfig.containsKey(key))){
-//                Log.d2f("Config from last round :<" + key + " " + value + ">; From user: <" + key + " " + value + ">");
-//            }
-            if ((userConfig.containsKey(key) && !userConfig.get(key).equals(value))) {
+
+            // (1) If user doesn't set, return true;
+            if (!userConfig.containsKey(key)) {
+                return true;
+            }
+
+            // (2) If user's setting is different, return true;
+            if (!userConfig.get(key).equals(value)) {
                 Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
                 return true;
             }
         }
+        // (3) else return false;
         return false;
     }
 
