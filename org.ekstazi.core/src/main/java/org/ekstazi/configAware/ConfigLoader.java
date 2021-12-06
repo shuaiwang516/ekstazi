@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class ConfigLoader {
     private static final Map<String, String > sExercisedConfigMap = new HashMap<String, String>();
+    private static final String configFileSeparator = ",";
 
     public static Map<String, String> getUserConfigMap() {
         if (sExercisedConfigMap.isEmpty() || sExercisedConfigMap == null){
@@ -40,22 +41,33 @@ public class ConfigLoader {
         load0(configFileName);
     }
 
-    private static void load0(String filename) {
+    private static void load0(String filenameList) {
         InputStream is = null;
-        if (!hasConfigFile(filename)) {
-            return;
-        }
-        try {
-            is = new FileInputStream(filename);
-            parseConfigurationFile(filename, is);
-            //Log.d2f("Configuration file is loaded.");
-            Log.printConfig(sExercisedConfigMap, "-loadMethod");
-        } catch (IOException e) {
-            Log.e("Loading configuration is not successful", e);
-            Log.d2f("Loading configuration is not successful" + e);
-            sExercisedConfigMap.clear();
-        } finally {
-            FileUtil.closeAndIgnoreExceptions(is);
+
+        //Handle several configuration files, separated by ","
+        String files [] = filenameList.split(configFileSeparator);
+        for (String filename : files) {
+            filename = filename.trim();
+            if (filename == null || filename.isEmpty()) {
+                Log.d2f("Load configuration: Continue next file, current filename: " + filename);
+                continue;
+            }
+            if (!hasConfigFile(filename)) {
+                Log.d2f("Can't find user's configuration file: " + filename);
+                return;
+            }
+            try {
+                is = new FileInputStream(filename);
+                parseConfigurationFile(filename, is);
+                //Log.d2f("Configuration file is loaded.");
+                //Log.printConfig(sExercisedConfigMap, "-loadMethod");
+            } catch (IOException e) {
+                Log.e("Loading configuration is not successful", e);
+                Log.d2f("Loading configuration is not successful" + e);
+                sExercisedConfigMap.clear();
+            } finally {
+                FileUtil.closeAndIgnoreExceptions(is);
+            }
         }
     }
 
@@ -108,6 +120,9 @@ public class ConfigLoader {
                 } catch (Exception e) {
                     configValue = "";
                 }
+
+                // Multiple configuration files may have duplicated settings. We choose the last one as the final value (Overwrite)
+                // This is the same idea as some real-world software like Hadoop.
                 sExercisedConfigMap.put(configName, configValue);
                 //System.out.println(configName + " , " + configValue);
             }
