@@ -48,7 +48,7 @@ public class TxtStorer extends Storer {
     protected static final String SEPARATOR = " _ ";
 
     /** Character between Configuration Name and Value */
-    protected static final String CONFIG_SEPARATOR = " , ";
+    protected static final String CONFIG_SEPARATOR = " = ";
 
     /** Length of the separator (to avoid invoking length() many times) */
     protected static final int SEPARATOR_LEN = SEPARATOR.length();
