@@ -104,7 +104,7 @@ public class TxtStorer extends Storer {
                     if (line == null) {
                         break;
                     }
-                    if (line.equals("Configuration_Name , Configuration_Value")) {
+                    if (line.equals("Configuration_Name = Configuration_Value")) {
                         isConfig = true;
                     }
                     if (isConfig) {
@@ -137,7 +137,7 @@ public class TxtStorer extends Storer {
                 State state = newState();
                 while (true) {
                     String line = br.readLine();        // Shuai: Each line: URL _ ChecksumValues
-                    if (line == null || line.equals("Configuration_Name , Configuration_Value")) {
+                    if (line == null || line.equals("Configuration_Name = Configuration_Value")) {
                         break;
                     }
                     RegData regDatum = parseLine(state, line);
