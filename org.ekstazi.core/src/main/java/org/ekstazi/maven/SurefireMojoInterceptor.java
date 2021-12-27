@@ -314,6 +314,24 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             if (prev && prevDependencyDir.exists()) {
                 Log.d2f("In copyFromPrev: line312: ready to copy file from Previous Round");
                 Log.d2f("In copyFromPrev: line313: prevDepList.size() = " + prevDepList.size());
+
+                // Previous failed tests are not rerun, so we need to copy the failure report into the new folder
+                if (!Config.FORCE_FAILING_V) {
+                    File prevTestResultsDir = new File(prevDependencyDir, Names.TEST_RESULTS_DIR_NAME);
+                    File nextTestResultDir = new File(nextDependencyDir, Names.TEST_RESULTS_DIR_NAME);
+                    if (prevTestResultsDir.exists() && prevTestResultsDir.isDirectory()) {
+                        if (nextTestResultDir.mkdir()) {
+                            for(File f : prevTestResultsDir.listFiles()) {
+                                Path source = Paths.get(f.getAbsolutePath());
+                                Path target = Paths.get(nextTestResultDir.getAbsolutePath(), f.getName());
+                                Files.move(source, target);
+                            }
+                        } else {
+                            Log.d2f("Failed to create test result folder!");
+                            throw new IOException("Failed to create test result folder!");
+                        }
+                    }
+                }
                 for (String className : prevDepList) {
                     if (!className.contains(".java") || className.contains("**")) {
                         continue;

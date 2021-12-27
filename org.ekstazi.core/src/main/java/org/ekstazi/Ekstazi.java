@@ -141,7 +141,9 @@ public final class Ekstazi {
      * Saves info about the results of running the given test class.
      */
     public void endClassCoverage(String className, boolean isFailOrError) {
-        File testResultsDir = new File(Config.NEXT_DIR_V, Names.TEST_RESULTS_DIR_NAME);
+        Config.preLoadConfigAware();
+        Log.d2f("Result folder = " + Config.getCurDirName() + "/" + Names.TEST_RESULTS_DIR_NAME);
+        File testResultsDir = new File(Config.getCurDirName(), Names.TEST_RESULTS_DIR_NAME);
         File outcomeFile = new File(testResultsDir, className);
         if (isFailOrError) {
             // TODO: long names.
