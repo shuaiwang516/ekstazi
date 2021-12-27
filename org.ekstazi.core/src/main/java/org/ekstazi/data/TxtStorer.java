@@ -106,6 +106,7 @@ public class TxtStorer extends Storer {
                     }
                     if (line.equals("Configuration_Name = Configuration_Value")) {
                         isConfig = true;
+                        continue;
                     }
                     if (isConfig) {
                         int sepIndex = line.indexOf(CONFIG_SEPARATOR);

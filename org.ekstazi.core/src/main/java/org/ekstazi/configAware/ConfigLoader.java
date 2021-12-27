@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.*;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -113,17 +114,20 @@ public class ConfigLoader {
             Document doc = builder.parse(is);
             NodeList nl = doc.getElementsByTagName(tagName);
             for (int i = 0; i < nl.getLength(); i++) {
-                String configName = doc.getElementsByTagName(tagConfigName).item(i).getFirstChild().getNodeValue();
-                String configValue;
-                try {
-                    configValue = doc.getElementsByTagName(tagConfigValue).item(i).getFirstChild().getNodeValue();
-                } catch (Exception e) {
-                    configValue = "";
+                NodeList nl2 = nl.item(i).getChildNodes();
+                String configName = "";
+                String configValue = "";
+                for (int j = 0; j < nl2.getLength(); j++) {
+                    Node n = nl2.item(j);
+                    if (n.getNodeName().equals(tagConfigName)) configName = n.getTextContent();
+                    if (n.getNodeName().equals(tagConfigValue)) configValue = n.getTextContent();
                 }
 
                 // Multiple configuration files may have duplicated settings. We choose the last one as the final value (Overwrite)
                 // This is the same idea as some real-world software like Hadoop.
-                sExercisedConfigMap.put(configName, configValue);
+                if (!Objects.equals(configName, "")) {
+                    sExercisedConfigMap.put(configName, configValue);
+                }
                 //System.out.println(configName + " , " + configValue);
             }
         } catch (Exception e) {
