@@ -37,6 +37,12 @@ public class CleanEkstaziMojo extends AbstractEkstaziMojo {
         //Log.d2f("CleanEkstaziMojo.java line 37");
         File fileList[] = parentdir.listFiles();
         for (File f : fileList) {
+            if (f.getName().contains(Log.D2F_FILE_NAME)) {
+                f.delete();
+            }
+            if (f.getName().contains(MojoLog.MOJO_LOG_FILE)) {
+                f.delete();
+            }
             if (f.isDirectory() && f.getName().contains(Names.EKSTAZI_ROOT_DIR_NAME)) {
                 FileUtil.deleteDirectory(f);
             }

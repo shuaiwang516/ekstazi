@@ -34,12 +34,14 @@ public final class Log {
     private static final String CONF_TEXT = "Ekstazi_Conf";
 
     private static final String CONFIG_LOG_FOLDER = "configDiffLog";
+    public static final String D2F_FILE_NAME = "D2FLog.txt";
 
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
 
     private static Boolean myLogEnabled = true;
     private static Boolean configDiffLogEnabled = true;
+
     private static Boolean firstEnterConfigLog = true;
 
     private static Set<String> loggedConfig = new HashSet<>();
@@ -166,7 +168,7 @@ public final class Log {
         if (!myLogEnabled)
             return;
         try {
-            FileWriter fw = new FileWriter("Shuai_debug.txt", true);
+            FileWriter fw = new FileWriter(D2F_FILE_NAME, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(s);
             bw.newLine();
@@ -180,7 +182,7 @@ public final class Log {
         if (!myLogEnabled)
             return;
         try {
-            FileWriter fw = new FileWriter("Shuai_debug.txt", true);
+            FileWriter fw = new FileWriter(D2F_FILE_NAME, true);
             BufferedWriter bw = new BufferedWriter(fw);
             for (String s : list) {
                 bw.write(s);
