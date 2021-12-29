@@ -40,6 +40,9 @@ public class CleanEkstaziMojo extends AbstractEkstaziMojo {
             if (f.isDirectory() && f.getName().contains(Names.EKSTAZI_ROOT_DIR_NAME)) {
                 FileUtil.deleteDirectory(f);
             }
+            if (f.isDirectory() && f.getName().contains(Names.EKSTAZI_CONFIGLOG_DIR_NAME)) {
+                FileUtil.deleteDirectory(f);
+            }
         }
 //        File dotEkstazi = new File(parentdir, Names.EKSTAZI_ROOT_DIR_NAME);
 //        if (dotEkstazi.exists()) {

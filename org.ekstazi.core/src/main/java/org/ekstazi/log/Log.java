@@ -21,8 +21,7 @@ import org.ekstazi.Config;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Simple logging facility.
@@ -34,10 +33,16 @@ public final class Log {
     private static final String WARN_TEXT = "Ekstazi_Warn";
     private static final String CONF_TEXT = "Ekstazi_Conf";
 
+    private static final String CONFIG_LOG_FOLDER = "configDiffLog";
+
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
 
     private static Boolean myLogEnabled = true;
+    private static Boolean configDiffLogEnabled = true;
+    private static Boolean firstEnterConfigLog = true;
+
+    private static Set<String> loggedConfig = new HashSet<>();
 
     public static void initScreen() {
         init(true, false, null);
@@ -181,6 +186,39 @@ public final class Log {
                 bw.write(s);
                 bw.newLine();
             }
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void configDiffLog(String key, String depValue, String userValue, String msg, String className) {
+        if (!configDiffLogEnabled)
+            return;
+        try {
+            if (firstEnterConfigLog) {
+                File logFolder = new File(CONFIG_LOG_FOLDER);
+                if (!logFolder.exists()) {
+                    if(!logFolder.mkdir()) {
+                        throw new IOException("Can't create configDiffLog folder");
+                    }
+                } else {
+                    String[] entries = logFolder.list();
+                    for(String s: entries){
+                        File f = new File(logFolder.getPath(), s);
+                        f.delete();
+                    }
+                }
+                firstEnterConfigLog = false;
+            }
+            if (loggedConfig.contains(key)) {
+                return;
+            }
+            loggedConfig.add(key);
+            FileWriter fw = new FileWriter(CONFIG_LOG_FOLDER + "/" + className + ".txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
+            bw.newLine();
             bw.close();
         } catch (Exception e) {
             e.printStackTrace();

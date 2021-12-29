@@ -89,9 +89,10 @@ abstract class AbstractCheck {
      *
      */
     private boolean hasConfigChanged(Map<String, String> configMap, String className) {
-        Log.d2f("Compare configuration diff!");
+        Log.d2f("Compare configuration diff in AbstractCheck.java");
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
         if (userConfig == null) {
+            Log.configDiffLog("", "", "", "Failed to get user configuration", className);
             Log.d2f("Failed to get user configuration");
             return true;
         }
@@ -103,11 +104,13 @@ abstract class AbstractCheck {
 
             // (1) If user doesn't set, return true;
             if (!userConfig.containsKey(key)) {
+                Log.configDiffLog(key, value, "", "User didn't set this config", className);
                 return true;
             }
 
             // (2) If user's setting is different, return true;
             if (!userConfig.get(key).equals(value)) {
+                Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
                 Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
                 return true;
             }

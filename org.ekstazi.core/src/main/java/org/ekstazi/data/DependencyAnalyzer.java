@@ -104,7 +104,7 @@ public final class DependencyAnalyzer {
         String fullMethodName = name + "." + COV_EXT;
         Set<RegData> regData = mStorer.loadRegData(mCurDir, name, COV_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, name, COV_EXT);
-        boolean isAffected = isAffected(regData) || isAffected(configMap);
+        boolean isAffected = isAffected(regData) || isAffected(configMap, name);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -158,7 +158,7 @@ public final class DependencyAnalyzer {
         String fullMethodName = className + "." + CLASS_EXT;
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, CLASS_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, CLASS_EXT);
-        isAffected = isAffected(regData) || isAffected(configMap);
+        isAffected = isAffected(regData) || isAffected(configMap, className);
         //Log.d2f("line154 in isClassAffected: " + isAffected + " configAffecgted = " + isAffected(configMap));
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
@@ -224,7 +224,7 @@ public final class DependencyAnalyzer {
 
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, methodName);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, methodName);
-        boolean isAffected = isAffected(regData) || isAffected(configMap);
+        boolean isAffected = isAffected(regData) || isAffected(configMap, className);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);
         }
@@ -313,19 +313,20 @@ public final class DependencyAnalyzer {
         return regData == null || regData.size() == 0 || hasHashChanged(regData);
     }
 
-    protected boolean isAffected(Map<String, String> configMap) {
-        Log.d2f("configMap not null = " + (configMap != null) + "; not Empty = " + !configMap.isEmpty() + "; hasConfigChanged(configMap) = " + hasConfigChanged(configMap));
-        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap);
+    protected boolean isAffected(Map<String, String> configMap, String className) {
+        Log.d2f("configMap not null = " + (configMap != null) + "; not Empty = " + !configMap.isEmpty() + "; hasConfigChanged(configMap) = " + hasConfigChanged(configMap, className));
+        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, className);
     }
 
     /**
      * Check if the configuration has changed.
      *
      */
-    private boolean hasConfigChanged(Map<String, String> configMap) {
-        Log.d2f("Compare configuration diff!");
+    private boolean hasConfigChanged(Map<String, String> configMap, String className) {
+        Log.d2f("Compare configuration diff in DependencyAnalyzer.java");
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
         if (userConfig == null) {
+            Log.configDiffLog("", "", "", "Failed to get user configuration", className);
             Log.d2f("Failed to get user configuration");
             return true;
         }
@@ -337,11 +338,13 @@ public final class DependencyAnalyzer {
 
             // (1) If user doesn't set, return true;
             if (!userConfig.containsKey(key)) {
+                Log.configDiffLog(key, value, "", "User didn't set this config", className);
                 return true;
             }
 
             // (2) If user's setting is different, return true;
             if (!userConfig.get(key).equals(value)) {
+                Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
                 Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
                 return true;
             }
