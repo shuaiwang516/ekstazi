@@ -343,9 +343,8 @@ public final class DependencyAnalyzer {
                 Log.configDiffLog(key, value, "", "User didn't set this config", className);
                 diff = true;
             }
-
             // (2) If user's setting is different, return true;
-            if (!userConfig.get(key).equals(value)) {
+            else if (!userConfig.get(key).equals(value)) {
                 Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
                 Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
                 diff = true;
