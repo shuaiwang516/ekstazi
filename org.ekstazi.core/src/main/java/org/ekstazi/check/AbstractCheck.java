@@ -97,6 +97,8 @@ abstract class AbstractCheck {
             return true;
         }
 
+        // For evaluation
+        Boolean diff = false;
         // For every configuration pairs, compare with user's setting.
         for(Map.Entry<String, String> entry : configMap.entrySet()) {
             String key = entry.getKey();
@@ -105,15 +107,18 @@ abstract class AbstractCheck {
             // (1) If user doesn't set, return true;
             if (!userConfig.containsKey(key)) {
                 Log.configDiffLog(key, value, "", "User didn't set this config", className);
-                return true;
+                diff = true;
             }
 
             // (2) If user's setting is different, return true;
             if (!userConfig.get(key).equals(value)) {
                 Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
                 Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
-                return true;
+                diff = true;
             }
+        }
+        if (diff) {
+            return true;
         }
         // (3) else return false;
         return false;
