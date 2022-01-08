@@ -334,23 +334,40 @@ public final class DependencyAnalyzer {
         // For evaluation
         Boolean diff = false;
         // For every configuration pairs, compare with user's setting.
-        for(Map.Entry<String, String> entry : configMap.entrySet()) {
+//        for(Map.Entry<String, String> entry : configMap.entrySet()) {
+//            String key = entry.getKey();
+//            String value = entry.getValue();
+//
+//            // (1) If user doesn't set, return true;
+//            if (!userConfig.containsKey(key)) {
+//                Log.configDiffLog(key, value, "", "User didn't set this config", className);
+//                diff = true;
+//            }
+//
+//            // (2) If user's setting is different, return true;
+//            if (!userConfig.get(key).equals(value)) {
+//                Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
+//                Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
+//                diff = true;
+//            }
+//        }
+
+        for (Map.Entry<String, String> entry : userConfig.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            // (1) If user doesn't set, return true;
-            if (!userConfig.containsKey(key)) {
-                Log.configDiffLog(key, value, "", "User didn't set this config", className);
-                diff = true;
+            // (1) If this config is not used by test, continue
+            if (!configMap.containsKey(key)) {
+                continue;
             }
 
-            // (2) If user's setting is different, return true;
-            if (!userConfig.get(key).equals(value)) {
+            // (2) If user's setting is different, return true
+            else if (!configMap.get(key).equals(value)) {
                 Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
-                Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
                 diff = true;
             }
         }
+
         if (diff) {
             return true;
         }
