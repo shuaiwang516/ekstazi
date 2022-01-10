@@ -49,12 +49,12 @@ abstract class AbstractCheck {
 
     protected boolean isAffected(String dirName, String className, String methodName) {
         //Log.d2f("line49: Compare diff!");
-        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName))
+        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), className)
                 || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), className);
     }
 
-    protected boolean isAffectedByReg(Set<RegData> regData) {
-        return regData == null || regData.size() == 0 || hasHashChanged(regData);
+    protected boolean isAffectedByReg(Set<RegData> regData, String className) {
+        return regData == null || regData.size() == 0 || hasHashChanged(regData, className);
     }
 
     protected boolean isAffectedByConfig(Map<String, String> configMap, String className) {
@@ -64,9 +64,10 @@ abstract class AbstractCheck {
     /**
      * Check if any element of the given set has changed.
      */
-    private boolean hasHashChanged(Set<RegData> regData) {
+    private boolean hasHashChanged(Set<RegData> regData, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
+                Log.codeDiffLog(el.getURLExternalForm(), className);
                 return true;
             }
         }

@@ -33,18 +33,19 @@ public final class Log {
     private static final String WARN_TEXT = "Ekstazi_Warn";
     private static final String CONF_TEXT = "Ekstazi_Conf";
 
-    private static final String CONFIG_LOG_FOLDER = "configDiffLog";
+    private static final String DIFF_LOG_FOLDER = "diffLog";
     public static final String D2F_FILE_NAME = "D2FLog.txt";
 
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
 
     private static Boolean myLogEnabled = true;
-    private static Boolean configDiffLogEnabled = true;
+    private static Boolean diffLogEnabled = true;
 
-    private static Boolean firstEnterConfigLog = true;
+    private static Boolean firstEnterDiffLog = true;
 
-    private static Set<String> loggedConfig = new HashSet<>();
+//    private static Set<String> loggedConfig = new HashSet<>();
+//    private static Set<String> loggedURL = new HashSet<>();
 
     public static void initScreen() {
         init(true, false, null);
@@ -194,15 +195,15 @@ public final class Log {
         }
     }
 
-    public static void configDiffLog(String key, String depValue, String userValue, String msg, String className) {
-        if (!configDiffLogEnabled)
+    public static void codeDiffLog(String url, String className) {
+        if (!diffLogEnabled)
             return;
         try {
-            if (firstEnterConfigLog) {
-                File logFolder = new File(CONFIG_LOG_FOLDER);
+            if (firstEnterDiffLog) {
+                File logFolder = new File(DIFF_LOG_FOLDER);
                 if (!logFolder.exists()) {
                     if(!logFolder.mkdir()) {
-                        throw new IOException("Can't create configDiffLog folder");
+                        throw new IOException("Can't create diffLog folder");
                     }
                 } else {
                     String[] entries = logFolder.list();
@@ -211,15 +212,40 @@ public final class Log {
                         f.delete();
                     }
                 }
-                firstEnterConfigLog = false;
+                firstEnterDiffLog = false;
             }
-            if (loggedConfig.contains(key)) {
-                return;
-            }
-            loggedConfig.add(key);
-            FileWriter fw = new FileWriter(CONFIG_LOG_FOLDER + "/" + className + ".txt", true);
+            FileWriter fw = new FileWriter(DIFF_LOG_FOLDER + "/" + className + ".txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write("config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
+            bw.write("[CODE-DIFF] file= " + url);
+            bw.newLine();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void configDiffLog(String key, String depValue, String userValue, String msg, String className) {
+        if (!diffLogEnabled)
+            return;
+        try {
+            if (firstEnterDiffLog) {
+                File logFolder = new File(DIFF_LOG_FOLDER);
+                if (!logFolder.exists()) {
+                    if(!logFolder.mkdir()) {
+                        throw new IOException("Can't create diffLog folder");
+                    }
+                } else {
+                    String[] entries = logFolder.list();
+                    for(String s: entries){
+                        File f = new File(logFolder.getPath(), s);
+                        f.delete();
+                    }
+                }
+                firstEnterDiffLog = false;
+            }
+            FileWriter fw = new FileWriter(DIFF_LOG_FOLDER + "/" + className + ".txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("[CONFIG-DIFF] config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
             bw.newLine();
             bw.close();
         } catch (Exception e) {
