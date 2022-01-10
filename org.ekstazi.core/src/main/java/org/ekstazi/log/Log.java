@@ -44,7 +44,7 @@ public final class Log {
 
     private static Boolean firstEnterConfigLog = true;
 
-    private static Set<String> loggedConfig = new HashSet<>();
+//    private static Set<String> loggedConfig = new HashSet<>();
 
     public static void initScreen() {
         init(true, false, null);
@@ -213,10 +213,6 @@ public final class Log {
                 }
                 firstEnterConfigLog = false;
             }
-            if (loggedConfig.contains(key)) {
-                return;
-            }
-            loggedConfig.add(key);
             FileWriter fw = new FileWriter(CONFIG_LOG_FOLDER + "/" + className + ".txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
