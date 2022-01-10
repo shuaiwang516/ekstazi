@@ -33,7 +33,7 @@ public final class Log {
     private static final String WARN_TEXT = "Ekstazi_Warn";
     private static final String CONF_TEXT = "Ekstazi_Conf";
 
-    private static final String CONFIG_LOG_FOLDER = "configDiffLog";
+    private static final String DIFF_LOG_FOLDER = "diffLog";
     public static final String D2F_FILE_NAME = "D2FLog.txt";
 
     private static PrintWriter pwScreen;
@@ -199,7 +199,7 @@ public final class Log {
             return;
         try {
             if (firstEnterConfigLog) {
-                File logFolder = new File(CONFIG_LOG_FOLDER);
+                File logFolder = new File(DIFF_LOG_FOLDER);
                 if (!logFolder.exists()) {
                     if(!logFolder.mkdir()) {
                         throw new IOException("Can't create configDiffLog folder");
@@ -213,7 +213,7 @@ public final class Log {
                 }
                 firstEnterConfigLog = false;
             }
-            FileWriter fw = new FileWriter(CONFIG_LOG_FOLDER + "/" + className + ".txt", true);
+            FileWriter fw = new FileWriter(DIFF_LOG_FOLDER + "/" + className + ".txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
             bw.newLine();
