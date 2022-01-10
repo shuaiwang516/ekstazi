@@ -129,7 +129,7 @@ abstract class AbstractCheck {
 
             // (2) If user's setting is different, return true
             else if (!configMap.get(key).equals(value)) {
-                Log.configDiffLog(key, value, configMap.get(key), "Value different!", className);
+                Log.configDiffLog(key, configMap.get(key), value, "Value different!", className);
                 diff = true;
             }
         }
