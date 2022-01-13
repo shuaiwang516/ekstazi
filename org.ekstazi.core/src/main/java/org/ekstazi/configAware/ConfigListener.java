@@ -140,7 +140,7 @@ public class ConfigListener {
     public static void recordGetConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
             name = replaceBlank(name);
-            value = replaceBlank(name);
+            value = replaceBlank(value);
             addGetConfig(name, value);
         }
     }
@@ -148,7 +148,7 @@ public class ConfigListener {
     public static void recordSetConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
             name = replaceBlank(name);
-            value = replaceBlank(name);
+            value = replaceBlank(value);
             addSetConfig(name, value);
         }
     }
