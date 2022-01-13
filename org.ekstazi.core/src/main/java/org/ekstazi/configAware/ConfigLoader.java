@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.*;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -126,7 +128,7 @@ public class ConfigLoader {
                 // Multiple configuration files may have duplicated settings. We choose the last one as the final value (Overwrite)
                 // This is the same idea as some real-world software like Hadoop.
                 if (!Objects.equals(configName, "")) {
-                    sExercisedConfigMap.put(configName, configValue);
+                    sExercisedConfigMap.put(replaceBlank(configName), replaceBlank(configValue));
                 }
                 //System.out.println(configName + " , " + configValue);
             }
@@ -135,6 +137,21 @@ public class ConfigLoader {
             Log.e("Loading configuration is not successful", e);
             sExercisedConfigMap.clear();
         }
+    }
+
+    // internal method
+
+    /**
+     * Remove blank space, \r, \n, \t in a given string
+     */
+    public static String replaceBlank(String str) {
+        String dest = "";
+        if (str != null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
     }
 
     // For simply test
