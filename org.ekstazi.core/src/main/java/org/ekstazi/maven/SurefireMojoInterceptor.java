@@ -182,9 +182,12 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             ekstaziExcludesFromCurRoundWithoutRound.add(className);
         }
 
-        List<String> newExcludes = ekstaziExcludesFromPrev;
+        List<String> newExcludes = new ArrayList<String>();
+        if (!ekstaziExcludesFromPrev.isEmpty()) {
+            newExcludes.addAll(ekstaziExcludesFromPrev);
+        }
 
-        if (ekstaziExcludesFromCurRoundWithoutRound.size() != 0) {
+        if (!ekstaziExcludesFromCurRoundWithoutRound.isEmpty()) {
             newExcludes.addAll(ekstaziExcludesFromCurRoundWithoutRound);
         }
 

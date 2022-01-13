@@ -125,7 +125,7 @@ public class AffectedChecker {
 
         Set<String> allClasses = new HashSet<String>();
         Set<String> affectedClasses = new HashSet<String>();
-        List<String> nonAffectedClasses = new ArrayList<>();
+        Set <String> nonAffectedClasses = new HashSet<String>();
         for (File depsDir : sameRoundDirs) {
             Log.d2f("In findNonAffectedClassesFromCurRound, depsDir name = " + depsDir.getName());
             if (checkIfDoesNotExist(depsDir)) {
