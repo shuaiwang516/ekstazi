@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class instruments Listener methods to monitor configuration loading.
@@ -114,6 +116,19 @@ public class ConfigListener {
         return sGetConfigMap;
     }
 
+    /**
+     * Remove blank space, \r, \n, \t in a given string
+     */
+    public static String replaceBlank(String str) {
+        String dest = "";
+        if (str != null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
+    }
+
     // Touch method
 
     /**
@@ -124,16 +139,16 @@ public class ConfigListener {
      */
     public static void recordGetConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
-            name = name.trim().replaceAll("\\n", "");
-            value = value.trim().replaceAll("\\n", "");
+            name = replaceBlank(name);
+            value = replaceBlank(name);
             addGetConfig(name, value);
         }
     }
 
     public static void recordSetConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
-            name = name.trim().replaceAll("\\n", "");
-            value = value.trim().replaceAll("\\n", "");
+            name = replaceBlank(name);
+            value = replaceBlank(name);
             addSetConfig(name, value);
         }
     }
