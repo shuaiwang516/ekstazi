@@ -44,7 +44,7 @@ final class DebugNameCheck extends NameBasedCheck {
     }
 
     @Override
-    protected boolean isAffectedByReg(Set<RegData> regData, String className) {
+    protected boolean isAffectedByReg(Set<RegData> regData, String dirName, String className) {
         for (RegData el: regData) {
             if (hasHashChanged(mHasher, el)) {
                 Log.d("Checking::Diff::", el.getURLExternalForm());
@@ -52,6 +52,6 @@ final class DebugNameCheck extends NameBasedCheck {
                 Log.d("Checking::Same::", el.getURLExternalForm());
             }
         }
-        return super.isAffectedByReg(regData, className);
+        return super.isAffectedByReg(regData, dirName, className);
     }
 }

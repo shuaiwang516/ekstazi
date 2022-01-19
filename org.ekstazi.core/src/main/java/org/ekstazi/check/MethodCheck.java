@@ -157,7 +157,7 @@ final class MethodCheck extends AbstractCheck {
     }
 
     private boolean checkForConfigDiff(TestAbs aTest) {
-        return isAffectedByConfig(aTest.mConfigMap, aTest.mClassName);
+        return isAffectedByConfig(aTest.mConfigMap, aTest.mFileDir, aTest.mClassName);
     }
     
     private boolean checkForDifferences(TestAbs affected, TestAbs nonAffected) {

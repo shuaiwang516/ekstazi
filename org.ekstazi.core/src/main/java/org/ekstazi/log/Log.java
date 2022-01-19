@@ -195,7 +195,7 @@ public final class Log {
         }
     }
 
-    public static void codeDiffLog(String url, String className) {
+    public static void codeDiffLog(String url, String dirName, String className, String msg) {
         if (!diffLogEnabled)
             return;
         try {
@@ -216,7 +216,7 @@ public final class Log {
             }
             FileWriter fw = new FileWriter(DIFF_LOG_FOLDER + "/" + className + ".txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write("[CODE-DIFF] file= " + url);
+            bw.write("[CODE-DIFF] file= " + url + ", compared with " + dirName + " msg = " + msg);
             bw.newLine();
             bw.close();
         } catch (Exception e) {

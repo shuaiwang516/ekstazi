@@ -49,25 +49,25 @@ abstract class AbstractCheck {
 
     protected boolean isAffected(String dirName, String className, String methodName) {
         //Log.d2f("line49: Compare diff!");
-        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), className)
-                || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), className);
+        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), dirName, className)
+                || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
     }
 
-    protected boolean isAffectedByReg(Set<RegData> regData, String className) {
-        return regData == null || regData.size() == 0 || hasHashChanged(regData, className);
+    protected boolean isAffectedByReg(Set<RegData> regData, String dirName, String className) {
+        return regData == null || regData.size() == 0 || hasHashChanged(regData, dirName, className);
     }
 
-    protected boolean isAffectedByConfig(Map<String, String> configMap, String className) {
-        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, className);
+    protected boolean isAffectedByConfig(Map<String, String> configMap, String dirName, String className) {
+        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, dirName, className);
     }
 
     /**
      * Check if any element of the given set has changed.
      */
-    private boolean hasHashChanged(Set<RegData> regData, String className) {
+    private boolean hasHashChanged(Set<RegData> regData, String dirName, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
-                Log.codeDiffLog(el.getURLExternalForm(), className);
+                Log.codeDiffLog(el.getURLExternalForm(), dirName, className, " Code diff in AbstractChecker");
                 return true;
             }
         }
@@ -89,7 +89,7 @@ abstract class AbstractCheck {
      * Check if the configuration has changed.
      *
      */
-    private boolean hasConfigChanged(Map<String, String> configMap, String className) {
+    private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
         Log.d2f("Compare configuration diff in AbstractCheck.java");
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
         if (userConfig == null) {
@@ -130,7 +130,7 @@ abstract class AbstractCheck {
 
             // (2) If user's setting is different, return true
             else if (!configMap.get(key).equals(value)) {
-                Log.configDiffLog(key, configMap.get(key), value, "Value different!", className);
+                Log.configDiffLog(key, configMap.get(key), value, "Value different in AbstractCheck! Compared with " + dirName, className);
                 diff = true;
             }
         }

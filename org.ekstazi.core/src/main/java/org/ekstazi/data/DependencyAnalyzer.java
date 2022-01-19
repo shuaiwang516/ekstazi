@@ -104,7 +104,7 @@ public final class DependencyAnalyzer {
         String fullMethodName = name + "." + COV_EXT;
         Set<RegData> regData = mStorer.loadRegData(mCurDir, name, COV_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, name, COV_EXT);
-        boolean isAffected = isAffected(regData, name) || isAffected(configMap, name);
+        boolean isAffected = isAffected(regData, mCurDir, name) || isAffected(configMap, mCurDir, name);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -158,7 +158,7 @@ public final class DependencyAnalyzer {
         String fullMethodName = className + "." + CLASS_EXT;
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, CLASS_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, CLASS_EXT);
-        isAffected = isAffected(regData, className) || isAffected(configMap, className);
+        isAffected = isAffected(regData, mCurDir, className) || isAffected(configMap, mCurDir, className);
         //Log.d2f("line154 in isClassAffected: " + isAffected + " configAffecgted = " + isAffected(configMap));
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
@@ -224,7 +224,7 @@ public final class DependencyAnalyzer {
 
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, methodName);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, methodName);
-        boolean isAffected = isAffected(regData, className) || isAffected(configMap, className);
+        boolean isAffected = isAffected(regData, mCurDir, className) || isAffected(configMap, mCurDir, className);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);
         }
@@ -309,20 +309,20 @@ public final class DependencyAnalyzer {
      * Returns true if test is affected. Test is affected if hash of any
      * resource does not match old hash.
      */
-    private boolean isAffected(Set<RegData> regData, String className) {
-        return regData == null || regData.size() == 0 || hasHashChanged(regData, className);
+    private boolean isAffected(Set<RegData> regData, String dirName, String className) {
+        return regData == null || regData.size() == 0 || hasHashChanged(regData, dirName, className);
     }
 
-    protected boolean isAffected(Map<String, String> configMap, String className) {
-        Log.d2f("configMap not null = " + (configMap != null) + "; not Empty = " + !configMap.isEmpty() + "; hasConfigChanged(configMap) = " + hasConfigChanged(configMap, className));
-        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, className);
+    protected boolean isAffected(Map<String, String> configMap, String dirName, String className) {
+        Log.d2f("configMap not null = " + (configMap != null) + "; not Empty = " + !configMap.isEmpty() + "; hasConfigChanged(configMap) = " + hasConfigChanged(configMap, dirName, className));
+        return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, dirName, className);
     }
 
     /**
      * Check if the configuration has changed.
      *
      */
-    private boolean hasConfigChanged(Map<String, String> configMap, String className) {
+    private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
         Log.d2f("Compare configuration diff in DependencyAnalyzer.java");
         Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
         if (userConfig == null) {
@@ -363,7 +363,7 @@ public final class DependencyAnalyzer {
 
             // (2) If user's setting is different, return true
             else if (!configMap.get(key).equals(value)) {
-                Log.configDiffLog(key, configMap.get(key), value,"Value different!", className);
+                Log.configDiffLog(key, configMap.get(key), value, "Value different in DepAnalyzer! Compared with " + dirName, className);
                 diff = true;
             }
         }
@@ -380,10 +380,10 @@ public final class DependencyAnalyzer {
      * Hashes files and compares with the old hashes. If any hash is different,
      * returns true; false otherwise.
      */
-    private boolean hasHashChanged(Set<RegData> regData, String className) {
+    private boolean hasHashChanged(Set<RegData> regData, String dirName, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
-                Log.codeDiffLog(el.getURLExternalForm(), className);
+                Log.codeDiffLog(el.getURLExternalForm(), dirName, className, " Code diff in DepAnalyzer");
                 Log.d("CHANGED", el.getURLExternalForm());
                 return true;
             }
