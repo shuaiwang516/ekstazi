@@ -128,7 +128,8 @@ public class ConfigLoader {
                 // Multiple configuration files may have duplicated settings. We choose the last one as the final value (Overwrite)
                 // This is the same idea as some real-world software like Hadoop.
                 if (!Objects.equals(configName, "")) {
-                    sExercisedConfigMap.put(replaceBlank(configName), replaceBlank(configValue));
+                    //sExercisedConfigMap.put(replaceBlank(configName), replaceBlank(configValue));
+                    sExercisedConfigMap.put(configName, configValue);
                 }
                 //System.out.println(configName + " , " + configValue);
             }
