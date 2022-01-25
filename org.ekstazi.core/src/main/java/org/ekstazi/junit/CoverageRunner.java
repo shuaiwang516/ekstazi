@@ -73,7 +73,7 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
 
     @Override
     public void run(RunNotifier notifier) {
-        if (isIgnoreAllTests()) {
+        if (isIgnoreAllTests() || isTestForGetConfigValue()) {
             return;
         } else if (isRunWithoutCoverage() || isTestForGetConfigValue()) {     // Shuai: Run without coverage means -> No start and end coverage method between each test class.
             mWrappedRunner.run(notifier);

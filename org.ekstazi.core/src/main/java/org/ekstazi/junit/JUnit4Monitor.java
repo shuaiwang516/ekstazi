@@ -61,8 +61,6 @@ public class JUnit4Monitor {
         }
         CoverageMonitor.clean();  // Shuai: Insert this into Initialization part (e.g. @Before part of Junit)
         Runner wrapped = builder.runnerForClass(testClass);
-        System.out.println("In JUnit4Monitor.java:line64: -> return CoverageRunner!");
-        Thread.dumpStack();
         return new CoverageRunner(testClass, wrapped, CoverageMonitor.getURLs());
     }
 

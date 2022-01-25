@@ -59,7 +59,6 @@ public final class Config {
     public static void prepareRound() {
         curRound = getCurRound();
         nextRound = getNextRound();
-        Log.d2f("In prepareRound: curRound = " + curRound + " nextRound = " + nextRound);
     }
 
     /**
@@ -106,31 +105,22 @@ public final class Config {
     }
 
     private static int getCurRound() {
-        Log.d2f("In config.java, getCurRound line 81");
         Config.preLoadConfigAware();
         String rootDir = rootDirDefault();
         String configName = CONFIG_FILE_NAME_V;
-        Log.d2f("In config.java, getCurRound line 84, configName = " + configName);
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
-        Log.d2f("In config.java, getCurRound line 88");
         for(File f : files) {
-            Log.d2f("In config.java, getCurRound line 88: filename = " + f.getAbsolutePath());
             if (f.isDirectory() && f.getName().contains(configName)) {
                 String filename = f.getName();
-                Log.d2f("In config.java, getCurRound line 92: filename = " + filename);
                 return Integer.parseInt(filename.substring(filename.length() - 1));
             }
         }
-        Log.d2f("In config.java, getCurRound line 93");
         return 0;
     }
 
     private static int getMaxRound() {
-        Log.d2f("In config.java, getMaxRound line 126");
         String rootDir = rootDirDefault();
-        Log.d2f("In config.java, getMaxRound line 128 rootDir = " + rootDir);
-        Log.d2f("In config.java, CONFIG_FILE_NAME_V = " + CONFIG_FILE_NAME_V);
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
         int max = curRound;
@@ -142,13 +132,11 @@ public final class Config {
             if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
                 String filename = f.getName();
                 int round = Integer.parseInt(filename.substring(filename.length() - 1));
-                Log.d2f("In config.java, getMaxRound line 137: curRound = " + round);
                 if (round > max) {
                     max = round;
                 }
             }
         }
-        Log.d2f("In config.java, getMaxRound line 141, maxRound = " + max);
         return max;
     }
 
