@@ -49,7 +49,7 @@ public class ConfigLoader {
         try {
             File file = new File(filename);
             if (file.exists()) {
-                BufferedReader reader = new BufferedReader(new FileReader(file) );
+                BufferedReader reader = new BufferedReader(new FileReader(file));
 
                 String line;
                 String oneLineStr = reader.readLine();
@@ -65,6 +65,7 @@ public class ConfigLoader {
                         sExercisedConfigMap.put(replaceBlank(configName), replaceBlank(configValue));
                     }
                 }
+                reader.close();
             } else {
                 Log.e("Loading configuration is not successful because no file exists, please check config.file.path");
                 Log.d2f("Loading configuration is not successful because no file exists, please check config.file.path");
