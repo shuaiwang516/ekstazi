@@ -47,6 +47,9 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
     /** Set of urls that is used when test classes were instantiated */
     private final String[] mURLs;
 
+    /** Test name that used for getting all configuration values */
+    private final String configTestName = "TestGetConfigValueForConfigAware";
+
     /**
      * Constructor.
      */
@@ -72,7 +75,7 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
     public void run(RunNotifier notifier) {
         if (isIgnoreAllTests()) {
             return;
-        } else if (isRunWithoutCoverage()) {     // Shuai: Run without coverage means -> No start and end coverage method between each test class.
+        } else if (isRunWithoutCoverage() || isTestForGetConfigValue()) {     // Shuai: Run without coverage means -> No start and end coverage method between each test class.
             mWrappedRunner.run(notifier);
         } else {
             Ekstazi.inst().beginClassCoverage(mClz.getName());
@@ -89,6 +92,15 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
     }
 
     // INTERNAL
+
+    /**
+     * Check whether this test is used for getting all configuration values
+     *
+     */
+
+    private boolean isTestForGetConfigValue() {
+        return mClz.getName().contains(configTestName);
+    }
 
     /**
      * Check if for any reason we want to ignore all the tests. We ignore all

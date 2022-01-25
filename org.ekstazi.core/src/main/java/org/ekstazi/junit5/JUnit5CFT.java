@@ -11,6 +11,10 @@ import java.security.ProtectionDomain;
 public class JUnit5CFT implements ClassFileTransformer {
     //private static int count = 0;
 
+
+    /** Test name that used for getting all configuration values */
+    private final String configTestName = "TestGetConfigValueForConfigAware";
+
     private static class TestClassVisitor extends ClassVisitor {
         protected static String mClassName;
         protected static Boolean seenBeforeAll;
@@ -117,6 +121,7 @@ public class JUnit5CFT implements ClassFileTransformer {
         //Log.d2f("I have entered JUNIT5 CFT: " + className);
         if (className.contains("Test") &&
                 !className.contains("org/apache/tools/ant") &&
+                !className.contains(configTestName) &&
                 !className.startsWith("org/apache/maven") &&
                 !className.contains("junit") &&
                 !className.contains("opentest4j") &&
