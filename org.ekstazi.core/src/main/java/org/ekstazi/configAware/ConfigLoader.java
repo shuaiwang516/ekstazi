@@ -18,7 +18,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class ConfigLoader {
     private static final Map<String, String > sExercisedConfigMap = new HashMap<String, String>();
     private static final String configFileSeparator = ",";
-    private static final String configValueSeparator = "@@";
+    private static final String configSeparator = "@CONFIGAWARE@";
+    private static final String configValueSeparator = "=CONFIGAWARE=";
 
     public static Map<String, String> getUserConfigMap() {
         if (sExercisedConfigMap.isEmpty() || sExercisedConfigMap == null){
@@ -58,11 +59,11 @@ public class ConfigLoader {
                     oneLineStr += line;
                     line = reader.readLine();
                 }
-                String pairs [] = oneLineStr.replace("\n", "").split(configValueSeparator);
+                String pairs [] = oneLineStr.replace("\n", "").split(configSeparator);
                 for (String configPair : pairs) {
                     configPair = configPair.trim();
-                    String configName = configPair.split("=")[0];
-                    String configValue = configPair.split("=")[1];
+                    String configName = configPair.split(configValueSeparator)[0];
+                    String configValue = configPair.split(configValueSeparator)[1];
                     if (!Objects.equals(configName, "")) {
                         sExercisedConfigMap.put(replaceBlank(configName), replaceBlank(configValue));
                     }
