@@ -33,6 +33,9 @@ abstract class AbstractCheck {
     /** Hasher */
     protected final Hasher mHasher;
 
+    /** Flag to indicate configuration's value is got from default-reset */
+    private final String configDefaultFlag = "@DEFAULTVALUE4CONFIGAWARE@";
+
     /**
      * Constructor.
      */
@@ -121,17 +124,26 @@ abstract class AbstractCheck {
 
         for (Map.Entry<String, String> entry : userConfig.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
+            String userValue = entry.getValue();
 
             // (1) If this config is not used by test, continue
             if (!configMap.containsKey(key)) {
                 continue;
             }
 
+            String depValue = configMap.get(key);
+
             // (2) If user's setting is different, return true
-            else if (!configMap.get(key).equals(value)) {
-                Log.configDiffLog(key, configMap.get(key), value, "Value different in AbstractCheck! Compared with " + dirName, className);
-                diff = true;
+            if (!depValue.equals(userValue)) {
+                if (depValue.contains(configDefaultFlag)) {
+                    if (!userValue.equals("null") && !userValue.equals(depValue.replace(configDefaultFlag, ""))) {
+                        Log.configDiffLog(key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
+                        diff = true;
+                    }
+                } else {
+                    Log.configDiffLog(key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
+                    diff = true;
+                }
             }
         }
 
