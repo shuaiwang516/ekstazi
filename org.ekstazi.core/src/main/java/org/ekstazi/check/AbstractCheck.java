@@ -70,7 +70,7 @@ abstract class AbstractCheck {
     private boolean hasHashChanged(Set<RegData> regData, String dirName, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
-                Log.codeDiffLog(el.getURLExternalForm(), dirName, className, " Code diff in AbstractChecker");
+                //Log.codeDiffLog(el.getURLExternalForm(), dirName, className, " Code diff in AbstractChecker");
                 return true;
             }
         }
