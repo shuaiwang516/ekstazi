@@ -119,6 +119,7 @@ public class ConfigLoader {
                 parseConfigurationFile(filename, is);
                 //Log.d2f("Configuration file is loaded.");
                 //Log.printConfig(sExercisedConfigMap, "-loadMethod");
+                is.close();
             } catch (IOException e) {
                 Log.e("Loading configuration is not successful", e);
                 Log.d2f("Loading configuration is not successful" + e);
