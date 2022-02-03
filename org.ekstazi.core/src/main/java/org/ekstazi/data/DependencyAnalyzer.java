@@ -327,7 +327,7 @@ public final class DependencyAnalyzer {
      */
     private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
         Log.d2f("Compare configuration diff in DependencyAnalyzer.java");
-        Map<String, String> userConfig = ConfigLoader.getUserConfigMap();
+        Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
         if (userConfig == null) {
             Log.configDiffLog("", "", "", "Failed to get user configuration", className);
             Log.d2f("Failed to get user configuration");

@@ -361,6 +361,10 @@ public final class Config {
     public static String CONFIG_INJECT_FILE_PATH_V = "NonSetConfigInjectionFilePath";
     protected static final String CONFIG_INJECT_FILE_PATH_N = "config.inject.path";
 
+    @Opt(desc = "Production Configuration File Path")
+    public static String CONFIG_PROD_FILE_PATH_V = "NonSetConfigInjectionFilePath";
+    protected static final String CONFIG_PROD_FILE_PATH_N = "config.prod.path";
+
     // INCLUDE/EXCLUDE
 
     @Opt(desc = "Force execution of all tests.")
@@ -444,6 +448,7 @@ public final class Config {
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
+        CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
     }
 
 
@@ -554,6 +559,7 @@ public final class Config {
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
+        CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
         Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
     }
 
