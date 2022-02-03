@@ -59,7 +59,11 @@ public class ConfigMapping {
         }
     }
 
-
+    /**
+     *
+     * @param testName
+     * @return the real inject configuration pairs for running ${testName}
+     */
     public static Map<String, String> getInjectConfigPairs(String testName) {
         Map<String, String> defaultConfigPairs = ConfigLoader.getDefaultConfigMap();
         Map<String, String> prodConfigPairs = ConfigLoader.getProdConfigMap();

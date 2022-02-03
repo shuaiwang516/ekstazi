@@ -18,6 +18,9 @@ package org.ekstazi.junit;
 
 import org.ekstazi.Config;
 import org.ekstazi.Ekstazi;
+import org.ekstazi.configAware.ConfigInjector;
+import org.ekstazi.configAware.ConfigMapping;
+import org.ekstazi.log.Log;
 import org.ekstazi.monitor.CoverageMonitor;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.Description;
@@ -75,9 +78,13 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
     public void run(RunNotifier notifier) {
         if (isIgnoreAllTests() || isTestForGetConfigValue()) {
             return;
-        } else if (isRunWithoutCoverage() || isTestForGetConfigValue()) {     // Shuai: Run without coverage means -> No start and end coverage method between each test class.
+        } else if (isRunWithoutCoverage() || isTestForGetConfigValue()) {
+            ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClz.getName()));
+            Log.d2f("In Runner: Test name = " + mClz.getName());
             mWrappedRunner.run(notifier);
         } else {
+            ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClz.getName()));
+            Log.d2f("In Runner: Test name = " + mClz.getName());
             Ekstazi.inst().beginClassCoverage(mClz.getName());
             JUnit4OutcomeListener outcomeListener = new JUnit4OutcomeListener();
             notifier.addListener(outcomeListener);
