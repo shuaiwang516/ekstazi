@@ -45,6 +45,7 @@ public class ConfigInjector {
 
             // root element and add xml declaration
             Document doc = docBuilder.newDocument();
+            // TODO: Here is a hardcoded for Hadoop softwares, we may want to support more softwares in the future.
             ProcessingInstruction pi1 = doc.createProcessingInstruction("xml", "version=1.0");
             ProcessingInstruction pi2 = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"configuration.xsl\"");
             doc.insertBefore(pi1, doc.getDocumentElement());
