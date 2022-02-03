@@ -227,8 +227,10 @@ public class ConfigLoader {
 
     // For simply test
     public static void main(String args[]) {
-        load0("/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml", sDefaultConfigMap);
-        load0("/Users/alenwang/Desktop/generatedXML.xml", sProdConfigMap);
+        Config.DEFAULT_CONFIG_FILE_PATH_V = "/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml";
+        Config.CONFIG_PROD_FILE_PATH_V = "/Users/alenwang/Desktop/generatedXML.xml";
+        getDefaultConfigMap();
+        getProdConfigMap();
         int count = 0;
         for(Map.Entry<String, String> entry : sDefaultConfigMap.entrySet()) {
             count += 1;

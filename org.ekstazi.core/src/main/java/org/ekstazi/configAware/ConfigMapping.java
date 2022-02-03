@@ -23,7 +23,7 @@ public class ConfigMapping {
     }
 
     /** Generate the grouped mapping */
-    public static void generateGroupedMapping(){
+    private static void generateGroupedMapping(){
         String mappingFilePath = Config.CTEST_MAPPING_FILE_PATH_V;
         File mappingFile = new File(mappingFilePath);
         if (!mappingFile.exists() || mappingFile.isDirectory()) {
@@ -57,6 +57,32 @@ public class ConfigMapping {
             sGroupedMapping.clear();
             e.printStackTrace();
         }
+    }
+
+
+    public static Map<String, String> getInjectConfigPairs(String testName) {
+        Map<String, String> defaultConfigPairs = ConfigLoader.getDefaultConfigMap();
+        Map<String, String> prodConfigPairs = ConfigLoader.getProdConfigMap();
+        Map<String, String> injectParis = new HashMap<String, String>();
+
+        // find different configuration pairs
+        for (Map.Entry<String, String> entry : prodConfigPairs.entrySet()) {
+            String configName = entry.getKey();
+            String configValue = entry.getValue();
+            if (defaultConfigPairs.containsKey(configName) && !configValue.equals(defaultConfigPairs.get(configName))) {
+                injectParis.put(configName, configValue);
+            }
+        }
+
+        // filter out those configuration that can't be tested by testName
+        Map<String, Set<String>> configMapping = getConfigMapping();
+        Set<String> unTestableConfigSet = configMapping.get(testName);
+        for (String config : injectParis.keySet()) {
+            if (unTestableConfigSet.contains(config)) {
+                injectParis.remove(config);
+            }
+        }
+        return injectParis;
     }
 
 
