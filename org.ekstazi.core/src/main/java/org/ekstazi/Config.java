@@ -353,6 +353,10 @@ public final class Config {
     public static String DEFAULT_CONFIG_FILE_PATH_V = "NonSetConfigFile";
     protected static final String DEFAULT_CONFIG_FILE_PATH_N = "config.default.path";
 
+    @Opt(desc = "ctest mapping file path")
+    public static String CTEST_MAPPING_FILE_PATH_V = "NonSetConfigFilePath";
+    protected static final String CTEST_MAPPING_FILE_PATH_N = "config.file.path";
+
     // INCLUDE/EXCLUDE
 
     @Opt(desc = "Force execution of all tests.")
@@ -434,6 +438,7 @@ public final class Config {
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
+        CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
     }
 
 
@@ -542,6 +547,7 @@ public final class Config {
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
+        CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
     }
 
