@@ -341,21 +341,25 @@ public final class Config {
 
     // CONFIGURATION-AWARE
 
-    @Opt(desc = "Configuration file path")
+    @Opt(desc = "Test Generated Configuration <key, value> file path")
     public static String CONFIG_FILE_PATH_V = "NonSetConfigFilePath";
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")
-    public static String CONFIG_FILE_NAME_V = "NonSetConfigFile";
+    public static String CONFIG_FILE_NAME_V = "NonSetConfigFileName";
     protected static final String CONFIG_FILE_NAME_N = "config.file.name";
 
-    @Opt(desc = "Configuration file name")
-    public static String DEFAULT_CONFIG_FILE_PATH_V = "NonSetConfigFile";
+    @Opt(desc = "Default Configuration File Path")
+    public static String DEFAULT_CONFIG_FILE_PATH_V = "NonSetDefaultConfigFile";
     protected static final String DEFAULT_CONFIG_FILE_PATH_N = "config.default.path";
 
     @Opt(desc = "ctest mapping file path")
-    public static String CTEST_MAPPING_FILE_PATH_V = "NonSetConfigFilePath";
+    public static String CTEST_MAPPING_FILE_PATH_V = "NonSetCtestMappingFilePath";
     protected static final String CTEST_MAPPING_FILE_PATH_N = "config.file.path";
+
+    @Opt(desc = "Inject Configuration File Path")
+    public static String CONFIG_INJECT_FILE_PATH_V = "NonSetConfigInjectionFilePath";
+    protected static final String CONFIG_INJECT_FILE_PATH_N = "config.inject.path";
 
     // INCLUDE/EXCLUDE
 
@@ -439,6 +443,7 @@ public final class Config {
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
+        CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
     }
 
 
@@ -548,6 +553,7 @@ public final class Config {
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
+        CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
     }
 

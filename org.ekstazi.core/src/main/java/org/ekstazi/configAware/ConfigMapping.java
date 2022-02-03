@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.util.*;
 
 public class ConfigMapping {
-    /** Ctest grouped mapping */
+    /** Ctest grouped mapping, key = TestName, Value = Set<configName>*/
     private static final Map<String, Set<String>> sGroupedMapping = new HashMap<String, Set<String>>();
 
     /** Return the grouped mapping */
