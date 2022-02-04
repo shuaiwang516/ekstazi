@@ -355,7 +355,7 @@ public final class Config {
 
     @Opt(desc = "ctest mapping file path")
     public static String CTEST_MAPPING_FILE_PATH_V = "NonSetCtestMappingFilePath";
-    protected static final String CTEST_MAPPING_FILE_PATH_N = "config.file.path";
+    protected static final String CTEST_MAPPING_FILE_PATH_N = "config.mapping.path";
 
     @Opt(desc = "Inject Configuration File Path")
     public static String CONFIG_INJECT_FILE_PATH_V = "NonSetConfigInjectionFilePath";
