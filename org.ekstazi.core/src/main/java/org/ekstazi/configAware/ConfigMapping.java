@@ -85,6 +85,7 @@ public class ConfigMapping {
         if (!injectPairs.isEmpty()) {
             for (String config : injectPairs.keySet()) {
                 if (!unTestableConfigSet.contains(config)) {
+                    Log.d2f("Do not inject config " + config + " for test " + testName);
                     returnPairs.put(config, injectPairs.get(config));
                 }
             }
