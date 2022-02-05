@@ -82,7 +82,7 @@ public class ConfigMapping {
         // filter out those configuration that can't be tested by testName
         Map<String, Set<String>> configMapping = getConfigMapping();
         Set<String> unTestableConfigSet = configMapping.get(testName);
-        if (!injectPairs.isEmpty()) {
+        if (!injectPairs.isEmpty() && !unTestableConfigSet.isEmpty()) {
             for (String config : injectPairs.keySet()) {
                 if (!unTestableConfigSet.contains(config)) {
                     Log.d2f("Do not inject config " + config + " for test " + testName);
