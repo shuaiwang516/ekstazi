@@ -81,9 +81,11 @@ public class ConfigMapping {
         // filter out those configuration that can't be tested by testName
         Map<String, Set<String>> configMapping = getConfigMapping();
         Set<String> unTestableConfigSet = configMapping.get(testName);
-        for (String config : injectParis.keySet()) {
-            if (unTestableConfigSet.contains(config)) {
-                injectParis.remove(config);
+        if (!injectParis.isEmpty()) {
+            for (String config : injectParis.keySet()) {
+                if (unTestableConfigSet.contains(config)) {
+                    injectParis.remove(config);
+                }
             }
         }
         return injectParis;
