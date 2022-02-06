@@ -93,6 +93,10 @@ public class ConfigMapping {
             }
         }
 
+        for (Map.Entry<String, String> entry : returnPairs.entrySet()) {
+            Log.d2f(testName + ": InjectLog " + entry.getKey() + " : " + entry.getValue());
+        }
+
         return returnPairs;
     }
 
