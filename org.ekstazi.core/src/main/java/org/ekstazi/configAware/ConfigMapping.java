@@ -76,6 +76,7 @@ public class ConfigMapping {
             String configValue = entry.getValue();
             if (defaultConfigPairs.containsKey(configName) && !configValue.equals(defaultConfigPairs.get(configName))) {
                 injectPairs.put(configName, configValue);
+                returnPairs.put(configName, configValue);
             }
         }
 
@@ -85,9 +86,9 @@ public class ConfigMapping {
             Set<String> unTestableConfigSet = configMapping.get(testName);
             if (!injectPairs.isEmpty() && !unTestableConfigSet.isEmpty()) {
                 for (String config : injectPairs.keySet()) {
-                    if (!unTestableConfigSet.contains(config)) {
+                    if (unTestableConfigSet.contains(config)) {
                         Log.d2f("Do not inject config " + config + " for test " + testName);
-                        returnPairs.put(config, injectPairs.get(config));
+                        returnPairs.remove(config);
                     }
                 }
             }
