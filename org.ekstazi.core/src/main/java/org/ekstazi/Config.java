@@ -113,7 +113,8 @@ public final class Config {
         for(File f : files) {
             if (f.isDirectory() && f.getName().contains(configName)) {
                 String filename = f.getName();
-                return Integer.parseInt(filename.substring(filename.length() - 1));
+                String[] filenamelist = filename.split("-");
+                return Integer.parseInt(filenamelist[filenamelist.length-1].substring(5));
             }
         }
         return 0;
@@ -131,7 +132,8 @@ public final class Config {
             }
             if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
                 String filename = f.getName();
-                int round = Integer.parseInt(filename.substring(filename.length() - 1));
+                String[] filenamelist = filename.split("-");
+                int round = Integer.parseInt(filenamelist[filenamelist.length-1].substring(5));
                 if (round > max) {
                     max = round;
                 }
