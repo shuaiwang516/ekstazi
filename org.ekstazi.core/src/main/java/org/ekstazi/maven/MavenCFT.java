@@ -87,7 +87,6 @@ public final class MavenCFT implements ClassFileTransformer {
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        //Log.d2f("In maven CFT, file name == " + className);
         if (className.equals(MavenNames.ABSTRACT_SUREFIRE_MOJO_VM)
                 || className.equals(MavenNames.SUREFIRE_PLUGIN_VM)
                 || className.equals(MavenNames.FAILSAFE_PLUGIN_VM)) {

@@ -36,6 +36,5 @@ public class EkstaziCycleMojo extends StaticSelectEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
         // Nothing.
-        //Log.d2f("EkstaziCycleMojo.java line 39");
     }
 }

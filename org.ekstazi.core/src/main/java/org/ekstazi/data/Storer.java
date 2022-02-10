@@ -149,7 +149,6 @@ public abstract class Storer {
         // Ensure that the directory for coverage exists.
         new File(dirName).mkdir();
         String fullName = className + '.' + methodName;
-        //Log.d2f("Log in Storer.java line 135: " + fullName);
         save(openFileWrite(dirName, fullName, className, methodName), regData, configMap);
     }
 
@@ -203,9 +202,7 @@ public abstract class Storer {
     }
 
     private final void save(FileOutputStream fos, Set<RegData> hashes, Map<String, String> configMap) {
-        //Log.d2f("Log in Storer.java line 171");
         if (fos != null) {
-            //Log.d2f("Log in Storer.java line 173");
             extendedSave(fos, hashes, configMap);
         }
     }
@@ -276,11 +273,9 @@ public abstract class Storer {
                     return openFileWrite(dirName, fullName, null, null);
                 } else {
                     // No hope.
-                    //Log.d2f("Could not open file for writing (name too long) " + fullName);
                     Log.w("Could not open file for writing (name too long) " + fullName);
                 }
             } else {
-                //Log.d2f("Could not open file for writing " + fullName + " " + ex1.getMessage());
                 Log.w("Could not open file for writing " + fullName + " " + ex1.getMessage());
             }
             return null;

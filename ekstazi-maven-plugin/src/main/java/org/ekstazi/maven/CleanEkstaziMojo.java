@@ -34,7 +34,6 @@ import org.ekstazi.Names;
 public class CleanEkstaziMojo extends AbstractEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
-        //Log.d2f("CleanEkstaziMojo.java line 37");
         File fileList[] = parentdir.listFiles();
         for (File f : fileList) {
             if (f.getName().contains(Log.D2F_FILE_NAME)) {
@@ -50,9 +49,5 @@ public class CleanEkstaziMojo extends AbstractEkstaziMojo {
                 FileUtil.deleteDirectory(f);
             }
         }
-//        File dotEkstazi = new File(parentdir, Names.EKSTAZI_ROOT_DIR_NAME);
-//        if (dotEkstazi.exists()) {
-//            FileUtil.deleteDirectory(dotEkstazi);
-//        }
     }
 }

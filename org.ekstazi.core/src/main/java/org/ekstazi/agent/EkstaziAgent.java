@@ -89,19 +89,19 @@ public class EkstaziAgent {
                 instrumentation.addTransformer(new CollectLoadedCFT(), false);
             }
         } else if (Config.MODE_V == Config.AgentMode.JUNIT5INSERTION) {
-            Log.d2f("JUNIT5_Insertion is enabled");
+            Log.d2f("[INFO] JUNIT5_Insertion is enabled");
             //Thread.dumpStack();
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initJUnit5Mode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT5EXTENSION) {
-            Log.d2f("JUNIT5_Extension is enabled");
+            Log.d2f("[INFO] JUNIT5_Extension is enabled");
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initJUni5ExtensionMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT5FORK) {
-            Log.d2f("JUNIT5 Fork is enabled");
+            Log.d2f("[INFO] JUNIT5 Fork is enabled");
             initJUnit5ForkMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT) {
-            Log.d2f("JUNIT4 is enabled");
+            Log.d2f("[INFO] JUNIT4 is enabled");
             //Thread.dumpStack();
             //System.out.println("In EkstaziAgent.java:line88: -> JUNIT");
             instrumentation.addTransformer(new EkstaziCFT(), true);
@@ -125,8 +125,6 @@ public class EkstaziAgent {
      */
     public static void agentmain(String options, Instrumentation instrumentation) {
         if (Config.X_ENABLED_V) {
-            //Log.d2f("agentmain");
-            //Thread.dumpStack();
             init(instrumentation);
             instrumentation.addTransformer(new MavenCFT(), true);
             instrumentMaven(instrumentation);

@@ -119,8 +119,6 @@ public class JUnitCFT implements ClassFileTransformer {
         if (className.startsWith("org/apache/tools/ant") ||
                 className.startsWith("org/apache/maven") ||
                 className.startsWith("org/junit/")) {
-            //Log.d2f("In JUnitCFT.java:line118: " + className);
-            //Thread.dumpStack();
             ClassReader classReader = new ClassReader(classfileBuffer);
             ClassWriter classWriter = new ClassWriter(classReader,
                     /* ClassWriter.COMPUTE_FRAMES | */ClassWriter.COMPUTE_MAXS);

@@ -112,8 +112,6 @@ public class AffectedChecker {
 
     private static List<String> findNonAffectedClassesFromCurRound(String workingDirectory, List<File> sameRoundDirs) {
         loadConfig(workingDirectory);
-
-        Log.d2f("In AffectedChecker line 130: Config.CUR_DIR_V = " + Config.CUR_DIR_V);
         List<String> nonAffectedClasses = findNonAffectedClassesFromCurRound(true, sameRoundDirs);
         return formatNonAffectedClassesForAntAndMavenWithRound(nonAffectedClasses);
     }
@@ -127,18 +125,13 @@ public class AffectedChecker {
         Set<String> affectedClasses = new HashSet<String>();
         Set <String> nonAffectedClasses = new HashSet<String>();
         for (File depsDir : sameRoundDirs) {
-            Log.d2f("In findNonAffectedClassesFromCurRound, depsDir name = " + depsDir.getName());
             if (checkIfDoesNotExist(depsDir)) {
                 continue;
             }
-            Log.d2f("In findNonAffectedClassesFromCurRound, line134");
             // Find affected test classes.
             includeAffectedFromCurRound(allClasses, affectedClasses, getSortedFiles(depsDir), depsDir.getName());
-            Log.d2f("In findNonAffectedClassesFromCurRound, line137");
             nonAffectedClasses.addAll(allClasses);
-            Log.d2f("In findNonAffectedClassesFromCurRound, line139");
             nonAffectedClasses.removeAll(affectedClasses);
-            Log.d2f("In findNonAffectedClassesFromCurRound, line141");
         }
 
         //Remove duplicated redundant class that has same class name but from different dependency folder.
@@ -150,16 +143,13 @@ public class AffectedChecker {
             }
         }
         Collections.sort(nonDuplicatedNonAffectedClasses);
-        Log.d2f("In findNonAffectedClassesFromCurRound, line153");
         return nonDuplicatedNonAffectedClasses;
     }
 
     private static void includeAffectedFromCurRound(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles, String depsDirName) {
-        //Log.d2f("line284: includeAffected");
         Storer storer = Config.createStorer();
         Hasher hasher = Config.createHasher();
 
-        Log.d2f("In includeAffectedFromCurRound, line161");
         NameBasedCheck classCheck = Config.DEBUG_MODE_V != Config.DebugMode.NONE ?
                 new DebugNameCheck(storer, hasher, DependencyAnalyzer.CLASS_EXT) :
                 new NameBasedCheck(storer, hasher, DependencyAnalyzer.CLASS_EXT);
@@ -173,7 +163,6 @@ public class AffectedChecker {
             if (file.isDirectory()) {
                 continue;
             }
-            Log.d2f("In includeAffectedFromCurRound, line175");
             if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
                 className = covCheck.includeAll(fileName, dirName);
             } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
@@ -181,24 +170,19 @@ public class AffectedChecker {
             } else {
                 className = methodCheck.includeAll(fileName, dirName);
             }
-            Log.d2f("In includeAffectedFromCurRound, line183");
             // Reset after some time to free space.
             if (prevClassName != null && className != null && !prevClassName.equals(className)) {
                 methodCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
                 methodCheck = new MethodCheck(Config.createStorer(), Config.createHasher());
             }
-            Log.d2f("In includeAffectedFromCurRound, line189");
             if (className != null) {
                 allClasses.add(className.trim() + ROUND_SEPARATOR + depsDirName);
                 prevClassName = className.trim();
             }
-            Log.d2f("In includeAffectedFromCurRound, line194");
         }
-        Log.d2f("In includeAffectedFromCurRound, line196");
         classCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
         covCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
         methodCheck.includeAffectedFromCurRound(affectedClasses, depsDirName);
-        Log.d2f("In includeAffectedFromCurRound, line200");
     }
 
 
@@ -217,7 +201,6 @@ public class AffectedChecker {
         if (!Config.createCurDir(parentDir).exists()) {
             return Collections.<String>emptyList();
         }
-        Log.d2f("In AffectedChecker line 116: curDir = " + Config.createCurDir(parentDir).getAbsolutePath());
         Config.loadConfig(options, true);
         return findNonAffectedClassesFromPrev(parentDir.getAbsolutePath());
     }
@@ -231,7 +214,6 @@ public class AffectedChecker {
         Set<String> affectedClasses = new HashSet<String>();
         loadConfig(workingDirectory);
         // Find non affected classes.
-        Log.d2f("In AffectedChecker line 130: Config.CUR_DIR_V = " + Config.CUR_DIR_V);
         List<String> nonAffectedClasses = findNonAffectedClassesFromPrev(Config.CUR_DIR_V, true, allClasses,
                 affectedClasses);
         // Format list to include class names in expected format for Ant and Maven.
@@ -295,14 +277,12 @@ public class AffectedChecker {
     }
 
     private static List<String> formatNonAffectedClassesForAntAndMavenWithRound(List<String> nonAffectedClasses) {
-        Log.d2f("In formatNonAffectedClassesForAntAndMavenWithRound, line298");
         List<String> formatted = new ArrayList<String>();
         for (String ClassNameWithRound : nonAffectedClasses) {
             String binClassName = ClassNameWithRound.split(ROUND_SEPARATOR)[0];
             String round = ClassNameWithRound.split(ROUND_SEPARATOR)[1];
             formatted.add(binClassName.replaceAll("\\.", "/") + ".java" + ROUND_SEPARATOR + round);
         }
-        Log.d2f("In formatNonAffectedClassesForAntAndMavenWithRound, line305");
         return formatted;
     }
 
@@ -399,7 +379,6 @@ public class AffectedChecker {
      * Find all non affected classes.
      */
     private static void includeAffectedFromPrev(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles) {
-        //Log.d2f("line284: includeAffected");
         Storer storer = Config.createStorer();
         Hasher hasher = Config.createHasher();
 

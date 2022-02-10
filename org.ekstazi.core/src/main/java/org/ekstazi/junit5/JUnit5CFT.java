@@ -118,7 +118,6 @@ public class JUnit5CFT implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        //Log.d2f("I have entered JUNIT5 CFT: " + className);
         if (className.contains("Test") &&
                 !className.contains("org/apache/tools/ant") &&
                 !className.contains(configTestName) &&
@@ -126,12 +125,10 @@ public class JUnit5CFT implements ClassFileTransformer {
                 !className.contains("junit") &&
                 !className.contains("opentest4j") &&
                 !className.contains("ekstazi")) {
-            //Log.d2f("I'm truely modifying JUNIT5 test class: " + className);
             ClassReader classReader = new ClassReader(classfileBuffer);
             ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
             TestClassVisitor visitor = new TestClassVisitor(className.replace('/','.'), classWriter);
             classReader.accept(visitor, 0);
-            //Log.write("/Users/alenwang/Documents/xlab/junit5_demo/Shuai_debug" + count++ +".class", classWriter.toByteArray());
             return classWriter.toByteArray();
         }
         return null;

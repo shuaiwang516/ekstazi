@@ -39,7 +39,6 @@ class AffectingRunner extends Runner {
     public void run(RunNotifier notifier) {
         // We decided not to tell the world that things are ignored.
         // notifier.fireTestIgnored(getDescription());
-        Log.d2f("In the empty runner! Still try to run the tests");
     }
 
     @Override

@@ -51,7 +51,6 @@ abstract class AbstractCheck {
     public abstract void includeAffectedFromCurRound(Set<String> affectedClasses, String curRoundDirName);
 
     protected boolean isAffected(String dirName, String className, String methodName) {
-        //Log.d2f("line49: Compare diff!");
         return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), dirName, className)
                 || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
     }
@@ -93,11 +92,10 @@ abstract class AbstractCheck {
      *
      */
     private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
-        Log.d2f("Compare configuration diff in AbstractCheck.java");
         Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
         if (userConfig == null) {
             Log.configDiffLog("", "", "", "Failed to get user configuration", className);
-            Log.d2f("Failed to get user configuration");
+            Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
             return true;
         }
 

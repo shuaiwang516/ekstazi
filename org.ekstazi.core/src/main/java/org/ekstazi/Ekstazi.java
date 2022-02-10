@@ -142,7 +142,6 @@ public final class Ekstazi {
      */
     public void endClassCoverage(String className, boolean isFailOrError) {
         Config.preLoadConfigAware();
-        Log.d2f("Result folder = " + Config.getCurDirName() + "/" + Names.TEST_RESULTS_DIR_NAME);
         File testResultsDir = new File(Config.getCurDirName(), Names.TEST_RESULTS_DIR_NAME);
         File outcomeFile = new File(testResultsDir, className);
         if (isFailOrError) {

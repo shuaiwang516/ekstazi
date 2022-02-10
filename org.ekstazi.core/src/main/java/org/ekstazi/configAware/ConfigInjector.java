@@ -30,7 +30,7 @@ public class ConfigInjector {
                 injectConfigXML(configPairs);
                 break;
             default:
-                Log.d2f("Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
+                Log.d2f("[ERROR] Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
                 Log.e("Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
                 break;
         }
@@ -69,7 +69,7 @@ public class ConfigInjector {
             writeXML(doc, os);
             os.close();
         } catch (Exception e) {
-            Log.d2f("Failed to inject configuration " + e.getMessage());
+            Log.d2f("[ERROR] Failed to inject configuration " + e.getMessage());
             Log.e("Failed to inject configuration " + e.getMessage());
         }
     }

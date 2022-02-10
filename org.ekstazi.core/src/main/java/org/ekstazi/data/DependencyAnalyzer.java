@@ -87,7 +87,6 @@ public final class DependencyAnalyzer {
         Config.prepareRound();
         this.mCurDir = Config.getCurDirName();
         this.mNextDir = Config.getNextDirName();
-        Log.d2f("mCurDir = " + this.mCurDir + " mNextDir = " + this.mNextDir);
         //this.mRootDir = Config.ROOT_DIR_V;
         this.mDependenciesAppend = Config.DEPENDENCIES_APPEND_V;
 
@@ -162,7 +161,6 @@ public final class DependencyAnalyzer {
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, CLASS_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, CLASS_EXT);
         isAffected = isAffected(regData, mCurDir, className) || isAffected(configMap, mCurDir, className);
-        //Log.d2f("line154 in isClassAffected: " + isAffected + " configAffecgted = " + isAffected(configMap));
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -290,9 +288,7 @@ public final class DependencyAnalyzer {
     private void endCoverage(String className, String methodName) {
         Map<String, String> hashes = mHasher.hashExternalForms(CoverageMonitor.getURLs());
         Set<RegData> regData = new TreeSet<RegData>(new RegData.RegComparator());
-        //Log.d2f("Before Hash entry added here!");
         for (Entry<String, String> entry : hashes.entrySet()) {
-            //Log.d2f("Hash entry added here!");
             regData.add(new RegData(entry.getKey(), entry.getValue()));
         }
         //Config-aware mapping information
@@ -302,9 +298,6 @@ public final class DependencyAnalyzer {
         } else {
             mStorer.save(mNextDir, className, methodName, regData, configMap);
         }
-        //Log.d2f("endCoverage and save to file: " + mRootDir + " class name = "
-        //        + className + " method name = " + methodName + " regData = " + regData);
-        // Clean monitor after the test finished the execution
         CoverageMonitor.clean();
     }
 
@@ -317,7 +310,6 @@ public final class DependencyAnalyzer {
     }
 
     protected boolean isAffected(Map<String, String> configMap, String dirName, String className) {
-        Log.d2f("configMap not null = " + (configMap != null) + "; not Empty = " + !configMap.isEmpty() + "; hasConfigChanged(configMap) = " + hasConfigChanged(configMap, dirName, className));
         return configMap != null && !configMap.isEmpty() && hasConfigChanged(configMap, dirName, className);
     }
 
@@ -326,11 +318,10 @@ public final class DependencyAnalyzer {
      *
      */
     private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
-        Log.d2f("Compare configuration diff in DependencyAnalyzer.java");
         Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
         if (userConfig == null) {
             Log.configDiffLog("", "", "", "Failed to get user configuration", className);
-            Log.d2f("Failed to get user configuration");
+            Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
             return true;
         }
 

@@ -46,7 +46,6 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
 //    }
 
     public void execute() throws MojoExecutionException {
-        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 42");
         if (getSkipme()) {
             getLog().info("Ekstazi is skipped.");
             return;
@@ -55,17 +54,14 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             getLog().info("Tests are skipped.");
             return;
         }
-        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 51");
 
         checkIfEkstaziDirCanBeCreated();
 
-        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 55");
         if (isRestoreGoalPresent()) {
             super.execute();
         } else {
             executeThis();
         }
-        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 60");
     }
 
     // INTERNAL
@@ -75,10 +71,8 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
      * problems can happen if there is no sufficient permission.
      */
     private void checkIfEkstaziDirCanBeCreated() throws MojoExecutionException {
-        MojoLog.d2f("DynamicSelectEkstaziMojo.java line 71");
         File curEkstaziDir = Config.createCurDir(parentdir);
         File nextEkstaziDir = Config.createNextDir(parentdir);
-        MojoLog.d2f("in DynamicSelectEkstaziMojo line74: curEkstaziDir = " + curEkstaziDir.getAbsolutePath() + " nextEkstaziDir = " + nextEkstaziDir.getAbsolutePath());
         // If .ekstazi does not exist and cannot be created, let them
         // know.  (We also remove directory if successfully created.)
         // !curEkstaziDir.exists()false !curEkstaziDir.mkdirs()true !curEkstaziDir.delete()true curEkstaziDir.exists()true !nextEkstaziDir.mkdir() true !nextEkstaziDir.delete()true
@@ -101,11 +95,9 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             // Prepare initial list of options and set property.
             System.setProperty(AbstractMojoInterceptor.ARGLINE_INTERNAL_PROP, prepareEkstaziOptions());
             // Find non affected classes and set property.
-            MojoLog.d2f("line104: computeNonAffectedClasses");
             List<List<String>> nonAffectedClassesList = computeNonAffectedClassesForDynamicSelect();
             List<String> nonAffectedClassesFromPrev = nonAffectedClassesList.get(0);
             List<String> nonAffectedClassesFromCurRound = nonAffectedClassesList.get(1);
-            MojoLog.d2f("line106: After computeNonAffectedClasses");
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PREV_PROP, Arrays.toString(nonAffectedClassesFromPrev.toArray(new String[0])));
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_CURROUND_PROP, Arrays.toString(nonAffectedClassesFromCurRound.toArray(new String[0])));
         } else {

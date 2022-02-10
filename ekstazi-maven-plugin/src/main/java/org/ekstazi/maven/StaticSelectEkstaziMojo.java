@@ -89,8 +89,6 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
     }
 
     public void execute() throws MojoExecutionException {
-        MojoLog.d2f("StaticSelectEkstaziMojo.java line 103");
-        //Config.preLoadConfig();
         // Check if user explicitly requested to not use Ekstazi in
         // this run.
         if (getSkipme()) {
@@ -115,7 +113,6 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
         boolean isForkMode = isForkMode(surefirePlugin);
         // Include agent to be used during test run.
-        MojoLog.d2f("Add java agent StaticSelectEkstaziMojo.java line 128");
         try {
             addJavaAgent(SurefireMojoInterceptor.isJupiterInPom() ? (isForkMode ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                     (isForkMode ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT));
@@ -143,25 +140,15 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             // Create excludes list; we assume that all files are in
             // the parentdir.
             // Parent dir is ".ekstazi-{}-{}"'s parent dir.
-            MojoLog.d2f("line144: findNonAffectedClasses, parentDir = " + parentdir + " getRootDirOption() = " + getRootDirOption() );
             Config.prepareRound();
             nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
-            MojoLog.d2f("line 149: computeNonAffectedClassesForDynamicSelect");
-            //For debug
-            for(String s : nonAffectedClassesFromCurRound) {
-                MojoLog.d2f("line 152: class in nonAffectedClassesFromCurRound: " + s);
-            }
             for (String classNameWithRound : nonAffectedClassesFromCurRound) {
-                MojoLog.d2f("line 151: computeNonAffectedClassesForDynamicSelect, classNameWithRound = " + classNameWithRound);
                 String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
-                MojoLog.d2f("line 153: computeNonAffectedClassesForDynamicSelect, className = " + className);
                 if (!nonAffectedClassesFromPrev.contains(className)) {
                     nonAffectedClassesFromCurRoundResult.add(classNameWithRound);
                 }
-                MojoLog.d2f("line 156: computeNonAffectedClassesForDynamicSelect");
             }
-            MojoLog.d2f("line 158: computeNonAffectedClassesForDynamicSelect");
 
             // Do not exclude recently failing tests if appropriate
             // argument is provided.
@@ -170,11 +157,9 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
                 nonAffectedClassesFromPrev.removeAll(recentlyFailingClasses);
             }
 
-            MojoLog.d2f("line 165: computeNonAffectedClassesForDynamicSelect");
 //            nonAffectedClasses.addAll(nonAffectedClassesFromPrev);
 //            nonAffectedClasses.addAll(nonAffectedClassesFromCurRound);
 //            Collections.sort(nonAffectedClasses);
-            MojoLog.d2f("Finish compute Non affected classes");
         }
         List<List<String>> result = new ArrayList<List<String>>();
         result.add(nonAffectedClassesFromPrev);
@@ -190,7 +175,6 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             // Create excludes list; we assume that all files are in
             // the parentdir.
             // Parent dir is ".ekstazi-{}-{}"'s parent dir.
-            MojoLog.d2f("line144: findNonAffectedClasses, parentDir = " + parentdir + " getRootDirOption() = " + getRootDirOption() );
             Config.prepareRound();
             nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
@@ -218,7 +202,6 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             }
             Collections.sort(nonAffectedClasses);
 
-            MojoLog.d2f("Finish compute Non affected classes");
         }
         return nonAffectedClassesFromPrev;
     }
@@ -245,7 +228,6 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
 
     private String prepareEkstaziOptions(URL agentJarURL, Config.AgentMode junitMode) throws URISyntaxException {
         String agentAbsolutePath = new File(agentJarURL.toURI().getSchemeSpecificPart()).getAbsolutePath();
-        Log.d2f("prepare Options in StaticSelectEkstaziMojo.java line 177: " + getRootDirOption());
         return "-javaagent:" + agentAbsolutePath + "=mode=" + junitMode +
             ",force.all=" + getForceall() +
             ",force.failing=" + getForcefailing() +

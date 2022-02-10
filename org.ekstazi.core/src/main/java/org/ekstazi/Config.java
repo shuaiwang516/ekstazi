@@ -46,10 +46,6 @@ public final class Config {
     /** Ensures that we initialize this class only once */
     private static boolean sIsInitialized;
 
-//    public void Config() {
-//        prepareRound();
-//        Log.d2f("Config initialization: curRound = " + curRound + " nextRound = " + nextRound);
-//    }
 
     // GENERAL
 
@@ -189,13 +185,11 @@ public final class Config {
         //return new File(pathAsString).toURI().toString();
         File rootDir = createCurDir(parentDir);
         // rootDir is the full name of the dependency folder, such as "XXX/.ekstazi-default-Round2"
-        Log.d2f("In Config.java line 153: rootDir = " + rootDir.getAbsolutePath());
         return rootDir.toURI().toString();
     }
 
     public static List<File> getSameRoundDirName() {
         Config.preLoadConfigAware();
-        Log.d2f("In getSameRoundDirName, curRound = " + curRound + " nextRound = " + nextRound);
         List<File> dirs = new ArrayList<>();
         String rootDir = rootDirDefault();
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
@@ -229,7 +223,7 @@ public final class Config {
             if (text != null) {
                 for (AgentMode b : AgentMode.values()) {
                     if (text.equalsIgnoreCase(b.name())) {
-                        Log.d2f("Return " + b.name());
+                        Log.d2f("[INFO] AgenMode Return " + b.name());
                         return b;
                     }
                 }
@@ -421,11 +415,8 @@ public final class Config {
         Properties homeProperties = getProperties(userHomeDir);
         File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
         Properties userProperties = getProperties(userDir);
-        //Log.d2f("Load home properties");
         loadProperties(homeProperties);
-        //Log.d2f("Load user properties");
         loadProperties(userProperties);
-        //Log.d2f("Load command properties");
         loadProperties(commandProperties);
         // Init Log before any print of config/debug.
         Log.init(DEBUG_MODE_V == DebugMode.SCREEN || DEBUG_MODE_V == DebugMode.EVERYWHERE,
@@ -521,19 +512,14 @@ public final class Config {
     }
 
     protected static void loadProperties(Properties props) {
-        Log.d2f("loadProperties, props = " + props.toString());
         CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
-        Log.d2f("463");
         MODE_V = AgentMode.fromString(getString(props, MODE_N, MODE_V.toString()));
         SINGLE_NAME_V = getString(props, SINGLE_NAME_N, SINGLE_NAME_V);
         DEPENDENCIES_FORMAT_V = getString(props, DEPENDENCIES_FORMAT_N, DEPENDENCIES_FORMAT_V);
-        Log.d2f("467");
         HASH_ALGORITHM_V = Hasher.Algorithm.fromString(getString(props, HASH_ALGORITHM_N, HASH_ALGORITHM_V.toString()));
-        Log.d2f("469");
         DEPENDENCIES_INCLUDE_WELLKNOWN_V = getBoolean(props, DEPENDENCIES_INCLUDE_WELLKNOWN_N, DEPENDENCIES_INCLUDE_WELLKNOWN_V);
         X_ENABLED_V = getBoolean(props, X_ENABLED_N, X_ENABLED_V);
         X_LOG_RUNS_V = getBoolean(props, X_LOG_RUNS_N, X_LOG_RUNS_V);
-        Log.d2f("471");
         X_INSTRUMENT_CODE_V = getBoolean(props, X_INSTRUMENT_CODE_N, X_INSTRUMENT_CODE_V);
         X_DEPENDENCIES_SAVE_V = getBoolean(props, X_DEPENDENCIES_SAVE_N, X_DEPENDENCIES_SAVE_V);
         DEBUG_V = getBoolean(props, DEBUG_N, DEBUG_V);
@@ -544,7 +530,6 @@ public final class Config {
         SELECTION_EXCLUDES_V = getArray(props, SELECTION_EXCLUDES_N, SELECTION_EXCLUDES_V);
         SELECTION_INCLUDES_V = getArray(props, SELECTION_INCLUDES_N, SELECTION_INCLUDES_V);
         FORCE_ALL_V = getBoolean(props, FORCE_ALL_N, FORCE_ALL_V);
-        Log.d2f("482");
         FORCE_FAILING_V = getBoolean(props, FORCE_FAILING_N, FORCE_FAILING_V);
         HASH_WITHOUT_DEBUGINFO_V = getBoolean(props, HASH_WITHOUT_DEBUGINFO_N, HASH_WITHOUT_DEBUGINFO_V);
         CACHE_SEEN_CLASSES_V = getBoolean(props, CACHE_SEEN_CLASSES_N, CACHE_SEEN_CLASSES_V);
@@ -555,14 +540,12 @@ public final class Config {
         DEPENDENCIES_NIO_V = getBoolean(props, DEPENDENCIES_NIO_N, DEPENDENCIES_NIO_V);
         DEPENDENCIES_NIO_INCLUDES_V = getPattern(props, DEPENDENCIES_NIO_INCLUDES_N, DEPENDENCIES_NIO_INCLUDES_V);
         DEPENDENCIES_NIO_EXCLUDES_V = getPattern(props, DEPENDENCIES_NIO_EXCLUDES_N, DEPENDENCIES_NIO_EXCLUDES_V);
-        Log.d2f("493");
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
         DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
-        Log.d2f("file.name = " + CONFIG_FILE_NAME_V + " file.path = " + CONFIG_FILE_PATH_V);
     }
 
     /**

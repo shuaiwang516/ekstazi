@@ -217,10 +217,8 @@ public class TxtStorer extends Storer {
             for (Map.Entry<String, String> configEntry : configMap.entrySet()) {
                 printConfigLine(pw, configEntry.getKey(), configEntry.getValue());
             }
-            //Log.d2f("Log in TxtStorer.java line 172");
         } catch (IOException ex) {
             Log.e("Problems while saving dependencies");
-            //Log.d2f("Problems while saving dependencies in TxtStorer.java line 175");
         } finally {
             FileUtil.closeAndIgnoreExceptions(pw);
         }

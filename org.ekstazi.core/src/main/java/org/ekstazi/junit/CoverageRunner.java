@@ -80,11 +80,9 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
             return;
         } else if (isRunWithoutCoverage() || isTestForGetConfigValue()) {
             ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClz.getName()));
-            Log.d2f("In Runner: Test name = " + mClz.getName());
             mWrappedRunner.run(notifier);
         } else {
             ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClz.getName()));
-            Log.d2f("In Runner: Test name = " + mClz.getName());
             Ekstazi.inst().beginClassCoverage(mClz.getName());
             JUnit4OutcomeListener outcomeListener = new JUnit4OutcomeListener();
             notifier.addListener(outcomeListener);

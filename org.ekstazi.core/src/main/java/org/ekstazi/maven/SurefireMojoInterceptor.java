@@ -197,6 +197,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             // Add default excludes as specified by Surefire if excludes is not provided by the user.
             newExcludes.add("**/*$*");
         }
+        Log.d2f("[INFO] Print Exclude Test Name:");
         Log.d2f(newExcludes);
         setField(EXCLUDES_FIELD, mojo, newExcludes);
 
@@ -259,7 +260,6 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     public static boolean isJupiterInPom() throws IOException {
         try {
             String pomPath = new java.io.File(".").getCanonicalPath().concat("/pom.xml");
-            //Log.d2f("pom file path = " + pomPath);
             BufferedReader br = new BufferedReader(new FileReader(pomPath));
             String line;
             while((line = br.readLine()) != null) {
@@ -283,8 +283,6 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         Config.prepareRound();
         File prevDependencyDir = new File(Config.getCurDirName());
         File rootDir = new File(Config.getCurRoot());
-        Log.d2f("In copyFromPrev: prevDependencyDir = " + prevDependencyDir.getAbsolutePath());
-        Log.d2f("In copyFromPrev: rootDir = " + rootDir.getAbsolutePath());
         //No non-affected class.
         boolean noNonAffectedClass = true;
         boolean prev = false;
@@ -305,7 +303,6 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         }
 
         if(noNonAffectedClass) {
-            Log.d2f("In copyFromPrev: line 302 noAffectedClass");
             File nextDependencyDir = new File(Config.getNextDirName());
             nextDependencyDir.mkdir();
             FileUtil.deleteDirectory(prevDependencyDir);
@@ -315,9 +312,6 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         File nextDependencyDir = new File(Config.getNextDirName());
         if (nextDependencyDir.mkdir()) {
             if (prev && prevDependencyDir.exists()) {
-                Log.d2f("In copyFromPrev: line312: ready to copy file from Previous Round");
-                Log.d2f("In copyFromPrev: line313: prevDepList.size() = " + prevDepList.size());
-
                 // Previous failed tests are not rerun, so we need to copy the failure report into the new folder
                 if (!Config.FORCE_FAILING_V) {
                     File prevTestResultsDir = new File(prevDependencyDir, Names.TEST_RESULTS_DIR_NAME);
@@ -330,7 +324,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                                 Files.move(source, target);
                             }
                         } else {
-                            Log.d2f("Failed to create test result folder!");
+                            Log.d2f("[ERROR] CopyFromPrevious: Failed to create test result folder!");
                             throw new IOException("Failed to create test result folder!");
                         }
                     }
@@ -339,9 +333,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                     if (!className.contains(".java") || className.contains("**")) {
                         continue;
                     }
-                    Log.d2f("In copyFromPrev: line 315 From Prev Move className: " + className);
                     String fileName = className.trim().replace(".java", ".clz").replace("/", ".");
-                    Log.d2f("In copyFromPrev: line 317 From Prev Move File: " + fileName);
                     Path source = Paths.get(prevDependencyDir.getAbsolutePath(), fileName);
                     Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
                     Files.move(source, target);
@@ -351,7 +343,6 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             if (cur) {
                 for (String classNameWithRound : curRoundDepList) {
                     if (!classNameWithRound.contains(AffectedChecker.ROUND_SEPARATOR)) {
-                        Log.d2f("classNameWithRound not found # separator = " + classNameWithRound);
                         continue;
                     }
                     if (!classNameWithRound.contains(".java") || classNameWithRound.contains("**")) {
@@ -360,20 +351,17 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                     String strList[] = classNameWithRound.trim().split(AffectedChecker.ROUND_SEPARATOR);
                     String fileName = strList[0].replace(".java", ".clz").replace("/", ".");
                     String depDirName = strList[1];
-                    Log.d2f("In copyFromPrev: line 335 From CurRound, ready to Copy File");
                     File sourceDepDir = new File(rootDir, depDirName);
                     if (sourceDepDir.exists() && sourceDepDir.isDirectory()) {
-                        Log.d2f("In copyFromPrev: line 338 From CurRound, className = " + fileName + " depDirName = " + depDirName);
                         Path source = Paths.get(sourceDepDir.getAbsolutePath(), fileName);
                         Path target = Paths.get(nextDependencyDir.getAbsolutePath(), fileName);
-                        Log.d2f("In copyFromPrev: line 347 sourcePath = " + source.toAbsolutePath() + " targetPath = " + target.toAbsolutePath());
                         Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-                        Log.d2f("In copyFromPrev: line 349 Finished!!! From CurRound, className = " + fileName + " depDirName = " + depDirName);
                     }
                 }
             }
         } else {
-            throw new IOException("Can create new round dependency folder!");
+            Log.d2f("[ERROR] CopyFromPrevious: Can't create new round dependency folder!");
+            throw new IOException("Can't create new round dependency folder!");
         }
     }
 }
