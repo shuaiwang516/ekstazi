@@ -136,9 +136,9 @@ public class AffectedChecker {
 
         // [DEBUG] generating debug info
         Config.preLoadConfigAware();
-        String [] round = Config.getNextDirName().split("-");
-        String roundIndex = round[1] + "-" + round[2];
-        Log.AffectedLog(roundIndex,  new ArrayList<String>(affectedClasses), "AFFECTED FROM CURR");
+        String [] folder = Config.getNextDirName().split("/");
+        String folderName = folder[folder.length - 1];
+        Log.AffectedLog(folderName,  new ArrayList<String>(affectedClasses), "AFFECTED FROM CURR");
 
         //Remove duplicated redundant class that has same class name but from different dependency folder.
         List<String> nonDuplicatedNonAffectedClasses = new ArrayList<>();
