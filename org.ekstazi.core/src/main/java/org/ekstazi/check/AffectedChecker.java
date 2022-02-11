@@ -315,9 +315,9 @@ public class AffectedChecker {
 
         // [DEBUG] generating debug info
         Config.preLoadConfigAware();
-        String [] round = Config.getNextDirName().split("-");
-        String roundIndex = round[1] + "-" + round[2];
-        Log.AffectedLog(roundIndex,  new ArrayList<String>(affectedClasses), "AFFECTED FROM PREV");
+        String [] folder = Config.getNextDirName().split("/");
+        String folderName = folder[folder.length - 1];
+        Log.AffectedLog(folderName,  new ArrayList<String>(affectedClasses), "AFFECTED FROM PREV");
         return nonAffectedClasses;
     }
 
