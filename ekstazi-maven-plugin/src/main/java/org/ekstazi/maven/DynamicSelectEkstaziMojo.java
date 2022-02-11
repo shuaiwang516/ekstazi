@@ -98,6 +98,13 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             List<List<String>> nonAffectedClassesList = computeNonAffectedClassesForDynamicSelect();
             List<String> nonAffectedClassesFromPrev = nonAffectedClassesList.get(0);
             List<String> nonAffectedClassesFromCurRound = nonAffectedClassesList.get(1);
+
+            // [DEBUG] generating debug info
+            Config.preLoadConfigAware();
+            String [] round = Config.getNextDirName().split("-");
+            String roundIndex = round[1] + "-" + round[2];
+            MojoLog.unAffectedLog(roundIndex, nonAffectedClassesFromPrev, nonAffectedClassesFromCurRound);
+
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PREV_PROP, Arrays.toString(nonAffectedClassesFromPrev.toArray(new String[0])));
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_CURROUND_PROP, Arrays.toString(nonAffectedClassesFromCurRound.toArray(new String[0])));
         } else {

@@ -42,6 +42,15 @@ public class CleanEkstaziMojo extends AbstractEkstaziMojo {
             if (f.getName().contains(MojoLog.MOJO_LOG_FILE)) {
                 f.delete();
             }
+            if (f.isDirectory() && f.getName().contains(MojoLog.NON_Affected_LOG_FOLDER)) {
+                FileUtil.deleteDirectory(f);
+            }
+            if (f.isDirectory() && f.getName().contains(Log.DIFF_LOG_FOLDER)) {
+                FileUtil.deleteDirectory(f);
+            }
+            if (f.isDirectory() && f.getName().contains(Log.Affected_LOG_FOLDER)) {
+                FileUtil.deleteDirectory(f);
+            }
             if (f.isDirectory() && f.getName().contains(Names.EKSTAZI_ROOT_DIR_NAME)) {
                 FileUtil.deleteDirectory(f);
             }

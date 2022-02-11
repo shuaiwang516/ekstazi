@@ -134,6 +134,12 @@ public class AffectedChecker {
             nonAffectedClasses.removeAll(affectedClasses);
         }
 
+        // [DEBUG] generating debug info
+        Config.preLoadConfigAware();
+        String [] round = Config.getNextDirName().split("-");
+        String roundIndex = round[1] + "-" + round[2];
+        Log.AffectedLog(roundIndex,  new ArrayList<String>(affectedClasses), "AFFECTED FROM CURR");
+
         //Remove duplicated redundant class that has same class name but from different dependency folder.
         List<String> nonDuplicatedNonAffectedClasses = new ArrayList<>();
         for(String classNameWithRound : nonAffectedClasses) {
@@ -306,6 +312,12 @@ public class AffectedChecker {
         List<String> nonAffectedClasses = new ArrayList<String>(new HashSet<String>(allClasses));
         nonAffectedClasses.removeAll(affectedClasses);
         Collections.sort(nonAffectedClasses);
+
+        // [DEBUG] generating debug info
+        Config.preLoadConfigAware();
+        String [] round = Config.getNextDirName().split("-");
+        String roundIndex = round[1] + "-" + round[2];
+        Log.AffectedLog(roundIndex,  new ArrayList<String>(affectedClasses), "AFFECTED FROM PREV");
         return nonAffectedClasses;
     }
 

@@ -33,7 +33,7 @@ public final class Log {
     private static final String WARN_TEXT = "Ekstazi_Warn";
     private static final String CONF_TEXT = "Ekstazi_Conf";
 
-    private static final String DIFF_LOG_FOLDER = "diffLog";
+    public static final String DIFF_LOG_FOLDER = "diffLog";
     public static final String D2F_FILE_NAME = "D2FLog.txt";
 
     private static PrintWriter pwScreen;
@@ -43,6 +43,11 @@ public final class Log {
     private static Boolean diffLogEnabled = true;
 
     private static Boolean firstEnterDiffLog = true;
+
+
+    private static Boolean AffectedLogEnabled = true;
+    private static Boolean firstEnterAffectedLog = true;
+    public static String  Affected_LOG_FOLDER = "AffectedLog";
 
 //    private static Set<String> loggedConfig = new HashSet<>();
 //    private static Set<String> loggedURL = new HashSet<>();
@@ -247,6 +252,32 @@ public final class Log {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("[CONFIG-DIFF] config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
             bw.newLine();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void AffectedLog(String roundIndex, List<String> affectedList, String msg) {
+        if (!AffectedLogEnabled)
+            return;
+        try {
+            if (firstEnterAffectedLog) {
+                File logFolder = new File(Affected_LOG_FOLDER);
+                if (!logFolder.exists()) {
+                    if(!logFolder.mkdir()) {
+                        throw new IOException("Can't create unaffected log folder");
+                    }
+                }
+                firstEnterAffectedLog = false;
+            }
+            FileWriter fw = new FileWriter(Affected_LOG_FOLDER + "/" + roundIndex + ".txt", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("==============================" + msg + "==============================\n");
+            for (String className : affectedList) {
+                bw.write(className + "\n");
+            }
             bw.close();
         } catch (Exception e) {
             e.printStackTrace();
