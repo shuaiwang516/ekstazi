@@ -64,6 +64,7 @@ public class ConfigInjector {
                 value.setTextContent(configPair.getValue());
                 property.appendChild(name);
                 property.appendChild(value);
+                Log.d2f("[INFO] Inject Config : " + name + " value = " + value);
             }
             OutputStream os = new FileOutputStream(Config.CONFIG_INJECT_FILE_PATH_V);
             writeXML(doc, os);
