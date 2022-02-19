@@ -138,7 +138,8 @@ public class AffectedChecker {
         Config.preLoadConfigAware();
         String [] folder = Config.getNextDirName().split("/");
         String folderName = folder[folder.length - 1];
-        Log.AffectedLog(folderName,  new ArrayList<String>(affectedClasses), "AFFECTED FROM CURR");
+        List<String> affectPrint = new ArrayList<String>(affectedClasses);
+        Log.AffectedLog(folderName, affectPrint , "AFFECTED FROM CURR, Test number = " + affectPrint.size());
 
         //Remove duplicated redundant class that has same class name but from different dependency folder.
         List<String> nonDuplicatedNonAffectedClasses = new ArrayList<>();
@@ -149,6 +150,8 @@ public class AffectedChecker {
             }
         }
         Collections.sort(nonDuplicatedNonAffectedClasses);
+        List<String> unAffectPrint = new ArrayList<String>(nonDuplicatedNonAffectedClasses);
+        Log.AffectedLog(folderName, unAffectPrint , "UNAFFECTED FROM CURR, Test number = " + unAffectPrint.size());
         return nonDuplicatedNonAffectedClasses;
     }
 
@@ -317,7 +320,10 @@ public class AffectedChecker {
         Config.preLoadConfigAware();
         String [] folder = Config.getNextDirName().split("/");
         String folderName = folder[folder.length - 1];
-        Log.AffectedLog(folderName,  new ArrayList<String>(affectedClasses), "AFFECTED FROM PREV");
+        List<String> affectPrint = new ArrayList<String>(affectedClasses);
+        List<String> unAffectPrint = new ArrayList<String>(nonAffectedClasses);
+        Log.AffectedLog(folderName,  affectPrint, "AFFECTED FROM PREV, Test Number = " + affectPrint.size());
+        Log.AffectedLog(folderName,  unAffectPrint, "UNAFFECTED FROM PREV, Test Number = " + unAffectPrint.size());
         return nonAffectedClasses;
     }
 
