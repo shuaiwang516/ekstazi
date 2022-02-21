@@ -125,30 +125,42 @@ public class AffectedChecker {
         String [] folder = Config.getNextDirName().split("/");
         String folderName = folder[folder.length - 1];
 
-        Set<String> allClasses = new HashSet<String>();
-        Set<String> affectedClasses = new HashSet<String>();
         Set <String> nonAffectedClasses = new HashSet<String>();
         for (File depsDir : sameRoundDirs) {
             if (checkIfDoesNotExist(depsDir)) {
                 continue;
             }
             // Find affected test classes.
+            Set<String> allClasses = new HashSet<String>();
+            Set<String> affectedClasses = new HashSet<String>();
             includeAffectedFromCurRound(allClasses, affectedClasses, getSortedFiles(depsDir), depsDir.getName());
             nonAffectedClasses.addAll(allClasses);
             nonAffectedClasses.removeAll(affectedClasses);
-            List<String> singleUnAffectPrint = new ArrayList<String>(nonAffectedClasses);
-            Log.AffectedLog(folderName, singleUnAffectPrint , "SINGLE-ROUND: UNAFFECTED FROM CURR " + depsDir.getName() + ", Test number = " + singleUnAffectPrint.size());
+
+            // [Evaluation] Log size from horizontal comparison
+            List <String> nonAffectedClassesPrint = new ArrayList<String>();
+            nonAffectedClassesPrint.addAll(allClasses);
+            nonAffectedClassesPrint.removeAll(affectedClasses);
+            Log.AffectedLog(folderName, nonAffectedClassesPrint , "SINGLE-ROUND: UNAFFECTED FROM CURR " + depsDir.getName() + ", Test number = " + nonAffectedClassesPrint.size());
         }
 
 
-        List<String> affectPrint = new ArrayList<String>(affectedClasses);
+        //List<String> affectPrint = new ArrayList<String>(affectedClasses);
         //Log.AffectedLog(folderName, affectPrint , "AFFECTED FROM CURR, Test number = " + affectPrint.size());
 
         //Remove duplicated redundant class that has same class name but from different dependency folder.
         List<String> nonDuplicatedNonAffectedClasses = new ArrayList<>();
         for(String classNameWithRound : nonAffectedClasses) {
             String className = classNameWithRound.split(ROUND_SEPARATOR)[0];
-            if(!nonDuplicatedNonAffectedClasses.contains(className)){
+            Boolean isDuplicated = false;
+            if (!nonDuplicatedNonAffectedClasses.isEmpty()) {
+                for (String classWithRoundInList : nonDuplicatedNonAffectedClasses) {
+                    if (classWithRoundInList.contains(className)) {
+                        isDuplicated = true;
+                    }
+                }
+            }
+            if(!isDuplicated){
                 nonDuplicatedNonAffectedClasses.add(classNameWithRound);
             }
         }
