@@ -120,6 +120,10 @@ public class AffectedChecker {
         if (!forceCacheUse) {
             Config.CACHE_SIZES_V = 0;
         }
+        // [DEBUG] generating debug info
+        Config.preLoadConfigAware();
+        String [] folder = Config.getNextDirName().split("/");
+        String folderName = folder[folder.length - 1];
 
         Set<String> allClasses = new HashSet<String>();
         Set<String> affectedClasses = new HashSet<String>();
@@ -132,14 +136,13 @@ public class AffectedChecker {
             includeAffectedFromCurRound(allClasses, affectedClasses, getSortedFiles(depsDir), depsDir.getName());
             nonAffectedClasses.addAll(allClasses);
             nonAffectedClasses.removeAll(affectedClasses);
+            List<String> singleUnAffectPrint = new ArrayList<String>(nonAffectedClasses);
+            Log.AffectedLog(folderName, singleUnAffectPrint , "SINGLE-ROUND: UNAFFECTED FROM CURR " + depsDir.getName() + ", Test number = " + singleUnAffectPrint.size());
         }
 
-        // [DEBUG] generating debug info
-        Config.preLoadConfigAware();
-        String [] folder = Config.getNextDirName().split("/");
-        String folderName = folder[folder.length - 1];
+
         List<String> affectPrint = new ArrayList<String>(affectedClasses);
-        Log.AffectedLog(folderName, affectPrint , "AFFECTED FROM CURR, Test number = " + affectPrint.size());
+        //Log.AffectedLog(folderName, affectPrint , "AFFECTED FROM CURR, Test number = " + affectPrint.size());
 
         //Remove duplicated redundant class that has same class name but from different dependency folder.
         List<String> nonDuplicatedNonAffectedClasses = new ArrayList<>();
@@ -150,8 +153,8 @@ public class AffectedChecker {
             }
         }
         Collections.sort(nonDuplicatedNonAffectedClasses);
-        List<String> unAffectPrint = new ArrayList<String>(nonDuplicatedNonAffectedClasses);
-        Log.AffectedLog(folderName, unAffectPrint , "UNAFFECTED FROM CURR, Test number = " + unAffectPrint.size());
+        List<String> totalUnAffectPrint = new ArrayList<String>(nonDuplicatedNonAffectedClasses);
+        Log.AffectedLog(folderName, totalUnAffectPrint , "TOTAL-ROUND: UNAFFECTED FROM CURR, Test number = " + totalUnAffectPrint.size());
         return nonDuplicatedNonAffectedClasses;
     }
 
@@ -322,7 +325,7 @@ public class AffectedChecker {
         String folderName = folder[folder.length - 1];
         List<String> affectPrint = new ArrayList<String>(affectedClasses);
         List<String> unAffectPrint = new ArrayList<String>(nonAffectedClasses);
-        Log.AffectedLog(folderName,  affectPrint, "AFFECTED FROM PREV, Test Number = " + affectPrint.size());
+        //Log.AffectedLog(folderName,  affectPrint, "AFFECTED FROM PREV, Test Number = " + affectPrint.size());
         Log.AffectedLog(folderName,  unAffectPrint, "UNAFFECTED FROM PREV, Test Number = " + unAffectPrint.size());
         return nonAffectedClasses;
     }
