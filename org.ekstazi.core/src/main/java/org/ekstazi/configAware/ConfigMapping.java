@@ -65,7 +65,7 @@ public class ConfigMapping {
      * @return the real inject configuration pairs for running ${testName}
      */
     public static Map<String, String> getInjectConfigPairs(String testName) {
-        Map<String, String> defaultConfigPairs = ConfigLoader.getDefaultConfigMap();
+        // Map<String, String> defaultConfigPairs = ConfigLoader.getDefaultConfigMap();
         Map<String, String> prodConfigPairs = ConfigLoader.getProdConfigMap();
         Map<String, String> injectPairs = new HashMap<String, String>();
         Map<String, String> returnPairs = new HashMap<String, String>();
@@ -74,10 +74,12 @@ public class ConfigMapping {
         for (Map.Entry<String, String> entry : prodConfigPairs.entrySet()) {
             String configName = entry.getKey();
             String configValue = entry.getValue();
-            if (defaultConfigPairs.containsKey(configName) && !configValue.equals(defaultConfigPairs.get(configName))) {
-                injectPairs.put(configName, configValue);
-                returnPairs.put(configName, configValue);
-            }
+//            if (defaultConfigPairs.containsKey(configName) && !configValue.equals(defaultConfigPairs.get(configName))) {
+//                injectPairs.put(configName, configValue);
+//                returnPairs.put(configName, configValue);
+//            }
+            injectPairs.put(configName, configValue);
+            returnPairs.put(configName, configValue);
         }
 
         // filter out those configuration that can't be tested by testName

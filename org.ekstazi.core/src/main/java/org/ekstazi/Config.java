@@ -345,9 +345,9 @@ public final class Config {
     public static String CONFIG_FILE_NAME_V = "NonSetConfigFileName";
     protected static final String CONFIG_FILE_NAME_N = "config.file.name";
 
-    @Opt(desc = "Default Configuration File Path")
-    public static String DEFAULT_CONFIG_FILE_PATH_V = "NonSetDefaultConfigFile";
-    protected static final String DEFAULT_CONFIG_FILE_PATH_N = "config.default.path";
+//    @Opt(desc = "Default Configuration File Path")
+//    public static String DEFAULT_CONFIG_FILE_PATH_V = "NonSetDefaultConfigFile";
+//    protected static final String DEFAULT_CONFIG_FILE_PATH_N = "config.default.path";
 
     @Opt(desc = "ctest mapping file path")
     public static String CTEST_MAPPING_FILE_PATH_V = "NonSetCtestMappingFilePath";
@@ -438,7 +438,7 @@ public final class Config {
         CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
-        DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
+        // DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
@@ -542,7 +542,7 @@ public final class Config {
         DEPENDENCIES_NIO_EXCLUDES_V = getPattern(props, DEPENDENCIES_NIO_EXCLUDES_N, DEPENDENCIES_NIO_EXCLUDES_V);
         CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
         CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
-        DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
+        // DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);

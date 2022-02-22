@@ -30,12 +30,12 @@ public class ConfigLoader {
         return sExercisedConfigMap;
     }
 
-    public static Map<String, String> getDefaultConfigMap() {
-        if (sDefaultConfigMap.isEmpty() || sDefaultConfigMap == null) {
-            loadDefaultFromFile();
-        }
-        return sDefaultConfigMap;
-    }
+//    public static Map<String, String> getDefaultConfigMap() {
+//        if (sDefaultConfigMap.isEmpty() || sDefaultConfigMap == null) {
+//            loadDefaultFromFile();
+//        }
+//        return sDefaultConfigMap;
+//    }
 
     public static Map<String, String> getProdConfigMap() {
         if (sProdConfigMap.isEmpty() || sProdConfigMap == null) {
@@ -57,10 +57,10 @@ public class ConfigLoader {
      *  Load default configuration file
      *  TODO: consider different type of configuration file (e.g. xml)
      */
-    public static void loadDefaultFromFile() {
-        String defaultFileName = Config.DEFAULT_CONFIG_FILE_PATH_V;
-        load0(defaultFileName, sDefaultConfigMap);
-    }
+//    public static void loadDefaultFromFile() {
+//        String defaultFileName = Config.DEFAULT_CONFIG_FILE_PATH_V;
+//        load0(defaultFileName, sDefaultConfigMap);
+//    }
 
     /**
      *  Load test generated configuration file
@@ -225,9 +225,9 @@ public class ConfigLoader {
 
     // For simply test
     public static void main(String args[]) {
-        Config.DEFAULT_CONFIG_FILE_PATH_V = "/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml";
+        // Config.DEFAULT_CONFIG_FILE_PATH_V = "/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml";
         Config.CONFIG_PROD_FILE_PATH_V = "/Users/alenwang/Desktop/generatedXML.xml";
-        getDefaultConfigMap();
+        // getDefaultConfigMap();
         getProdConfigMap();
         int count = 0;
         for(Map.Entry<String, String> entry : sDefaultConfigMap.entrySet()) {
