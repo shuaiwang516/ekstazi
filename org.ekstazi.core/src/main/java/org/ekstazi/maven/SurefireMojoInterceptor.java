@@ -358,6 +358,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                         Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
+                FileUtil.deleteDirectory(prevDependencyDir);
             }
         } else {
             Log.d2f("[ERROR] CopyFromPrevious: Can't create new round dependency folder!");
