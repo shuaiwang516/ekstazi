@@ -29,6 +29,9 @@ public class ConfigInjector {
             case "xml":
                 injectConfigXML(configPairs);
                 break;
+            case "properties":
+                injectConfigProperties(configPairs);
+                break;
             default:
                 Log.d2f("[ERROR] Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
                 Log.e("Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
@@ -36,6 +39,37 @@ public class ConfigInjector {
         }
     }
 
+
+    /**
+     * Inject real configuration in *.properties file for testing
+     * @param configPairs
+     */
+    private static void injectConfigProperties(Map<String, String> configPairs) {
+        try {
+
+            FileWriter fw = new FileWriter(Config.CONFIG_INJECT_FILE_PATH_V);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            for (Map.Entry<String, String> configPair : configPairs.entrySet()) {
+                String configName = configPair.getKey();
+                String configValue = configPair.getValue();
+                bw.write(configName + "=" + configValue);
+                bw.newLine();
+                Log.d2f("[INFO] Inject Config : " + configName + " value = " + configValue);
+            }
+            bw.close();
+            fw.close();
+        } catch (IOException e){
+            Log.d2f("[ERROR] Failed to inject configuration " + e.getMessage());
+            Log.e("Failed to inject configuration " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Inject real configuration in *.xml file for testing
+     * @param configPairs
+     */
     private static void injectConfigXML(Map<String, String> configPairs) {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -75,6 +109,14 @@ public class ConfigInjector {
         }
     }
 
+
+    /**
+     * Inject parameter to XML file
+     * @param doc
+     * @param output
+     * @throws TransformerException
+     * @throws IOException
+     */
     private static void writeXML(Document doc, OutputStream output) throws TransformerException, IOException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -97,7 +139,7 @@ public class ConfigInjector {
         configPairs.put("person.name", "shuai");
         configPairs.put("person.age", "23");
         configPairs.put("person.info", "");
-        Config.CONFIG_INJECT_FILE_PATH_V = "/Users/alenwang/Desktop/generatedXML.xml";
-        injectConfig(configPairs);
+        Config.CONFIG_INJECT_FILE_PATH_V = "/Users/alenwang/Desktop/generatedProperties.properties";
+        injectConfigProperties(configPairs);
     }
 }
