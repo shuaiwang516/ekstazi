@@ -1,10 +1,12 @@
 package org.ekstazi.configAware;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.ekstazi.Config;
 import org.ekstazi.log.Log;
 import org.ekstazi.util.FileUtil;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.*;
@@ -17,7 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class ConfigLoader {
     private static final Map<String, String > sExercisedConfigMap = new HashMap<String, String>();
-    private static final Map<String, String> sDefaultConfigMap = new HashMap<String, String>();
+    // private static final Map<String, String> sDefaultConfigMap = new HashMap<String, String>();
     private static final Map<String, String> sProdConfigMap = new HashMap<String, String>();
     private static final String configFileSeparator = ",";
     private static final String configSeparator = "@CONFIGAWARE@";
@@ -154,7 +156,7 @@ public class ConfigLoader {
                 loadFromXML(is, map);
                 break;
             case "properties":
-                loadFromProperties();
+                loadFromProperties(is, map);
                 break;
             case "cfg":
                 loadFromCFG();
@@ -169,8 +171,35 @@ public class ConfigLoader {
         parseXML(is, map, "property", "name", "value");
     }
 
-    private static void loadFromProperties() {
-
+    private static void loadFromProperties(InputStream is, Map<String, String> map) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        try {
+            while(reader.ready()) {
+                String line = reader.readLine();
+                String configPairs [] = line.split("=");
+                if (!line.contains("=")) {
+                    continue;
+                }else if (configPairs.length == 1) {
+                    String configName = configPairs[0];
+                    String configValue = "null";
+                    if (!Objects.equals(configName, "")) {
+                        map.put(replaceBlank(configName), replaceBlank(configValue));
+                    }
+                } else if (configPairs.length == 2) {
+                    String configName = configPairs[0];
+                    String configValue = configPairs[1];
+                    if (!Objects.equals(configName, "")) {
+                        map.put(replaceBlank(configName), replaceBlank(configValue));
+                    }
+                } else {
+                    Log.d2f("[ERROR] Incorrectly parse configuration from properties file: configPairs length is too long " + Arrays.toString(configPairs));
+                }
+            }
+        } catch (IOException e) {
+            Log.d2f("[ERROR] Loading configuration is not successful: " + e.getStackTrace());
+            Log.e("Loading configuration is not successful", e);
+            map.clear();
+        }
     }
 
     private static void loadFromCFG() {
@@ -226,15 +255,15 @@ public class ConfigLoader {
     // For simply test
     public static void main(String args[]) {
         // Config.DEFAULT_CONFIG_FILE_PATH_V = "/Users/alenwang/Documents/xlab/hadoop/hadoop-common-project/hadoop-common/src/main/resources/core-default.xml";
-        Config.CONFIG_PROD_FILE_PATH_V = "/Users/alenwang/Desktop/generatedXML.xml";
+        Config.CONFIG_PROD_FILE_PATH_V = "/Users/alenwang/Desktop/generatedProperties.properties";
         // getDefaultConfigMap();
         getProdConfigMap();
-        int count = 0;
-        for(Map.Entry<String, String> entry : sDefaultConfigMap.entrySet()) {
-            count += 1;
-            System.out.println(entry.getKey() + " , " + entry.getValue());
-        }
-        System.out.println(count);
+//        int count = 0;
+//        for(Map.Entry<String, String> entry : sDefaultConfigMap.entrySet()) {
+//            count += 1;
+//            System.out.println(entry.getKey() + " , " + entry.getValue());
+//        }
+//        System.out.println(count);
         int count2 = 0;
         for(Map.Entry<String, String> entry : sProdConfigMap.entrySet()) {
             count2 += 1;
