@@ -21,6 +21,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
      * Implements 'select' that does not require changes to any
      * existing plugin in configuration file(s).
      */
-    private void executeThis() throws MojoExecutionException {
+    private void executeThis() throws MojoExecutionException, IOException {
         // Try to attach agent that will modify Surefire.
         if (AgentLoader.loadEkstaziAgent()) {
             // Prepare initial list of options and set property.
@@ -100,7 +101,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             List<String> nonAffectedClassesFromCurRound = nonAffectedClassesList.get(1);
 
             // [DEBUG] generating debug info
-            Config.preLoadConfigAware();
+            Config.preLoadConfigAwareWithChecks();
             String [] folder = Config.getNextDirName().split("/");
             String folderName = folder[folder.length - 1];
             MojoLog.unAffectedLog(folderName, nonAffectedClassesFromPrev, nonAffectedClassesFromCurRound);
