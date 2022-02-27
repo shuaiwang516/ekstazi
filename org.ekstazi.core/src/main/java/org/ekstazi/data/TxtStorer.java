@@ -217,7 +217,10 @@ public class TxtStorer extends Storer {
             printConfigLine(pw, "Configuration_Name", "Configuration_Value");
             for (Map.Entry<String, String> configEntry : configMap.entrySet()) {
                 String configName = configEntry.getKey();
-                if (Config.CONFIG_EXCLUDES_V != null && !Config.CONFIG_EXCLUDES_V.isEmpty() && !Config.CONFIG_EXCLUDES_V.contains(configName)){
+                // If there is no config.excludes declared by user, directly add config to dep data
+                if (Config.CONFIG_EXCLUDES_V == null || Config.CONFIG_EXCLUDES_V.isEmpty()) {
+                    printConfigLine(pw, configName, configEntry.getValue());
+                } else if (!Config.CONFIG_EXCLUDES_V.contains(configName)) {
                     printConfigLine(pw, configName, configEntry.getValue());
                 }
             }
