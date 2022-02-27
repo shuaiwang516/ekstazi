@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.ekstazi.data.DependencyAnalyzer;
 import org.ekstazi.data.PrefixTxtStorer;
 import org.ekstazi.data.Storer;
@@ -435,7 +436,7 @@ public final class Config {
     }
 
 
-    public static void preLoadConfigAwareWithChecks() throws IOException {
+    public static void preLoadConfigAwareWithChecks() throws MojoExecutionException {
         File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
         Properties userProperties = getProperties(userDir);
         preLoadProperties(userProperties);
@@ -443,13 +444,13 @@ public final class Config {
     }
 
 
-    private static void preCheckConfigProperties() throws IOException {
+    private static void preCheckConfigProperties() throws MojoExecutionException {
         String files [] = {CONFIG_FILE_PATH_V, CTEST_MAPPING_FILE_PATH_V,
                 CONFIG_INJECT_FILE_PATH_V, CONFIG_PROD_FILE_PATH_V};
         for (String file : files) {
             File checkFile = new File(file);
             if (!checkFile.exists()) {
-                throw new IOException("Config-aware file does not exist + " + file + "; Please check your .ekstazirc file ");
+                throw new MojoExecutionException("Config-aware file does not exist + " + file + "; Please check your .ekstazirc file ");
             }
         }
     }
