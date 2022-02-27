@@ -103,7 +103,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
             Config.preLoadConfigAware();
             String [] folder = Config.getNextDirName().split("/");
             String folderName = folder[folder.length - 1];
-            MojoLog.unAffectedLog(Config.curWorkingDir(), folderName, nonAffectedClassesFromPrev, nonAffectedClassesFromCurRound);
+            MojoLog.unAffectedLog(parentdir.getAbsolutePath(), folderName, nonAffectedClassesFromPrev, nonAffectedClassesFromCurRound);
 
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_PREV_PROP, Arrays.toString(nonAffectedClassesFromPrev.toArray(new String[0])));
             System.setProperty(AbstractMojoInterceptor.EXCLUDES_INTERNAL_CURROUND_PROP, Arrays.toString(nonAffectedClassesFromCurRound.toArray(new String[0])));
