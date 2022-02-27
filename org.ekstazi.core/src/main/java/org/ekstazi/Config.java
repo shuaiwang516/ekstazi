@@ -338,7 +338,7 @@ public final class Config {
     // CONFIGURATION-AWARE
 
     @Opt(desc = "Test Generated Configuration <key, value> file path")
-    public static String CONFIG_FILE_PATH_V = ".ConfigValue";
+    public static String CONFIG_FILE_PATH_V = "NonSetConfigFilePath";
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")
@@ -433,27 +433,6 @@ public final class Config {
         Properties userProperties = getProperties(userDir);
         preLoadProperties(userProperties);
     }
-
-
-    public static void preLoadConfigAwareWithChecks() throws IOException {
-        File userDir = new File(System.getProperty("user.dir"), Names.EKSTAZI_CONFIG_FILE);
-        Properties userProperties = getProperties(userDir);
-        preLoadProperties(userProperties);
-        preCheckConfigProperties();
-    }
-
-
-    private static void preCheckConfigProperties() throws IOException {
-        String files [] = {CONFIG_FILE_PATH_V, CTEST_MAPPING_FILE_PATH_V,
-                CONFIG_INJECT_FILE_PATH_V, CONFIG_PROD_FILE_PATH_V};
-        for (String file : files) {
-            File checkFile = new File(file);
-            if (!checkFile.exists()) {
-                throw new IOException("Config-aware file does not exist + " + file + "; Please check your .ekstazirc file ");
-            }
-        }
-    }
-
 
     protected static void preLoadProperties(Properties props) {
         CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
