@@ -365,6 +365,10 @@ public final class Config {
     public static String CONFIG_PROD_FILE_PATH_V = "NonSetConfigInjectionFilePath";
     protected static final String CONFIG_PROD_FILE_PATH_N = "config.prod.path";
 
+    @Opt(desc = "Configurations that will not be involved in comparison")
+    public static Set<String> CONFIG_EXCLUDES_V = null;
+    protected static final String CONFIG_EXCLUDES_N = "config.excludes";
+
     // INCLUDE/EXCLUDE
 
     @Opt(desc = "Force execution of all tests.")
@@ -446,6 +450,7 @@ public final class Config {
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
+        CONFIG_EXCLUDES_V = getSet(props, CONFIG_EXCLUDES_N, CONFIG_EXCLUDES_V);
     }
 
 
@@ -550,6 +555,7 @@ public final class Config {
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
+        CONFIG_EXCLUDES_V = getSet(props, CONFIG_EXCLUDES_N, CONFIG_EXCLUDES_V);
     }
 
     /**
@@ -619,6 +625,12 @@ public final class Config {
             return def;
         }
         return Pattern.compile(val);
+    }
+
+    private static Set<String> getSet(Properties props, String key, Set<String> def) {
+        String val = props.getProperty(key, null);
+        if (val == null) return def;
+        return new HashSet<String>(Arrays.asList(val.split(ARRAY_SEPARATOR)));
     }
 
     private static String[] getArray(Properties props, String key, String[] def) {

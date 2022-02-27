@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.ekstazi.Config;
 import org.ekstazi.log.Log;
 import org.ekstazi.util.FileUtil;
 
@@ -215,7 +216,10 @@ public class TxtStorer extends Storer {
             }
             printConfigLine(pw, "Configuration_Name", "Configuration_Value");
             for (Map.Entry<String, String> configEntry : configMap.entrySet()) {
-                printConfigLine(pw, configEntry.getKey(), configEntry.getValue());
+                String configName = configEntry.getKey();
+                if (Config.CONFIG_EXCLUDES_V != null && !Config.CONFIG_EXCLUDES_V.isEmpty() && !Config.CONFIG_EXCLUDES_V.contains(configName)){
+                    printConfigLine(pw, configName, configEntry.getValue());
+                }
             }
         } catch (IOException ex) {
             Log.e("Problems while saving dependencies");
