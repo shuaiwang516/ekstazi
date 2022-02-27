@@ -320,7 +320,7 @@ public final class DependencyAnalyzer {
     private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
         Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
         if (userConfig == null) {
-            Log.configDiffLog("", "", "", "Failed to get user configuration", className);
+            Log.configDiffLog(Config.curWorkingDir(), "", "", "", "Failed to get user configuration", className);
             Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
             return true;
         }
@@ -361,11 +361,11 @@ public final class DependencyAnalyzer {
             if (!depValue.equals(userValue)) {
                 if (depValue.contains(configDefaultFlag)) {
                     if (!userValue.equals("null") && !userValue.equals(depValue.replace(configDefaultFlag, ""))) {
-                        Log.configDiffLog(key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
+                        Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
                         diff = true;
                     }
                 } else {
-                    Log.configDiffLog(key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
+                    Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
                     diff = true;
                 }
             }
@@ -386,7 +386,7 @@ public final class DependencyAnalyzer {
     private boolean hasHashChanged(Set<RegData> regData, String dirName, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
-                Log.codeDiffLog(el.getURLExternalForm(), dirName, className, " Code diff in DepAnalyzer");
+                Log.codeDiffLog(Config.curWorkingDir(), el.getURLExternalForm(), dirName, className, " Code diff in DepAnalyzer");
                 Log.d("CHANGED", el.getURLExternalForm());
                 return true;
             }

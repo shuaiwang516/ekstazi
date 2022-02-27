@@ -201,12 +201,11 @@ public final class Log {
         }
     }
 
-    public static void codeDiffLog(String url, String dirName, String className, String msg) {
+    public static void codeDiffLog(String curFolder, String url, String dirName, String className, String msg) {
         if (!diffLogEnabled)
             return;
         try {
-            String curRoot = Config.getCurRoot();
-            String logFolderPath = Paths.get(curRoot, DIFF_LOG_FOLDER).toAbsolutePath().toString();
+            String logFolderPath = Paths.get(curFolder, DIFF_LOG_FOLDER).toAbsolutePath().toString();
             if (firstEnterDiffLog) {
                 File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {
@@ -233,12 +232,11 @@ public final class Log {
         }
     }
 
-    public static void configDiffLog(String key, String depValue, String userValue, String msg, String className) {
+    public static void configDiffLog(String curFolder, String key, String depValue, String userValue, String msg, String className) {
         if (!diffLogEnabled)
             return;
         try {
-            String curRoot = Config.getCurRoot();
-            String logFolderPath = Paths.get(curRoot, DIFF_LOG_FOLDER).toAbsolutePath().toString();
+            String logFolderPath = Paths.get(curFolder, DIFF_LOG_FOLDER).toAbsolutePath().toString();
             if (firstEnterDiffLog) {
                 File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {
@@ -266,12 +264,11 @@ public final class Log {
     }
 
 
-    public static void AffectedLog(String roundIndex, List<String> affectedList, String msg) {
+    public static void AffectedLog(String curFolder, String roundIndex, List<String> affectedList, String msg) {
         if (!AffectedLogEnabled)
             return;
         try {
-            String curRoot = Config.getCurRoot();
-            String logFolderPath = Paths.get(curRoot, Affected_LOG_FOLDER).toAbsolutePath().toString();
+            String logFolderPath = Paths.get(curFolder, Affected_LOG_FOLDER).toAbsolutePath().toString();
             d2f("[DEBUG] root = " + logFolderPath);
             if (firstEnterAffectedLog) {
                 File logFolder = new File(logFolderPath);

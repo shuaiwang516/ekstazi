@@ -49,13 +49,12 @@ public class MojoLog {
         }
     }
 
-    public static void unAffectedLog(String roundIndex, List<String> nonAffectedClassesFromPrev, List<String> nonAffectedClassesFromCurRound) {
+    public static void unAffectedLog(String curFolder, String roundIndex, List<String> nonAffectedClassesFromPrev, List<String> nonAffectedClassesFromCurRound) {
         if (!NONAffectedLogEnabled)
             return;
         try {
-            String curRoot = Config.getCurRoot();
-            String logFolderPath = Paths.get(curRoot, NON_Affected_LOG_FOLDER).toAbsolutePath().toString();
-            d2f("[DEBUG] root = " + logFolderPath);
+            String logFolderPath = Paths.get(curFolder, NON_Affected_LOG_FOLDER).toAbsolutePath().toString();
+            d2f("[DEBUG] MOJO unAffectedLog = " + logFolderPath);
             if (firstEnterUnAffectedLog) {
                 File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {

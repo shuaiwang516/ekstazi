@@ -19,6 +19,7 @@ package org.ekstazi.check;
 import java.util.Map;
 import java.util.Set;
 
+import org.ekstazi.Config;
 import org.ekstazi.configAware.ConfigLoader;
 import org.ekstazi.data.RegData;
 import org.ekstazi.data.Storer;
@@ -69,7 +70,7 @@ abstract class AbstractCheck {
     private boolean hasHashChanged(Set<RegData> regData, String dirName, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
-                Log.codeDiffLog(el.getURLExternalForm(), dirName, className, " Code diff in AbstractChecker");
+                Log.codeDiffLog(Config.curWorkingDir(), el.getURLExternalForm(), dirName, className, " Code diff in AbstractChecker");
                 return true;
             }
         }
@@ -94,7 +95,7 @@ abstract class AbstractCheck {
     private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
         Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
         if (userConfig == null) {
-            Log.configDiffLog("", "", "", "Failed to get user configuration", className);
+            Log.configDiffLog(Config.curWorkingDir(), "", "", "", "Failed to get user configuration", className);
             Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
             return true;
         }
@@ -135,11 +136,11 @@ abstract class AbstractCheck {
             if (!depValue.equals(userValue)) {
                 if (depValue.contains(configDefaultFlag)) {
                     if (!userValue.equals("null") && !userValue.equals(depValue.replace(configDefaultFlag, ""))) {
-                        Log.configDiffLog(key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
+                        Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
                         diff = true;
                     }
                 } else {
-                    Log.configDiffLog(key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
+                    Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
                     diff = true;
                 }
             }

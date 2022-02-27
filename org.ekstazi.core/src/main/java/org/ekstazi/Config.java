@@ -150,6 +150,10 @@ public final class Config {
         return System.getProperty("user.dir") + System.getProperty("file.separator") + Names.EKSTAZI_ROOT_DIR_NAME;
     }
 
+    public static String curWorkingDir() {
+        return System.getProperty("user.dir") + System.getProperty("file.separator");
+    }
+
     /**
      * Returns a File that describes .ekstazi-{configName}-Round{i} directory. Note that the directory
      * is not created with this invocation.

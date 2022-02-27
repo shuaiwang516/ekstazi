@@ -112,11 +112,11 @@ public class AffectedChecker {
 
     private static List<String> findNonAffectedClassesFromCurRound(String workingDirectory, List<File> sameRoundDirs) {
         loadConfig(workingDirectory);
-        List<String> nonAffectedClasses = findNonAffectedClassesFromCurRound(true, sameRoundDirs);
+        List<String> nonAffectedClasses = findNonAffectedClassesFromCurRound(true, sameRoundDirs, workingDirectory);
         return formatNonAffectedClassesForAntAndMavenWithRound(nonAffectedClasses);
     }
 
-    private static List<String> findNonAffectedClassesFromCurRound(boolean forceCacheUse, List<File> sameRoundDirs) {
+    private static List<String> findNonAffectedClassesFromCurRound(boolean forceCacheUse, List<File> sameRoundDirs, String workingDirectory) {
         if (!forceCacheUse) {
             Config.CACHE_SIZES_V = 0;
         }
@@ -141,7 +141,7 @@ public class AffectedChecker {
             List <String> nonAffectedClassesPrint = new ArrayList<String>();
             nonAffectedClassesPrint.addAll(allClasses);
             nonAffectedClassesPrint.removeAll(affectedClasses);
-            Log.AffectedLog(folderName, nonAffectedClassesPrint , "SINGLE-ROUND: UNAFFECTED FROM CURR " + depsDir.getName() + ", Test number = " + nonAffectedClassesPrint.size());
+            Log.AffectedLog(workingDirectory, folderName, nonAffectedClassesPrint , "SINGLE-ROUND: UNAFFECTED FROM CURR " + depsDir.getName() + ", Test number = " + nonAffectedClassesPrint.size());
         }
 
 
@@ -166,7 +166,7 @@ public class AffectedChecker {
         }
         Collections.sort(nonDuplicatedNonAffectedClasses);
         List<String> totalUnAffectPrint = new ArrayList<String>(nonDuplicatedNonAffectedClasses);
-        Log.AffectedLog(folderName, totalUnAffectPrint , "TOTAL-ROUND: UNAFFECTED FROM CURR, Test number = " + totalUnAffectPrint.size());
+        Log.AffectedLog(workingDirectory, folderName, totalUnAffectPrint , "TOTAL-ROUND: UNAFFECTED FROM CURR, Test number = " + totalUnAffectPrint.size());
         return nonDuplicatedNonAffectedClasses;
     }
 
@@ -338,7 +338,7 @@ public class AffectedChecker {
         List<String> affectPrint = new ArrayList<String>(affectedClasses);
         List<String> unAffectPrint = new ArrayList<String>(nonAffectedClasses);
         //Log.AffectedLog(folderName,  affectPrint, "AFFECTED FROM PREV, Test Number = " + affectPrint.size());
-        Log.AffectedLog(folderName,  unAffectPrint, "UNAFFECTED FROM PREV, Test Number = " + unAffectPrint.size());
+        Log.AffectedLog(Config.curWorkingDir(), folderName,  unAffectPrint, "UNAFFECTED FROM PREV, Test Number = " + unAffectPrint.size());
         return nonAffectedClasses;
     }
 
