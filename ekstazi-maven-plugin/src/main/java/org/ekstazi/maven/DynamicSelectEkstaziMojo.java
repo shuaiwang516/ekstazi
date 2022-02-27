@@ -90,7 +90,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
      * Implements 'select' that does not require changes to any
      * existing plugin in configuration file(s).
      */
-    private void executeThis() throws MojoExecutionException {
+    private void executeThis() throws MojoExecutionException, IOException {
         // Try to attach agent that will modify Surefire.
         if (AgentLoader.loadEkstaziAgent()) {
             // Prepare initial list of options and set property.
