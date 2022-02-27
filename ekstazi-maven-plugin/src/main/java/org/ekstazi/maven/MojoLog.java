@@ -1,9 +1,13 @@
 package org.ekstazi.maven;
 
+import org.ekstazi.Config;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class MojoLog {
@@ -49,8 +53,11 @@ public class MojoLog {
         if (!NONAffectedLogEnabled)
             return;
         try {
+            String curRoot = Config.getCurRoot();
+            String logFolderPath = Paths.get(curRoot, NON_Affected_LOG_FOLDER).toAbsolutePath().toString();
+            d2f("[DEBUG] root = " + logFolderPath);
             if (firstEnterUnAffectedLog) {
-                File logFolder = new File(NON_Affected_LOG_FOLDER);
+                File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {
                     if(!logFolder.mkdir()) {
                         throw new IOException("Can't create unaffected log folder");
@@ -58,7 +65,8 @@ public class MojoLog {
                 }
                 firstEnterUnAffectedLog = false;
             }
-            FileWriter fw = new FileWriter(NON_Affected_LOG_FOLDER + "/" + roundIndex + ".txt", false);
+            Path logFile = Paths.get(logFolderPath, roundIndex + ".txt");
+            FileWriter fw = new FileWriter(logFile.toFile(), false);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("==============================UNAFFECTED FROM PREV==============================\n");
             for (String prev : nonAffectedClassesFromPrev) {

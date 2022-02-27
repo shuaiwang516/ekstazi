@@ -20,6 +20,7 @@ import org.ekstazi.Config;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -204,8 +205,10 @@ public final class Log {
         if (!diffLogEnabled)
             return;
         try {
+            String curRoot = Config.getCurRoot();
+            String logFolderPath = Paths.get(curRoot, DIFF_LOG_FOLDER).toAbsolutePath().toString();
             if (firstEnterDiffLog) {
-                File logFolder = new File(DIFF_LOG_FOLDER);
+                File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {
                     if(!logFolder.mkdir()) {
                         throw new IOException("Can't create diffLog folder");
@@ -219,7 +222,8 @@ public final class Log {
                 }
                 firstEnterDiffLog = false;
             }
-            FileWriter fw = new FileWriter(DIFF_LOG_FOLDER + "/" + className + ".txt", true);
+            Path logFile = Paths.get(logFolderPath, className + ".txt");
+            FileWriter fw = new FileWriter(logFile.toFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("[CODE-DIFF] file= " + url + ", compared with " + dirName + " msg = " + msg);
             bw.newLine();
@@ -233,8 +237,10 @@ public final class Log {
         if (!diffLogEnabled)
             return;
         try {
+            String curRoot = Config.getCurRoot();
+            String logFolderPath = Paths.get(curRoot, DIFF_LOG_FOLDER).toAbsolutePath().toString();
             if (firstEnterDiffLog) {
-                File logFolder = new File(DIFF_LOG_FOLDER);
+                File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {
                     if(!logFolder.mkdir()) {
                         throw new IOException("Can't create diffLog folder");
@@ -248,7 +254,8 @@ public final class Log {
                 }
                 firstEnterDiffLog = false;
             }
-            FileWriter fw = new FileWriter(DIFF_LOG_FOLDER + "/" + className + ".txt", true);
+            Path logFile = Paths.get(logFolderPath, className + ".txt");
+            FileWriter fw = new FileWriter(logFile.toFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("[CONFIG-DIFF] config_name=" + key + ", dep_value=" + depValue + ", user_value=" + userValue +  ", msg=" + msg);
             bw.newLine();
@@ -263,8 +270,11 @@ public final class Log {
         if (!AffectedLogEnabled)
             return;
         try {
+            String curRoot = Config.getCurRoot();
+            String logFolderPath = Paths.get(curRoot, Affected_LOG_FOLDER).toAbsolutePath().toString();
+            d2f("[DEBUG] root = " + logFolderPath);
             if (firstEnterAffectedLog) {
-                File logFolder = new File(Affected_LOG_FOLDER);
+                File logFolder = new File(logFolderPath);
                 if (!logFolder.exists()) {
                     if(!logFolder.mkdir()) {
                         throw new IOException("Can't create unaffected log folder");
@@ -272,7 +282,8 @@ public final class Log {
                 }
                 firstEnterAffectedLog = false;
             }
-            FileWriter fw = new FileWriter(Affected_LOG_FOLDER + "/" + roundIndex + ".txt", true);
+            Path logFile = Paths.get(logFolderPath, roundIndex + ".txt");
+            FileWriter fw = new FileWriter(logFile.toFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write("==============================" + msg + "==============================\n");
             for (String className : affectedList) {
