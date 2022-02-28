@@ -1,10 +1,10 @@
 package org.ekstazi.configAware;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import org.ekstazi.Config;
+import org.ekstazi.log.Log;
+
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +17,10 @@ public class ConfigListener {
     private static final Map<String, String> sGetConfigMap = new HashMap<String, String>();
 
     /** configuration pairs that from set() API */
-    private static final Map<String, String> sSetConfigMap = new HashMap<String, String>();
+    private static final Set<String> sSetConfigSet = new HashSet<String>();
+
+    /** configuration pairs that from set() API */
+    private static final Map<String, Set<String>> sConfigDependencyMap = Config.CONFIG_DEPENDENCY_V;
 
     /** Lock for this listener */
     private static final ReentrantLock sLock = new ReentrantLock();
@@ -38,7 +41,7 @@ public class ConfigListener {
 
     private static void clean0() {
         sGetConfigMap.clear();
-        sSetConfigMap.clear();
+        sSetConfigSet.clear();
     }
 
     /**
@@ -66,23 +69,18 @@ public class ConfigListener {
     /**
      * Add the set configuration into collected info.
      * @param configName set configuration name;
-     * @param configValue set configuration value;
      */
-    public static void addSetConfig(String configName, String configValue) {
+    public static void addSetConfig(String configName) {
         try {
             sLock.lock();
-            addSetConfig0(configName, configValue);
+            addSetConfig0(configName);
         } finally {
             sLock.unlock();
         }
     }
 
-    private static void addSetConfig0(String configName, String configValue) {
-        if (sSetConfigMap.containsKey(configName)) {
-            sSetConfigMap.replace(configName, configValue);
-        } else {
-            sSetConfigMap.put(configName, configValue);
-        }
+    private static void addSetConfig0(String configName) {
+        sSetConfigSet.add(configName);
     }
 
     /**
@@ -105,11 +103,26 @@ public class ConfigListener {
     }
 
     public static Map<String, String> getConfigMap() {
-        // Remove those configuration pairs that hardcoded in the unit tests.
-        if (!sSetConfigMap.isEmpty() && !sGetConfigMap.isEmpty()) {
-            for (Map.Entry<String, String> setEntry : sSetConfigMap.entrySet()) {
-                if (sGetConfigMap.containsKey(setEntry.getKey())) {
-                    sGetConfigMap.remove(setEntry.getKey());
+        // Insert parameter P into Set Map if P's value is depend on parameter Q and Q is hardcoded by SET()
+        if (sConfigDependencyMap != null && !sSetConfigSet.isEmpty() && !sConfigDependencyMap.isEmpty()) {
+            for (Map.Entry<String, Set<String>> depEntry : sConfigDependencyMap.entrySet()) {
+                Set<String> depConfig = depEntry.getValue();
+                for (String dep : depConfig) {
+                    if (sSetConfigSet.contains(dep)) {
+                        String depKey = depEntry.getKey();
+                        sSetConfigSet.add(depKey);
+                        Log.d2f("[INFO] " + dep + " is reset, its dependent parameter " + depKey + " also put into reset");
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Remove those configuration pairs that hardcoded by SET() API in the unit tests.
+        if (!sSetConfigSet.isEmpty() && !sGetConfigMap.isEmpty()) {
+            for (String resetConfig : sSetConfigSet) {
+                if (sGetConfigMap.containsKey(resetConfig)) {
+                    sGetConfigMap.remove(resetConfig);
                 }
             }
         }
@@ -148,8 +161,7 @@ public class ConfigListener {
     public static void recordSetConfig(String name, String value) {
         if (name != null && value != null && !name.equals("") && !value.equals("")) {
             name = replaceBlank(name);
-            value = replaceBlank(value);
-            addSetConfig(name, value);
+            addSetConfig(name);
         }
     }
 

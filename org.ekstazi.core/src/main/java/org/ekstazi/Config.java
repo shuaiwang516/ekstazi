@@ -43,6 +43,10 @@ public final class Config {
     /** Array separator */
     private static final String ARRAY_SEPARATOR = ":";
 
+    /** Config-Dependency seperator */
+    private static final String DEP_SEPARATOR = "@";
+
+
     /** Ensures that we initialize this class only once */
     private static boolean sIsInitialized;
 
@@ -342,7 +346,7 @@ public final class Config {
     // CONFIGURATION-AWARE
 
     @Opt(desc = "Test Generated Configuration <key, value> file path")
-    public static String CONFIG_FILE_PATH_V = "NonSetConfigFilePath";
+    public static String CONFIG_FILE_PATH_V = ".ConfigValue";
     protected static final String CONFIG_FILE_PATH_N = "config.file.path";
 
     @Opt(desc = "Configuration file name")
@@ -368,6 +372,10 @@ public final class Config {
     @Opt(desc = "Configurations that will not be involved in comparison")
     public static Set<String> CONFIG_EXCLUDES_V = null;
     protected static final String CONFIG_EXCLUDES_N = "config.excludes";
+
+    @Opt(desc = "Configurations that will not be involved in comparison")
+    public static Map<String, Set<String>> CONFIG_DEPENDENCY_V = null;
+    protected static final String CONFIG_DEPENDENCY_N = "config.dependency";
 
     // INCLUDE/EXCLUDE
 
@@ -451,6 +459,7 @@ public final class Config {
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
         CONFIG_EXCLUDES_V = getSet(props, CONFIG_EXCLUDES_N, CONFIG_EXCLUDES_V);
+        CONFIG_DEPENDENCY_V = getMapList(props, CONFIG_DEPENDENCY_N, CONFIG_DEPENDENCY_V);
     }
 
 
@@ -556,6 +565,7 @@ public final class Config {
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
         CONFIG_EXCLUDES_V = getSet(props, CONFIG_EXCLUDES_N, CONFIG_EXCLUDES_V);
+        CONFIG_DEPENDENCY_V = getMapList(props, CONFIG_DEPENDENCY_N, CONFIG_DEPENDENCY_V);
     }
 
     /**
@@ -631,6 +641,23 @@ public final class Config {
         String val = props.getProperty(key, null);
         if (val == null) return def;
         return new HashSet<String>(Arrays.asList(val.split(ARRAY_SEPARATOR)));
+    }
+
+    private static Map<String, Set<String>> getMapList(Properties props, String key, Map<String, Set<String>> def) {
+        String val = props.getProperty(key, null);
+        if (val == null) return def;
+        Map<String, Set<String>> returnMap = new HashMap<>();
+        String [] items = val.split(ARRAY_SEPARATOR);
+        for (String item : items) {
+            String mapKey = item.split(DEP_SEPARATOR)[0];
+            Set<String> mapValue = new HashSet<>();
+            String [] values = item.split(DEP_SEPARATOR)[1].split(OPTION_SEPARATOR);
+            for (String value : values) {
+                mapValue.add(value.trim());
+            }
+            returnMap.put(mapKey, mapValue);
+        }
+        return returnMap;
     }
 
     private static String[] getArray(Properties props, String key, String[] def) {
