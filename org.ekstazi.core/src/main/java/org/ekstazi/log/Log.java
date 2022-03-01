@@ -191,9 +191,11 @@ public final class Log {
         try {
             FileWriter fw = new FileWriter(D2F_FILE_NAME, true);
             BufferedWriter bw = new BufferedWriter(fw);
-            for (String s : list) {
-                bw.write(s);
-                bw.newLine();
+            if (list != null && !list.isEmpty()) {
+                for (String s : list) {
+                    bw.write(s);
+                    bw.newLine();
+                }
             }
             bw.close();
         } catch (Exception e) {
