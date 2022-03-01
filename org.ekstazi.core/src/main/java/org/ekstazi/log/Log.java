@@ -193,8 +193,10 @@ public final class Log {
             BufferedWriter bw = new BufferedWriter(fw);
             if (list != null && !list.isEmpty()) {
                 for (String s : list) {
-                    bw.write(s);
-                    bw.newLine();
+                    if (s != null) {
+                        bw.write(s);
+                        bw.newLine();
+                    }
                 }
             }
             bw.close();
