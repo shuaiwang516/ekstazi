@@ -75,6 +75,9 @@ public final class DependencyAnalyzer {
     /** Flag to indicate configuration's value is got from default-reset */
     private final String configDefaultFlag = "@DEFAULTVALUE4CONFIGAWARE@";
 
+    /** Flag to separator configuration's value that got from several APIs */
+    private final String configValueSeperator = "|";
+
     /**
      * Constructor.
      */
@@ -348,8 +351,7 @@ public final class DependencyAnalyzer {
 
         for (Map.Entry<String, String> entry : userConfig.entrySet()) {
             String key = entry.getKey();
-            String userValue = entry.getValue();
-
+            String [] userValues = entry.getValue().split(configValueSeperator);
             // (1) If this config is not used by test, continue
             if (!configMap.containsKey(key)) {
                 continue;
@@ -358,16 +360,19 @@ public final class DependencyAnalyzer {
             String depValue = configMap.get(key);
 
             // (2) If user's setting is different, return true
-            if (!depValue.equals(userValue)) {
-                if (depValue.contains(configDefaultFlag)) {
-                    if (!userValue.equals("null") && !userValue.equals(depValue.replace(configDefaultFlag, ""))) {
-                        Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
-                        diff = true;
+            Boolean atLeastOneValueSame = false;
+            for (String userValue : userValues) {
+                if (!depValue.equals(userValue)) {
+                    if (depValue.contains(configDefaultFlag) && !userValue.equals("null") && userValue.equals(depValue.replace(configDefaultFlag, ""))) {
+                        atLeastOneValueSame = true;
                     }
                 } else {
-                    Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), userValue, "Value different in AbstractCheck! Compared with " + dirName, className);
-                    diff = true;
+                    atLeastOneValueSame = true;
                 }
+            }
+            if (!atLeastOneValueSame) {
+                Log.configDiffLog(Config.curWorkingDir(), key, configMap.get(key), entry.getValue(), "Value different in AbstractCheck! Compared with " + dirName, className);
+                diff = true;
             }
         }
 
