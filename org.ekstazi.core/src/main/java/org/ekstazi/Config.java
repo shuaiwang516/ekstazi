@@ -373,7 +373,7 @@ public final class Config {
     public static Set<String> CONFIG_EXCLUDES_V = null;
     protected static final String CONFIG_EXCLUDES_N = "config.excludes";
 
-    @Opt(desc = "Configurations that will not be involved in comparison")
+    @Opt(desc = "Configurations that will not be involved in comparison (as a list of strings concat with '@' and seprataed by ':')")
     public static Map<String, Set<String>> CONFIG_DEPENDENCY_V = null;
     protected static final String CONFIG_DEPENDENCY_N = "config.dependency";
 
