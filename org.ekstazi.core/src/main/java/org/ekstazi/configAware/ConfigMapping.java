@@ -2,10 +2,8 @@ package org.ekstazi.configAware;
 
 import org.ekstazi.Config;
 import org.ekstazi.log.Log;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
@@ -33,23 +31,17 @@ public class ConfigMapping {
         }
         try {
             FileReader fileReader = new FileReader(mappingFile);
-            JSONParser jsonParser = new JSONParser();
-            Object obj = jsonParser.parse(fileReader);
-
-            JSONObject mappingObject = (JSONObject) obj;
-            Set<String> testName = mappingObject.keySet();
-            for (String test : testName) {
-                JSONArray configArray = (JSONArray) mappingObject.get(test);
+            BufferedReader br = new BufferedReader(fileReader);
+            String line;
+            while ((line = br.readLine()) != null) {
+                String test =  line.split(":")[0].trim();
+                String [] configs = line.split(":")[1].split(",");
                 Set<String> configName = new HashSet<>();
-                for (int i = 0; i < configArray.size(); i++) {
-                    String name = (String) configArray.get(i);
-                    if (name != "" && !name.isEmpty()) {
-                        configName.add(name);
-                    }
+                for (String config : configs) {
+                    configName.add(config.trim());
                 }
                 sGroupedMapping.put(test, configName);
             }
-
             fileReader.close();
         } catch (Exception e) {
             Log.e("Failed to generate group ctest mapping " + e.getMessage());
