@@ -103,14 +103,16 @@ public class ConfigListener {
     }
 
     public static Map<String, String> getConfigMap() {
+        Set<String> configSet = new HashSet<>(sSetConfigSet);
+        Map<String, String> configGet = new HashMap<>(sGetConfigMap);
         // Insert parameter P into Set Map if P's value is depend on parameter Q and Q is hardcoded by SET()
-        if (sConfigDependencyMap != null && !sSetConfigSet.isEmpty() && !sConfigDependencyMap.isEmpty()) {
+        if (sConfigDependencyMap != null && !configSet.isEmpty() && !sConfigDependencyMap.isEmpty()) {
             for (Map.Entry<String, Set<String>> depEntry : sConfigDependencyMap.entrySet()) {
                 Set<String> depConfig = depEntry.getValue();
                 for (String dep : depConfig) {
-                    if (sSetConfigSet.contains(dep)) {
+                    if (configSet.contains(dep)) {
                         String depKey = depEntry.getKey();
-                        sSetConfigSet.add(depKey);
+                        configSet.add(depKey);
                         Log.d2f("[INFO] " + dep + " is reset, its dependent parameter " + depKey + " also put into reset");
                         break;
                     }
@@ -118,15 +120,16 @@ public class ConfigListener {
             }
         }
 
+        Map<String, String> iteraotr = new HashMap<>(configGet);
         // Remove those configuration pairs that hardcoded by SET() API in the unit tests.
-        if (!sSetConfigSet.isEmpty() && !sGetConfigMap.isEmpty()) {
-            for (String resetConfig : sSetConfigSet) {
-                if (sGetConfigMap.containsKey(resetConfig)) {
-                    sGetConfigMap.remove(resetConfig);
+        if (!configSet.isEmpty() && !iteraotr.isEmpty()) {
+            for (String resetConfig : configSet) {
+                if (iteraotr.containsKey(resetConfig)) {
+                    configGet.remove(resetConfig);
                 }
             }
         }
-        return sGetConfigMap;
+        return configGet;
     }
 
     /**
