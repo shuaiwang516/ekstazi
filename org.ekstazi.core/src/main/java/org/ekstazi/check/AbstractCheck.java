@@ -138,8 +138,12 @@ abstract class AbstractCheck {
             Boolean atLeastOneValueSame = false;
             for (String userValue : userValues) {
                 if (!depValue.equals(userValue)) {
-                    if (depValue.contains(configDefaultFlag) && !userValue.equals("null") && userValue.equals(depValue.replace(configDefaultFlag, ""))) {
-                        atLeastOneValueSame = true;
+                    if (depValue.contains(configDefaultFlag)) {
+                        if (userValue.equals("null")) {
+                            atLeastOneValueSame = true;
+                        } else if (userValue.equals(depValue.replace(configDefaultFlag, ""))) {
+                            atLeastOneValueSame = true;
+                        }
                     }
                 } else {
                     atLeastOneValueSame = true;
