@@ -38,7 +38,7 @@ abstract class AbstractCheck {
     private final String configDefaultFlag = "@DEFAULTVALUE4CONFIGAWARE@";
 
     /** Flag to separator configuration's value that got from several APIs */
-    private final String configValueSeperator = "|";
+    private final String configValueSeparator = "|CONFIGAWARESEPARATOR|";
 
     /**
      * Constructor.
@@ -126,7 +126,7 @@ abstract class AbstractCheck {
 
         for (Map.Entry<String, String> entry : userConfig.entrySet()) {
             String key = entry.getKey();
-            String [] userValues = entry.getValue().split(configValueSeperator);
+            String [] userValues = entry.getValue().split(configValueSeparator);
             // (1) If this config is not used by test, continue
             if (!configMap.containsKey(key)) {
                 continue;
