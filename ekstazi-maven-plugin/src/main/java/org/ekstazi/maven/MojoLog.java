@@ -2,10 +2,7 @@ package org.ekstazi.maven;
 
 import org.ekstazi.Config;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -13,11 +10,29 @@ import java.util.List;
 public class MojoLog {
 
     public static final String MOJO_LOG_FILE = "mojo_debug.txt";
+    public static final String TIMER_FILE = "configaware_ekstazi_analysis_time.txt";
     private static Boolean mojoLogEnabled = false;
     private static Boolean NONAffectedLogEnabled = false;
+    private static Boolean timerLogEnabled = true;
     private static Boolean firstEnterUnAffectedLog = true;
     public static String NON_Affected_LOG_FOLDER = "NonAffectedLog";
 
+
+    public static void timerLog(String curRound, long timeElapsed) {
+        if (!timerLogEnabled) {
+            return;
+        }
+        try {
+            FileWriter fw = new FileWriter(TIMER_FILE, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(curRound + " : " + timeElapsed + " ms");
+            bw.newLine();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public static void d2f (String s) {
         if (!mojoLogEnabled)
