@@ -36,6 +36,7 @@ import org.apache.maven.model.Plugin;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import org.ekstazi.Config;
 import org.ekstazi.util.FileUtil;
 
 public abstract class AbstractEkstaziMojo extends AbstractMojo {
@@ -236,4 +237,17 @@ public abstract class AbstractEkstaziMojo extends AbstractMojo {
             throw new MojoExecutionException("Could not remove 'excludesFile'", ex);
         }
     }
+
+    protected void preCheckConfigAwareFiles() throws MojoExecutionException {
+        Config.preLoadConfigAware();
+        String files [] = {Config.CONFIG_FILE_PATH_V, Config.CTEST_MAPPING_FILE_PATH_V,
+                Config.CONFIG_INJECT_FILE_PATH_V, Config.CONFIG_PROD_FILE_PATH_V};
+        for (String file : files) {
+            File checkFile = new File(file);
+            if (!checkFile.exists()) {
+                throw new MojoExecutionException("Config-aware file does not exist + " + file + "; Please check your .ekstazirc file ");
+            }
+        }
+    }
+
 }

@@ -56,6 +56,7 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
         }
 
         checkIfEkstaziDirCanBeCreated();
+        preCheckConfigAwareFiles();
 
         if (isRestoreGoalPresent()) {
             super.execute();

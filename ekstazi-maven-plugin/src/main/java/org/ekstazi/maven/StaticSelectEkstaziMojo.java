@@ -102,6 +102,8 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             return;
         }
 
+        preCheckConfigAwareFiles();
+
         Plugin surefirePlugin = lookupPlugin(SUREFIRE_PLUGIN_KEY);
         // Get all plugin executions.
         Map<String, PluginExecution> id2Execution = surefirePlugin.getExecutionsAsMap();
