@@ -76,7 +76,7 @@ public class ConfigMapping {
 
         // filter out those configuration that can't be tested by testName
         Map<String, Set<String>> configMapping = getConfigMapping();
-        if (configMapping.containsKey(testName)) {
+        if (configMapping != null && !configMapping.isEmpty() && configMapping.containsKey(testName)) {
             Set<String> unTestableConfigSet = configMapping.get(testName);
             if (!injectPairs.isEmpty() && !unTestableConfigSet.isEmpty()) {
                 for (String config : injectPairs.keySet()) {
