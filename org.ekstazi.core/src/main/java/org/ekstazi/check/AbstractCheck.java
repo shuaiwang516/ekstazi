@@ -38,7 +38,7 @@ abstract class AbstractCheck {
     private final String configDefaultFlag = "@DEFAULTVALUE4CONFIGAWARE@";
 
     /** Flag to separator configuration's value that got from several APIs */
-    private final String configValueSeparator = "|CONFIGAWARESEPARATOR|";
+    private final String configValueSeparator = "@CONFIGAWARESEPARATOR@";
 
     /**
      * Constructor.
