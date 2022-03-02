@@ -40,14 +40,14 @@ public final class Log {
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
 
-    private static Boolean myLogEnabled = true;
-    private static Boolean diffLogEnabled = true;
+    private static Boolean myLogEnabled = false;
+    private static Boolean diffLogEnabled = false;
 
-    private static Boolean firstEnterDiffLog = true;
+    private static Boolean firstEnterDiffLog = false;
 
 
-    private static Boolean AffectedLogEnabled = true;
-    private static Boolean firstEnterAffectedLog = true;
+    private static Boolean AffectedLogEnabled = false;
+    private static Boolean firstEnterAffectedLog = false;
     public static String  Affected_LOG_FOLDER = "AffectedLog";
 
 //    private static Set<String> loggedConfig = new HashSet<>();
