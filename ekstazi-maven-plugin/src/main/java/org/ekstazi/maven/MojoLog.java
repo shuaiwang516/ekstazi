@@ -15,7 +15,7 @@ public class MojoLog {
     public static final String MOJO_LOG_FILE = "mojo_debug.txt";
     private static Boolean mojoLogEnabled = false;
     private static Boolean NONAffectedLogEnabled = false;
-    private static Boolean firstEnterUnAffectedLog = false;
+    private static Boolean firstEnterUnAffectedLog = true;
     public static String NON_Affected_LOG_FOLDER = "NonAffectedLog";
 
 
