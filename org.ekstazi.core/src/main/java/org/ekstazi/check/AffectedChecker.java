@@ -155,7 +155,8 @@ public class AffectedChecker {
             Boolean isDuplicated = false;
             if (!nonDuplicatedNonAffectedClasses.isEmpty()) {
                 for (String classWithRoundInList : nonDuplicatedNonAffectedClasses) {
-                    if (classWithRoundInList.contains(className)) {
+                    String classNameInList = classWithRoundInList.split(ROUND_SEPARATOR)[0];
+                    if (classNameInList.equals(className)) {
                         isDuplicated = true;
                     }
                 }
