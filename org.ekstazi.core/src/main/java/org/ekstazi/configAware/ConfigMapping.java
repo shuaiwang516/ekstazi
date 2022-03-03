@@ -34,8 +34,14 @@ public class ConfigMapping {
             BufferedReader br = new BufferedReader(fileReader);
             String line;
             while ((line = br.readLine()) != null) {
-                String test =  line.split(":")[0].trim();
-                String [] configs = line.split(":")[1].split(",");
+                if (!line.contains(":")) {
+                    continue;
+                }
+                String [] strArray = line.split(":");
+                if (strArray.length <= 1)
+                    continue;
+                String test =  strArray[0].trim();
+                String [] configs =strArray[1].split(",");
                 Set<String> configName = new HashSet<>();
                 for (String config : configs) {
                     configName.add(config.trim());
