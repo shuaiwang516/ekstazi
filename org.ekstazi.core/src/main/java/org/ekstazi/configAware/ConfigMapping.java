@@ -108,7 +108,7 @@ public class ConfigMapping {
         }
 
         for (Map.Entry<String, String> entry : returnPairs.entrySet()) {
-            Log.d2f("[INFO] " + testName + ": InjectLog " + entry.getKey() + " : " + entry.getValue());
+            Log.d2f("[INFO] " + testName + ": InjectLog " + entry.getKey() + " : " + entry.getValue() + " for test = " + testName);
         }
 
         return returnPairs;
