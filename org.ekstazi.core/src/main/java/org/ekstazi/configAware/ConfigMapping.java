@@ -9,15 +9,26 @@ import java.io.FileReader;
 import java.util.*;
 
 public class ConfigMapping {
-    /** Ctest grouped mapping, key = TestName, Value = Set<configName>*/
+    /** Ctest grouped mapping, key = Test_Full_Name, Value = Set<configName>*/
     private static final Map<String, Set<String>> sGroupedMapping = new HashMap<String, Set<String>>();
+
+    /** Ctest grouped mapping, key = TestName, Value = Set<configName>*/
+    private static final Map<String, Set<String>> sOnlyTestNameMapping = new HashMap<>();
 
     /** Return the grouped mapping */
     public static Map<String, Set<String>> getConfigMapping(){
-        if (sGroupedMapping.isEmpty() || sGroupedMapping == null) {
+        if (sGroupedMapping.isEmpty()) {
             generateGroupedMapping();
         }
         return sGroupedMapping;
+    }
+
+    /** Return the grouped mapping */
+    public static Map<String, Set<String>> getOnlyTestNameMapping(){
+        if (sOnlyTestNameMapping.isEmpty()) {
+            generateGroupedMapping();
+        }
+        return sOnlyTestNameMapping;
     }
 
     /** Generate the grouped mapping */
@@ -47,6 +58,8 @@ public class ConfigMapping {
                     configName.add(config.trim());
                 }
                 sGroupedMapping.put(test, configName);
+                String [] testName = test.split("\\.");
+                sOnlyTestNameMapping.put(testName[testName.length - 1], configName);
             }
             fileReader.close();
         } catch (Exception e) {

@@ -19,6 +19,7 @@ package org.ekstazi.data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -27,6 +28,7 @@ import java.util.TreeSet;
 import org.ekstazi.Config;
 import org.ekstazi.configAware.ConfigListener;
 import org.ekstazi.configAware.ConfigLoader;
+import org.ekstazi.configAware.ConfigMapping;
 import org.ekstazi.hash.Hasher;
 import org.ekstazi.log.Log;
 import org.ekstazi.monitor.CoverageMonitor;
@@ -349,6 +351,13 @@ public final class DependencyAnalyzer {
 //            }
 //        }
 
+        String testNames [] = className.split("\\.");
+        String testName = testNames[testNames.length - 1];
+        Set<String> CtestMappingConfigs = new HashSet<>();
+        if (ConfigMapping.getOnlyTestNameMapping().containsKey(testName)) {
+            Log.d2f("[INFO] " + testName + " Mapping load successfully for comparison");
+            CtestMappingConfigs = ConfigMapping.getOnlyTestNameMapping().get(testName);
+        }
         for (Map.Entry<String, String> entry : userConfig.entrySet()) {
             String key = entry.getKey();
             String [] userValues = entry.getValue().split(configValueSeparator);
@@ -357,9 +366,15 @@ public final class DependencyAnalyzer {
                 continue;
             }
 
+            // (2) If this config is in ctest mapping (can't be tested under current test), continue
+            if (CtestMappingConfigs.contains(key)) {
+                Log.d2f("[INFO] " + key + " is skipped for " + testName + " comparison due to ctest mapping");
+                continue;
+            }
+
             String depValue = configMap.get(key);
 
-            // (2) If user's setting is different, return true
+            // (3) If user's setting is different, return true
             Boolean atLeastOneValueSame = false;
             for (String userValue : userValues) {
                 if (!depValue.equals(userValue)) {
@@ -383,7 +398,7 @@ public final class DependencyAnalyzer {
         if (diff) {
             return true;
         }
-        // (3) else return false;
+        // (4) else return false;
         return false;
     }
 
