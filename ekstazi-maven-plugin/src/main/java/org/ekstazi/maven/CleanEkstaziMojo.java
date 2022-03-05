@@ -42,6 +42,9 @@ public class CleanEkstaziMojo extends AbstractEkstaziMojo {
             if (f.getName().contains(MojoLog.MOJO_LOG_FILE)) {
                 f.delete();
             }
+            if (f.getName().contains(MojoLog.TIMER_FILE)) {
+                f.delete();
+            }
             if (f.isDirectory() && f.getName().contains(MojoLog.NON_Affected_LOG_FOLDER)) {
                 FileUtil.deleteDirectory(f);
             }
