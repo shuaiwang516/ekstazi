@@ -16,11 +16,13 @@
 
 package org.ekstazi.check;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.ekstazi.Config;
 import org.ekstazi.configAware.ConfigLoader;
+import org.ekstazi.configAware.ConfigMapping;
 import org.ekstazi.data.RegData;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
@@ -124,6 +126,13 @@ abstract class AbstractCheck {
 //            }
 //        }
 
+        String testNames [] = className.split("\\.");
+        String testName = testNames[testNames.length - 1];
+        Set<String> CtestMappingConfigs = new HashSet<>();
+        if (ConfigMapping.getOnlyTestNameMapping().containsKey(testName)) {
+            Log.d2f("[INFO] " + testName + " Mapping load successfully for comparison");
+            CtestMappingConfigs = ConfigMapping.getOnlyTestNameMapping().get(testName);
+        }
         for (Map.Entry<String, String> entry : userConfig.entrySet()) {
             String key = entry.getKey();
             String [] userValues = entry.getValue().split(configValueSeparator);
@@ -132,9 +141,15 @@ abstract class AbstractCheck {
                 continue;
             }
 
+            // (2) If this config is in ctest mapping (can't be tested under current test), continue
+            if (CtestMappingConfigs.contains(key)) {
+                Log.d2f("[INFO] " + key + " is skipped for " + testName + " comparison due to ctest mapping");
+                continue;
+            }
+
             String depValue = configMap.get(key);
 
-            // (2) If user's setting is different, return true
+            // (3) If user's setting is different, return true
             Boolean atLeastOneValueSame = false;
             for (String userValue : userValues) {
                 if (!depValue.equals(userValue)) {
@@ -158,7 +173,7 @@ abstract class AbstractCheck {
         if (diff) {
             return true;
         }
-        // (3) else return false;
+        // (4) else return false;
         return false;
     }
 }
