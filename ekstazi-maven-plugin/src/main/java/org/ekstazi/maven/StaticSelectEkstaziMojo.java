@@ -99,6 +99,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
     }
 
     public void execute() throws MojoExecutionException {
+        long startTime = System.currentTimeMillis();
         // Check if user explicitly requested to not use Ekstazi in
         // this run.
         if (getSkipme()) {
@@ -129,6 +130,12 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         // Append excludes list to "excludesFile".
         checkParametersInFileMode(surefirePlugin);
         appendExcludesListToExcludesFile(surefirePlugin, nonAffectedClasses);
+
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+
+
+        MojoLog.timerLog("Static", timeElapsed);
     }
 
     // INTERNAL

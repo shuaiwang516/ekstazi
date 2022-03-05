@@ -3,6 +3,6 @@
 *.class
 target/
 .ekstazi/
-
+.idea/
 # Private settings.
 settings.xml

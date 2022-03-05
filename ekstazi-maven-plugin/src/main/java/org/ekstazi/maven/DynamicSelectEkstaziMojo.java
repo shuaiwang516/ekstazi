@@ -41,6 +41,7 @@ import org.ekstazi.agent.EkstaziAgent;
 public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
 
     public void execute() throws MojoExecutionException {
+        long startTime = System.currentTimeMillis();
         if (getSkipme()) {
             getLog().info("Ekstazi is skipped.");
             return;
@@ -57,6 +58,11 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
         } else {
             executeThis();
         }
+
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+
+        MojoLog.timerLog("Dynamic", timeElapsed);
     }
 
     // INTERNAL
