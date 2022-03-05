@@ -326,7 +326,7 @@ public final class DependencyAnalyzer {
         Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
         if (userConfig == null) {
             Log.configDiffLog(Config.curWorkingDir(), "", "", "", "Failed to get user configuration", className);
-            Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
+            //Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
             return true;
         }
 
@@ -355,7 +355,7 @@ public final class DependencyAnalyzer {
         String testName = testNames[testNames.length - 1];
         Set<String> CtestMappingConfigs = new HashSet<>();
         if (ConfigMapping.getOnlyTestNameMapping().containsKey(testName)) {
-            Log.d2f("[INFO] " + testName + " Mapping load successfully for comparison");
+            //Log.d2f("[INFO] " + testName + " Mapping load successfully for comparison");
             CtestMappingConfigs = ConfigMapping.getOnlyTestNameMapping().get(testName);
         }
         for (Map.Entry<String, String> entry : userConfig.entrySet()) {
@@ -368,7 +368,7 @@ public final class DependencyAnalyzer {
 
             // (2) If this config is in ctest mapping (can't be tested under current test), continue
             if (CtestMappingConfigs.contains(key)) {
-                Log.d2f("[INFO] " + key + " is skipped for " + testName + " comparison due to ctest mapping");
+                //Log.d2f("[INFO] " + key + " is skipped for " + testName + " comparison due to ctest mapping");
                 continue;
             }
 

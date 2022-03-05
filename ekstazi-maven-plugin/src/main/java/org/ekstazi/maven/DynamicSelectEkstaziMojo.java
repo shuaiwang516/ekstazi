@@ -86,9 +86,9 @@ public class DynamicSelectEkstaziMojo extends StaticSelectEkstaziMojo {
         // !curEkstaziDir.exists()false !curEkstaziDir.mkdirs()true !curEkstaziDir.delete()true curEkstaziDir.exists()true !nextEkstaziDir.mkdir() true !nextEkstaziDir.delete()true
         if ((!curEkstaziDir.exists() && (!curEkstaziDir.mkdirs() || !curEkstaziDir.delete()))
             || (curEkstaziDir.exists()) && (!nextEkstaziDir.mkdir() || !nextEkstaziDir.delete())) {
-            MojoLog.d2f("!curEkstaziDir.exists()" + !curEkstaziDir.exists() + " !curEkstaziDir.mkdirs()" + !curEkstaziDir.mkdirs() + " !curEkstaziDir.delete()"  +
-                    !curEkstaziDir.delete() + " curEkstaziDir.exists()" + curEkstaziDir.exists() + " !nextEkstaziDir.mkdir() " + !nextEkstaziDir.mkdir() +
-                    " !nextEkstaziDir.delete()" + !nextEkstaziDir.delete());
+            //MojoLog.d2f("!curEkstaziDir.exists()" + !curEkstaziDir.exists() + " !curEkstaziDir.mkdirs()" + !curEkstaziDir.mkdirs() + " !curEkstaziDir.delete()"  +
+            //        !curEkstaziDir.delete() + " curEkstaziDir.exists()" + curEkstaziDir.exists() + " !nextEkstaziDir.mkdir() " + !nextEkstaziDir.mkdir() +
+            //        " !nextEkstaziDir.delete()" + !nextEkstaziDir.delete());
             throw new MojoExecutionException("Cannot create Ekstazi directory in " + parentdir);
         }
     }

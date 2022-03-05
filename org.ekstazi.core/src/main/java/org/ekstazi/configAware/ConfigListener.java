@@ -113,7 +113,7 @@ public class ConfigListener {
                     if (configSet.contains(dep)) {
                         String depKey = depEntry.getKey();
                         configSet.add(depKey);
-                        Log.d2f("[INFO] " + dep + " is reset, its dependent parameter " + depKey + " also put into reset");
+                        //Log.d2f("[INFO] " + dep + " is reset, its dependent parameter " + depKey + " also put into reset");
                         break;
                     }
                 }

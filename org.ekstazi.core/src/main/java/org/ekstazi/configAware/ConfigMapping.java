@@ -37,7 +37,7 @@ public class ConfigMapping {
         File mappingFile = new File(mappingFilePath);
         if (!mappingFile.exists() || mappingFile.isDirectory()) {
             Log.e("Mapping file is not exist");
-            Log.d2f("[ERROR] generateGroupedMapping(): Mapping file is not exist");
+            //Log.d2f("[ERROR] generateGroupedMapping(): Mapping file is not exist");
             return;
         }
         try {
@@ -64,7 +64,7 @@ public class ConfigMapping {
             fileReader.close();
         } catch (Exception e) {
             Log.e("Failed to generate group ctest mapping " + e.getMessage());
-            Log.d2f("[ERROR] Failed to generate group ctest mapping " + e.getMessage());
+            //Log.d2f("[ERROR] Failed to generate group ctest mapping " + e.getMessage());
             sGroupedMapping.clear();
             e.printStackTrace();
         }
@@ -100,7 +100,7 @@ public class ConfigMapping {
             if (!injectPairs.isEmpty() && !unTestableConfigSet.isEmpty()) {
                 for (String config : injectPairs.keySet()) {
                     if (unTestableConfigSet.contains(config)) {
-                        Log.d2f("[INFO] Do not inject config " + config + " for test " + testName);
+                        //Log.d2f("[INFO] Do not inject config " + config + " for test " + testName);
                         returnPairs.remove(config);
                     }
                 }
@@ -108,7 +108,7 @@ public class ConfigMapping {
         }
 
         for (Map.Entry<String, String> entry : returnPairs.entrySet()) {
-            Log.d2f("[INFO] " + testName + ": InjectLog " + entry.getKey() + " : " + entry.getValue() + " for test = " + testName);
+            //Log.d2f("[INFO] " + testName + ": InjectLog " + entry.getKey() + " : " + entry.getValue() + " for test = " + testName);
         }
 
         return returnPairs;
