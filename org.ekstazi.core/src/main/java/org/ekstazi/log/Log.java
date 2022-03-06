@@ -21,6 +21,9 @@ import org.ekstazi.Config;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Simple logging facility.
@@ -37,6 +40,25 @@ public final class Log {
 
     public static void initScreen() {
         init(true, false, null);
+    }
+
+    public static final String SIZELOG_FILE = "configaware_ekstazi_analysis_time.txt";
+    private static Boolean sizeLogEnabled = true;
+
+    public static void sizeLog(int size) {
+        if (!sizeLogEnabled) {
+            return;
+        }
+        try {
+            FileWriter fw = new FileWriter(SIZELOG_FILE, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write( "[COLLECT] Size : " + size);
+            bw.newLine();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void init(boolean printToScreen, boolean printToFile, String logFileName) {

@@ -31,6 +31,7 @@ import org.ekstazi.Names;
 import org.ekstazi.data.DependencyAnalyzer;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
+import org.ekstazi.log.Log;
 
 /**
  * Checks all files in coverage directory based on configuration and print the
@@ -128,6 +129,7 @@ public class AffectedChecker {
         List<String> nonAffectedClasses = findNonAffectedClasses(Config.ROOT_DIR_V, true, allClasses,
                 affectedClasses);
         System.out.println("[COLLECT]:" + nonAffectedClasses.size());
+        Log.sizeLog(nonAffectedClasses.size());
         // Format list to include class names in expected format for Ant and Maven.
         return formatNonAffectedClassesForAntAndMaven(nonAffectedClasses);
     }
