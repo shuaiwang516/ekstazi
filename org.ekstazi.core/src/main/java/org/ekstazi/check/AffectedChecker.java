@@ -127,6 +127,7 @@ public class AffectedChecker {
         // Find non affected classes.
         List<String> nonAffectedClasses = findNonAffectedClasses(Config.ROOT_DIR_V, true, allClasses,
                 affectedClasses);
+        System.out.println("[COLLECT]:" + nonAffectedClasses.size());
         // Format list to include class names in expected format for Ant and Maven.
         return formatNonAffectedClassesForAntAndMaven(nonAffectedClasses);
     }
