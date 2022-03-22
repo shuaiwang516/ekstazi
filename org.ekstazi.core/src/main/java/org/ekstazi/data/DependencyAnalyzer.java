@@ -323,8 +323,8 @@ public final class DependencyAnalyzer {
      *
      */
     private boolean hasConfigChanged(Map<String, String> configMap, String dirName, String className) {
-        Map<String, String> userConfig = ConfigLoader.getTestGeneratedConfigMap();
-        if (userConfig == null) {
+        Map<String, String> ChangedConfig = ConfigLoader.getChangedConfigMap();
+        if (ChangedConfig == null) {
             Log.configDiffLog(Config.curWorkingDir(), "", "", "", "Failed to get user configuration", className);
             Log.d2f("[ERROR] hasConfigChanged(): Failed to get user configuration");
             return true;
@@ -338,15 +338,15 @@ public final class DependencyAnalyzer {
 //            String value = entry.getValue();
 //
 //            // (1) If user doesn't set, return true;
-//            if (!userConfig.containsKey(key)) {
+//            if (!ChangedConfig.containsKey(key)) {
 //                Log.configDiffLog(key, value, "", "User didn't set this config", className);
 //                diff = true;
 //            }
 //
 //            // (2) If user's setting is different, return true;
-//            if (!userConfig.get(key).equals(value)) {
-//                Log.configDiffLog(key, value, userConfig.get(key), "Value different!", className);
-//                Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + userConfig.get(key));
+//            if (!ChangedConfig.get(key).equals(value)) {
+//                Log.configDiffLog(key, value, ChangedConfig.get(key), "Value different!", className);
+//                Log.d2f("Diff!! Key = " + key + " value = " + value + " / " + ChangedConfig.get(key));
 //                diff = true;
 //            }
 //        }
@@ -358,7 +358,7 @@ public final class DependencyAnalyzer {
             Log.d2f("[INFO] " + testName + " Mapping load successfully for comparison");
             CtestMappingConfigs = ConfigMapping.getOnlyTestNameMapping().get(testName);
         }
-        for (Map.Entry<String, String> entry : userConfig.entrySet()) {
+        for (Map.Entry<String, String> entry : ChangedConfig.entrySet()) {
             String key = entry.getKey();
             String [] userValues = entry.getValue().split(configValueSeparator);
             // (1) If this config is not used by test, continue

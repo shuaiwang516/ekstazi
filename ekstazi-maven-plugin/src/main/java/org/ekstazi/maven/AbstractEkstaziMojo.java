@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -240,7 +241,8 @@ public abstract class AbstractEkstaziMojo extends AbstractMojo {
 
     protected void preCheckConfigAwareFiles() throws MojoExecutionException {
         Config.preLoadConfigAware();
-        String files [] = {Config.CONFIG_FILE_PATH_V, Config.CTEST_MAPPING_FILE_PATH_V,
+        String configFile = Paths.get(Paths.get(Config.CONFIG_FILE_DIR_PATH_V).toString(), ".ConfigValue").toString();
+        String files [] = {configFile, Config.CTEST_MAPPING_FILE_PATH_V,
                 Config.CONFIG_INJECT_FILE_PATH_V, Config.CONFIG_PROD_FILE_PATH_V};
         for (String file : files) {
             File checkFile = new File(file);

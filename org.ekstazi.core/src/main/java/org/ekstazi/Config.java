@@ -78,7 +78,7 @@ public final class Config {
         //int round = getCurRound();
         String rootDir = rootDirDefault();
         //return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + round;
-        return rootDir + "-" + CONFIG_FILE_NAME_V + "-Round" + curRound;
+        return rootDir + "-" + PRODUCTION_NAME_V + "-Round" + curRound;
     }
 
     /**
@@ -88,7 +88,7 @@ public final class Config {
     public static String getNextDirName() {
         //int round = getCurRound() + 1;
         String rootDir = rootDirDefault();
-        String configName = Config.CONFIG_FILE_NAME_V;
+        String configName = Config.PRODUCTION_NAME_V;
         int maxRound = getMaxRound();
 //        if (maxRound > round)
 //            return rootDir + "-" + configName + "-Round" + maxRound;
@@ -107,7 +107,7 @@ public final class Config {
     private static int getCurRound() {
         Config.preLoadConfigAware();
         String rootDir = rootDirDefault();
-        String configName = CONFIG_FILE_NAME_V;
+        String configName = PRODUCTION_NAME_V;
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
         for(File f : files) {
@@ -127,10 +127,10 @@ public final class Config {
         int max = curRound;
         for(File f : files) {
             Config.preLoadConfigAware();
-            if(CONFIG_FILE_NAME_V == null) {
-                CONFIG_FILE_NAME_V = "NonSetConfigFile";
+            if(PRODUCTION_NAME_V == null) {
+                PRODUCTION_NAME_V = "NonSetConfigFile";
             }
-            if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(CONFIG_FILE_NAME_V)) {
+            if (f.isDirectory() && f.getName().contains("Round") && !f.getName().contains(PRODUCTION_NAME_V)) {
                 String filename = f.getName();
                 String[] filenamelist = filename.split("-");
                 int round = Integer.parseInt(filenamelist[filenamelist.length-1].substring(5));
@@ -168,7 +168,7 @@ public final class Config {
      */
     public static File createCurDir(File parentDir) {
         return new File(parentDir,
-                Names.EKSTAZI_ROOT_DIR_NAME + "-" + CONFIG_FILE_NAME_V + "-Round" + getCurRound());
+                Names.EKSTAZI_ROOT_DIR_NAME + "-" + PRODUCTION_NAME_V + "-Round" + getCurRound());
     }
 
     public static File createNextDir(File parentDir) {
@@ -177,7 +177,7 @@ public final class Config {
         if (maxRound > round)
             round = maxRound;
         return new File(parentDir,
-                Names.EKSTAZI_ROOT_DIR_NAME + "-" + CONFIG_FILE_NAME_V + "-Round" + round);
+                Names.EKSTAZI_ROOT_DIR_NAME + "-" + PRODUCTION_NAME_V + "-Round" + round);
     }
 
     /**
@@ -203,7 +203,7 @@ public final class Config {
         File dir = new File (rootDir.substring(0, rootDir.length() - 8));
         File files [] = dir.listFiles();
         for(File f : files) {
-            if (f.isDirectory() && f.getName().contains("Round" + nextRound) && !f.getName().contains(CONFIG_FILE_NAME_V)) {
+            if (f.isDirectory() && f.getName().contains("Round" + nextRound) && !f.getName().contains(PRODUCTION_NAME_V)) {
                 dirs.add(f);
             }
         }
@@ -346,12 +346,12 @@ public final class Config {
     // CONFIGURATION-AWARE
 
     @Opt(desc = "Test Generated Configuration <key, value> file path")
-    public static String CONFIG_FILE_PATH_V = ".ConfigValue";
-    protected static final String CONFIG_FILE_PATH_N = "config.file.path";
+    public static String CONFIG_FILE_DIR_PATH_V = System.getProperty("user.dir");
+    protected static final String CONFIG_FILE_DIR_PATH_N = "config.file.dir.path";
 
     @Opt(desc = "Configuration file name")
-    public static String CONFIG_FILE_NAME_V = "NonSetConfigFileName";
-    protected static final String CONFIG_FILE_NAME_N = "config.file.name";
+    public static String PRODUCTION_NAME_V = "NonSetProductionName";
+    protected static final String PRODUCTION_NAME_N = "config.production.name";
 
 //    @Opt(desc = "Default Configuration File Path")
 //    public static String DEFAULT_CONFIG_FILE_PATH_V = "NonSetDefaultConfigFile";
@@ -452,8 +452,8 @@ public final class Config {
 
     protected static void preLoadProperties(Properties props) {
         CUR_DIR_V = getURIString(props, CUR_DIR_N, CUR_DIR_V);
-        CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
-        CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
+        PRODUCTION_NAME_V = getString(props, PRODUCTION_NAME_N, PRODUCTION_NAME_V);
+        CONFIG_FILE_DIR_PATH_V = getString(props, CONFIG_FILE_DIR_PATH_N, CONFIG_FILE_DIR_PATH_V);
         // DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
@@ -558,8 +558,8 @@ public final class Config {
         DEPENDENCIES_NIO_V = getBoolean(props, DEPENDENCIES_NIO_N, DEPENDENCIES_NIO_V);
         DEPENDENCIES_NIO_INCLUDES_V = getPattern(props, DEPENDENCIES_NIO_INCLUDES_N, DEPENDENCIES_NIO_INCLUDES_V);
         DEPENDENCIES_NIO_EXCLUDES_V = getPattern(props, DEPENDENCIES_NIO_EXCLUDES_N, DEPENDENCIES_NIO_EXCLUDES_V);
-        CONFIG_FILE_NAME_V = getString(props, CONFIG_FILE_NAME_N, CONFIG_FILE_NAME_V);
-        CONFIG_FILE_PATH_V = getString(props, CONFIG_FILE_PATH_N, CONFIG_FILE_PATH_V);
+        PRODUCTION_NAME_V = getString(props, PRODUCTION_NAME_N, PRODUCTION_NAME_V);
+        CONFIG_FILE_DIR_PATH_V = getString(props, CONFIG_FILE_DIR_PATH_N, CONFIG_FILE_DIR_PATH_V);
         // DEFAULT_CONFIG_FILE_PATH_V = getString(props, DEFAULT_CONFIG_FILE_PATH_N, DEFAULT_CONFIG_FILE_PATH_V);
         CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
         CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
