@@ -95,7 +95,7 @@ public final class DependencyAnalyzer {
     public synchronized boolean isAffected(String name) {
         String fullMethodName = name + "." + COV_EXT;
         Set<RegData> regData = mStorer.load(mRootDir, name, COV_EXT);
-        boolean isAffected = isAffected(regData);
+        boolean isAffected = isAffected(regData, name);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -148,7 +148,7 @@ public final class DependencyAnalyzer {
         boolean isAffected = true;
         String fullMethodName = className + "." + CLASS_EXT;
         Set<RegData> regData = mStorer.load(mRootDir, className, CLASS_EXT);
-        isAffected = isAffected(regData);
+        isAffected = isAffected(regData, className);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -207,7 +207,7 @@ public final class DependencyAnalyzer {
         }
 
         Set<RegData> regData = mStorer.load(mRootDir, className, methodName);
-        boolean isAffected = isAffected(regData);
+        boolean isAffected = isAffected(regData, className);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);
         }
@@ -282,18 +282,19 @@ public final class DependencyAnalyzer {
      * Returns true if test is affected. Test is affected if hash of any
      * resource does not match old hash.
      */
-    private boolean isAffected(Set<RegData> regData) {
-        return regData == null || regData.size() == 0 || hasHashChanged(regData);
+    private boolean isAffected(Set<RegData> regData, String className) {
+        return regData == null || regData.size() == 0 || hasHashChanged(regData, className);
     }
 
     /**
      * Hashes files and compares with the old hashes. If any hash is different,
      * returns true; false otherwise.
      */
-    private boolean hasHashChanged(Set<RegData> regData) {
+    private boolean hasHashChanged(Set<RegData> regData, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
                 Log.d("CHANGED", el.getURLExternalForm());
+                Log.codeDiffLog(Config.ROOT_DIR_V, el.getURLExternalForm(), className, " Code diff in AbstractChecker");
                 return true;
             }
         }

@@ -18,9 +18,9 @@ package org.ekstazi.log;
 
 import org.ekstazi.Config;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Simple logging facility.
@@ -34,6 +34,12 @@ public final class Log {
 
     private static PrintWriter pwScreen;
     private static PrintWriter pwFile;
+
+    public static final String DIFF_LOG_FOLDER = "diffLog";
+
+    private static Boolean diffLogEnabled = true;
+
+    private static Boolean firstEnterDiffLog = true;
 
     public static void initScreen() {
         init(true, false, null);
@@ -152,4 +158,37 @@ public final class Log {
             pwFile.flush();
         }
     }
+
+    public static void codeDiffLog(String curFolder, String url, String className, String msg) {
+        if (!diffLogEnabled)
+            return;
+        try {
+            String logFolderPath = Paths.get(curFolder, DIFF_LOG_FOLDER).toAbsolutePath().toString();
+            if (firstEnterDiffLog) {
+                File logFolder = new File(logFolderPath);
+                if (!logFolder.exists()) {
+                    if(!logFolder.mkdir()) {
+                        throw new IOException("Can't create diffLog folder");
+                    }
+                } else {
+                    String[] entries = logFolder.list();
+                    for(String s: entries){
+                        File f = new File(logFolder.getPath(), s);
+                        f.delete();
+                    }
+                }
+                firstEnterDiffLog = false;
+            }
+            Path logFile = Paths.get(logFolderPath, className + ".txt");
+            FileWriter fw = new FileWriter(logFile.toFile(), true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("[CODE-DIFF] file= " + url + " msg = " + msg);
+            bw.newLine();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+

@@ -18,9 +18,11 @@ package org.ekstazi.check;
 
 import java.util.Set;
 
+import org.ekstazi.Config;
 import org.ekstazi.data.RegData;
 import org.ekstazi.data.Storer;
 import org.ekstazi.hash.Hasher;
+import org.ekstazi.log.Log;
 
 abstract class AbstractCheck {
 
@@ -43,19 +45,20 @@ abstract class AbstractCheck {
     public abstract void includeAffected(Set<String> affectedClasses);
 
     protected boolean isAffected(String dirName, String className, String methodName) {
-        return isAffected(mStorer.load(dirName, className, methodName));
+        return isAffected(mStorer.load(dirName, className, methodName), className);
     }
 
-    protected boolean isAffected(Set<RegData> regData) {
-        return regData == null || regData.size() == 0 || hasHashChanged(regData);
+    protected boolean isAffected(Set<RegData> regData, String className) {
+        return regData == null || regData.size() == 0 || hasHashChanged(regData, className);
     }
 
     /**
      * Check if any element of the given set has changed.
      */
-    private boolean hasHashChanged(Set<RegData> regData) {
+    private boolean hasHashChanged(Set<RegData> regData, String className) {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
+                Log.codeDiffLog(Config.ROOT_DIR_V, el.getURLExternalForm(), className, " Code diff in AbstractChecker");
                 return true;
             }
         }

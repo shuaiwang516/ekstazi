@@ -44,7 +44,7 @@ final class DebugNameCheck extends NameBasedCheck {
     }
 
     @Override
-    protected boolean isAffected(Set<RegData> regData) {
+    protected boolean isAffected(Set<RegData> regData, String className) {
         for (RegData el: regData) {
             if (hasHashChanged(mHasher, el)) {
                 Log.d("Checking::Diff::", el.getURLExternalForm());
@@ -52,6 +52,6 @@ final class DebugNameCheck extends NameBasedCheck {
                 Log.d("Checking::Same::", el.getURLExternalForm());
             }
         }
-        return super.isAffected(regData);
+        return super.isAffected(regData, className);
     }
 }
