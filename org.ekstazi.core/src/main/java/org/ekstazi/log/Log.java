@@ -164,25 +164,32 @@ public final class Log {
             return;
         try {
             String logFolderPath = Paths.get(curFolder, DIFF_LOG_FOLDER).toAbsolutePath().toString();
-            if (firstEnterDiffLog) {
-                File logFolder = new File(logFolderPath);
-                if (!logFolder.exists()) {
-                    if(!logFolder.mkdir()) {
-                        throw new IOException("Can't create diffLog folder");
-                    }
-                } else {
-                    String[] entries = logFolder.list();
-                    for(String s: entries){
-                        File f = new File(logFolder.getPath(), s);
-                        f.delete();
-                    }
+            File logFolder = new File(logFolderPath);
+            if (!logFolder.exists()) {
+                if(!logFolder.mkdir()) {
+                    throw new IOException("Can't create diffLog folder");
                 }
-                firstEnterDiffLog = false;
             }
+//            if (firstEnterDiffLog) {
+//                File logFolder = new File(logFolderPath);
+//                if (!logFolder.exists()) {
+//                    if(!logFolder.mkdir()) {
+//                        throw new IOException("Can't create diffLog folder");
+//                    }
+//                }
+//                else {
+//                    String[] entries = logFolder.list();
+//                    for(String s: entries){
+//                        File f = new File(logFolder.getPath(), s);
+//                        f.delete();
+//                    }
+//                }
+//                firstEnterDiffLog = false;
+//            }
             Path logFile = Paths.get(logFolderPath, className + ".txt");
             FileWriter fw = new FileWriter(logFile.toFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write("[CODE-DIFF] file= " + url + " msg = " + msg);
+            bw.write(url + " || " + msg);
             bw.newLine();
             bw.close();
         } catch (Exception e) {

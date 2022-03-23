@@ -294,7 +294,7 @@ public final class DependencyAnalyzer {
         for (RegData el : regData) {
             if (hasHashChanged(mHasher, el)) {
                 Log.d("CHANGED", el.getURLExternalForm());
-                Log.codeDiffLog(Config.ROOT_DIR_V, el.getURLExternalForm(), className, " Code diff in AbstractChecker");
+                Log.codeDiffLog(System.getProperty("user.dir"), el.getURLExternalForm(), className, "new = " + mHasher.hashURL(el.getURLExternalForm()) + " old = " + el.getHash());
                 return true;
             }
         }
