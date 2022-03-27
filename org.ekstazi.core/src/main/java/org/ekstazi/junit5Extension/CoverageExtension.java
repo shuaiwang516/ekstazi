@@ -1,6 +1,8 @@
 package org.ekstazi.junit5Extension;
 
 import org.ekstazi.Ekstazi;
+import org.ekstazi.configAware.ConfigInjector;
+import org.ekstazi.configAware.ConfigMapping;
 import org.ekstazi.monitor.CoverageMonitor;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -14,14 +16,15 @@ public class CoverageExtension implements BeforeAllCallback, AfterAllCallback {
         mClassName = extensionContext.getRequiredTestClass().getCanonicalName();
         CoverageMonitor.clean();
         mURLs = CoverageMonitor.getURLs();
+        ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClassName));
         Ekstazi.inst().beginClassCoverage(mClassName);
-        System.out.println("Start Coverage :" + mClassName);
+        //System.out.println("Start Coverage :" + mClassName);
     }
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
         if (mURLs != null) CoverageMonitor.addURLs(mURLs);
         Ekstazi.inst().endClassCoverage(mClassName, Junit5Helper.isTestFailed);
-        System.out.println("End Coverage :" + mClassName);
+        //System.out.println("End Coverage :" + mClassName);
     }
 }
