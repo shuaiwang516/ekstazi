@@ -189,11 +189,11 @@ public class AffectedChecker {
                 continue;
             }
             if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
-                className = covCheck.includeAll(fileName, dirName);
+                className = covCheck.includeAll(fileName, dirName, true);
             } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
-                className = classCheck.includeAll(fileName, dirName);
+                className = classCheck.includeAll(fileName, dirName, true);
             } else {
-                className = methodCheck.includeAll(fileName, dirName);
+                className = methodCheck.includeAll(fileName, dirName, true);
             }
             // Reset after some time to free space.
             if (prevClassName != null && className != null && !prevClassName.equals(className)) {
@@ -430,15 +430,15 @@ public class AffectedChecker {
                 continue;
             }
             if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
-                className = covCheck.includeAll(fileName, dirName);
+                className = covCheck.includeAll(fileName, dirName, false);
             } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
-                className = classCheck.includeAll(fileName, dirName);
+                className = classCheck.includeAll(fileName, dirName, false);
             } else {
-                className = methodCheck.includeAll(fileName, dirName);
+                className = methodCheck.includeAll(fileName, dirName, false);
             }
             // Reset after some time to free space.
             if (prevClassName != null && className != null && !prevClassName.equals(className)) {
-                methodCheck.includeAffected(affectedClasses);
+                methodCheck.includeAffectedFromPrev(affectedClasses);
                 methodCheck = new MethodCheck(Config.createStorer(), Config.createHasher());
             }
             if (className != null) {
@@ -446,8 +446,8 @@ public class AffectedChecker {
                 prevClassName = className.trim();
             }
         }
-        classCheck.includeAffected(affectedClasses);
-        covCheck.includeAffected(affectedClasses);
-        methodCheck.includeAffected(affectedClasses);
+        classCheck.includeAffectedFromPrev(affectedClasses);
+        covCheck.includeAffectedFromPrev(affectedClasses);
+        methodCheck.includeAffectedFromPrev(affectedClasses);
     }
 }

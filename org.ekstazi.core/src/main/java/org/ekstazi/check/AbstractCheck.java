@@ -50,15 +50,19 @@ abstract class AbstractCheck {
         this.mHasher = hasher;
     }
 
-    public abstract String includeAll(String fileName, String fileDir);
+    public abstract String includeAll(String fileName, String fileDir, Boolean horizontalCompare);
 
-    public abstract void includeAffected(Set<String> affectedClasses);
+    public abstract void includeAffectedFromPrev(Set<String> affectedClasses);
 
     public abstract void includeAffectedFromCurRound(Set<String> affectedClasses, String curRoundDirName);
 
-    protected boolean isAffected(String dirName, String className, String methodName) {
-        return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), dirName, className)
-                || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
+    protected boolean isAffected(String dirName, String className, String methodName, Boolean horizontalCompare) {
+        if (horizontalCompare) {
+            return isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
+        } else {
+            return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), dirName, className)
+                    || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
+        }
     }
 
     protected boolean isAffectedByReg(Set<RegData> regData, String dirName, String className) {

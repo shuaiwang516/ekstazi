@@ -40,16 +40,16 @@ class NameBasedCheck extends AbstractCheck {
     }
 
     @Override
-    public String includeAll(String fileName, String fileDir) {
+    public String includeAll(String fileName, String fileDir, Boolean horizontalCompare) {
         String className = removeExtension(fileName, mExtension).trim();
-        if (isAffected(fileDir, className, mExtension)) {
+        if (isAffected(fileDir, className, mExtension, horizontalCompare)) {
             mAffected.add(className);
         }
         return className;
     }
 
     @Override
-    public void includeAffected(Set<String> affectedClasses) {
+    public void includeAffectedFromPrev(Set<String> affectedClasses) {
         affectedClasses.addAll(mAffected);
     }
 

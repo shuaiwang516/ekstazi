@@ -38,9 +38,9 @@ final class DebugNameCheck extends NameBasedCheck {
     }
 
     @Override
-    protected boolean isAffected(String dirName, String className, String methodName) {
+    protected boolean isAffected(String dirName, String className, String methodName, Boolean horizontalCompare) {
         Log.d("Checking::Class::", className);
-        return super.isAffected(dirName, className, methodName);
+        return super.isAffected(dirName, className, methodName, horizontalCompare);
     }
 
     @Override

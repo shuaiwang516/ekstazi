@@ -70,7 +70,7 @@ final class MethodCheck extends AbstractCheck {
     }
 
     @Override
-    public String includeAll(String fileName, String fileDir) {
+    public String includeAll(String fileName, String fileDir, Boolean horizontalCompare) {
         String className = null;
         int index = fileName.lastIndexOf(".");
         if (index == -1) {
@@ -81,15 +81,14 @@ final class MethodCheck extends AbstractCheck {
         } else {
             className = fileName.substring(0, index).trim();
             String methodName = fileName.substring(index + 1);
-            boolean isAffected = isAffected(fileDir, className, methodName);
+            boolean isAffected = isAffected(fileDir, className, methodName, horizontalCompare);
             mTests.add(new TestAbs(isAffected, mStorer.loadRegData(fileDir, className, methodName), mStorer.loadConfigData(fileDir, className, methodName), fileName, fileDir, className));
         }
         return className;
     }
 
-    //TODO: Do we need to check this method for config-aware? NOT SURE!!!
     @Override
-    public void includeAffected(Set<String> affectedClasses) {
+    public void includeAffectedFromPrev(Set<String> affectedClasses) {
         //Log.d2f("line92: includeAffected");
         // Check if affected tests are really affected.
         List<TestAbs> affectedTests = getAffectedTests(mTests);
