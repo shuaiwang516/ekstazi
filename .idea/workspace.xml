@@ -266,6 +266,13 @@
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -322,5 +329,9 @@
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="907" y="426" width="745" height="616" key="find.popup/560.1440.1440.900/0.0.2560.1440@0.0.2560.1440" timestamp="1647994970354" />
+    <state x="861" y="345" width="838" height="1032" key="search.everywhere.popup" timestamp="1648348470019">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="861" y="345" width="838" height="1032" key="search.everywhere.popup/560.1440.1440.900/0.0.2560.1440@0.0.2560.1440" timestamp="1648348470019" />
   </component>
 </project>

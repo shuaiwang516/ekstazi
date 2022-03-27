@@ -37,7 +37,7 @@ public final class Log {
 
     public static final String DIFF_LOG_FOLDER = "diffLog";
 
-    private static Boolean diffLogEnabled = true;
+    private static Boolean diffLogEnabled = false;
 
     private static Boolean firstEnterDiffLog = true;
 
