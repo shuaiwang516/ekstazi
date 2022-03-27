@@ -45,6 +45,25 @@ public final class Log {
         init(true, false, null);
     }
 
+    public static final String SIZELOG_FILE = "configaware_ekstazi_analysis_time.txt";
+    private static Boolean sizeLogEnabled = true;
+
+    public static void sizeLog(int size) {
+        if (!sizeLogEnabled) {
+            return;
+        }
+        try {
+            FileWriter fw = new FileWriter(SIZELOG_FILE, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write( "[COLLECT] Size : " + size);
+            bw.newLine();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void init(boolean printToScreen, boolean printToFile, String logFileName) {
         if (printToScreen) {
             pwScreen = new PrintWriter(System.err);

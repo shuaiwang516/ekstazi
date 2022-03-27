@@ -257,12 +257,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b855330d-5260-4166-b3fe-62fa9a28ab6e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/check/AbstractCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/check/AbstractCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/data/DependencyAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/data/DependencyAnalyzer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/log/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/log/Log.java" afterDir="false" />
-    </list>
+    <list default="true" id="b855330d-5260-4166-b3fe-62fa9a28ab6e" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -316,6 +311,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="640" y="210" key="SettingsEditor" timestamp="1647994696247">
