@@ -87,7 +87,6 @@ final class MethodCheck extends AbstractCheck {
         return className;
     }
 
-    //TODO: Do we need to check this method for config-aware? NOT SURE!!!
     @Override
     public void includeAffected(Set<String> affectedClasses) {
         //Log.d2f("line92: includeAffected");
@@ -103,13 +102,9 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
-                    boolean isConfigDiff = checkForConfigDiff(aTest);
-                    if (!isConfigDiff) {
-                        new File(aTest.getFileDir(), aTest.getFileName()).delete();
-                        // We remove flag that the test is affected not to include class later.
-                        aTest.setAffected(false);
-                        continue out;
-                    }
+                    // We remove flag that the test is affected not to include class later.
+                    aTest.setAffected(false);
+                    continue out;
                 }
             }
         }
@@ -133,13 +128,9 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
-                    boolean isConfigDiff = checkForConfigDiff(aTest);
-                    if (!isConfigDiff) {
-                        new File(aTest.getFileDir(), aTest.getFileName()).delete();
-                        // We remove flag that the test is affected not to include class later.
-                        aTest.setAffected(false);
-                        continue out;
-                    }
+                    // We remove flag that the test is affected not to include class later.
+                    aTest.setAffected(false);
+                    continue out;
                 }
             }
         }
