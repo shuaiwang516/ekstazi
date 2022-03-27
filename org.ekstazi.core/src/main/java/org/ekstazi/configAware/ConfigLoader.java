@@ -155,10 +155,8 @@ public class ConfigLoader {
                 loadFromXML(is, map);
                 break;
             case "properties":
-                loadFromProperties(is, map);
-                break;
             case "cfg":
-                loadFromCFG();
+                loadFromPropertiesAndCFG(is, map);
                 break;
             default:
                 Log.e("Can't load configuration from ." + fileSuffix + " file");
@@ -170,7 +168,7 @@ public class ConfigLoader {
         parseXML(is, map, "property", "name", "value");
     }
 
-    private static void loadFromProperties(InputStream is, Map<String, String> map) {
+    private static void loadFromPropertiesAndCFG(InputStream is, Map<String, String> map) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         try {
             while(reader.ready()) {

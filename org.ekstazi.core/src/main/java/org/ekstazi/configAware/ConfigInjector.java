@@ -30,7 +30,8 @@ public class ConfigInjector {
                 injectConfigXML(configPairs);
                 break;
             case "properties":
-                injectConfigProperties(configPairs);
+            case "cfg":
+                injectConfigPropertiesAndCFG(configPairs);
                 break;
             default:
                 //Log.d2f("[ERROR] Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
@@ -44,7 +45,7 @@ public class ConfigInjector {
      * Inject real configuration in *.properties file for testing
      * @param configPairs
      */
-    private static void injectConfigProperties(Map<String, String> configPairs) {
+    private static void injectConfigPropertiesAndCFG(Map<String, String> configPairs) {
         try {
 
             FileWriter fw = new FileWriter(Config.CONFIG_INJECT_FILE_PATH_V);
@@ -140,6 +141,6 @@ public class ConfigInjector {
         configPairs.put("person.age", "23");
         configPairs.put("person.info", "");
         Config.CONFIG_INJECT_FILE_PATH_V = "/Users/alenwang/Desktop/generatedProperties.properties";
-        injectConfigProperties(configPairs);
+        injectConfigPropertiesAndCFG(configPairs);
     }
 }
