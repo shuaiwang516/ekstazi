@@ -102,13 +102,9 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
-                    boolean isConfigDiff = checkForConfigDiff(aTest);
-                    if (!isConfigDiff) {
-                        new File(aTest.getFileDir(), aTest.getFileName()).delete();
-                        // We remove flag that the test is affected not to include class later.
-                        aTest.setAffected(false);
-                        continue out;
-                    }
+                    // We remove flag that the test is affected not to include class later.
+                    aTest.setAffected(false);
+                    continue out;
                 }
             }
         }
@@ -132,13 +128,9 @@ final class MethodCheck extends AbstractCheck {
                 // differs, we should remove affected file.
                 boolean anyDiff = checkForDifferences(aTest, naTest);
                 if (anyDiff) {
-                    boolean isConfigDiff = checkForConfigDiff(aTest);
-                    if (!isConfigDiff) {
-                        new File(aTest.getFileDir(), aTest.getFileName()).delete();
-                        // We remove flag that the test is affected not to include class later.
-                        aTest.setAffected(false);
-                        continue out;
-                    }
+                    // We remove flag that the test is affected not to include class later.
+                    aTest.setAffected(false);
+                    continue out;
                 }
             }
         }
