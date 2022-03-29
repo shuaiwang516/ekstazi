@@ -21,6 +21,7 @@ import org.ekstazi.Config;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Simple logging facility.
@@ -36,6 +37,8 @@ public final class Log {
     private static PrintWriter pwFile;
 
     public static final String DIFF_LOG_FOLDER = "diffLog";
+    public static final String D2F_FILE_NAME = "D2FLog.txt";
+    private static Boolean myLogEnabled = true;
 
     private static Boolean diffLogEnabled = true;
 
@@ -43,6 +46,40 @@ public final class Log {
 
     public static void initScreen() {
         init(true, false, null);
+    }
+
+    public static void d2f (String s) {
+        if (!myLogEnabled)
+            return;
+        try {
+            FileWriter fw = new FileWriter(D2F_FILE_NAME, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(s);
+            bw.newLine();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void d2f (List<String> list) {
+        if (!myLogEnabled)
+            return;
+        try {
+            FileWriter fw = new FileWriter(D2F_FILE_NAME, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            if (list != null && !list.isEmpty()) {
+                for (String s : list) {
+                    if (s != null) {
+                        bw.write(s);
+                        bw.newLine();
+                    }
+                }
+            }
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void init(boolean printToScreen, boolean printToFile, String logFileName) {

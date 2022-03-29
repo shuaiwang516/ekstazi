@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.agent.EkstaziAgent;
+import org.ekstazi.log.Log;
 import org.ekstazi.util.Types;
 
 /**
@@ -151,6 +152,7 @@ public abstract class AbstractMojoInterceptor {
         }
         field.setAccessible(true);
         field.set(mojo, value);
+        Log.d2f("Set Filed: + " + field.toString() + " Mojo:" + mojo.toString() + " value" + value.toString());
     }
 
     /**

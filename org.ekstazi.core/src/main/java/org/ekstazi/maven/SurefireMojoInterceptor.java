@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.ekstazi.Config;
 import org.ekstazi.Names;
+import org.ekstazi.log.Log;
 
 /**
  * Monitor invoked before Surefire. The purpose of monitoring is to
@@ -160,6 +161,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
         String currentArgLine = (String) getField(ARGLINE_FIELD, mojo);
         String newArgLine = makeArgLine(mojo, junitMode, currentArgLine);
         setField(ARGLINE_FIELD, mojo, newArgLine);
+        Log.d2f("[DEBUG] line164: start argline" + newArgLine);
     }
     
     private static void updateExcludes(Object mojo) throws Exception {
@@ -175,6 +177,9 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             newExcludes.add("**/*$*");
         }
         setField(EXCLUDES_FIELD, mojo, newExcludes);
+        Log.d2f("[DEBUG] line179: start set_excludes_filed");
+        Log.d2f(newExcludes);
+        Log.d2f("[DEBUG] line179: end set_excludes_filed");
     }
 
     /**

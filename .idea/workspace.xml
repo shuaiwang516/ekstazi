@@ -259,9 +259,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b855330d-5260-4166-b3fe-62fa9a28ab6e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/check/AbstractCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/check/AbstractCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/data/DependencyAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/data/DependencyAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/log/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/log/Log.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/maven/AbstractMojoInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/maven/AbstractMojoInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/maven/SurefireMojoInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/maven/SurefireMojoInterceptor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -270,6 +270,13 @@
   </component>
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -316,15 +323,16 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="640" y="210" key="SettingsEditor" timestamp="1647994696247">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
     <state x="640" y="210" key="SettingsEditor/560.1440.1440.900/0.0.2560.1440@0.0.2560.1440" timestamp="1647994696247" />
-    <state x="907" y="426" width="745" height="616" key="find.popup" timestamp="1647994970354">
+    <state x="907" y="426" width="745" height="616" key="find.popup" timestamp="1648576019656">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
-    <state x="907" y="426" width="745" height="616" key="find.popup/560.1440.1440.900/0.0.2560.1440@0.0.2560.1440" timestamp="1647994970354" />
+    <state x="907" y="426" width="745" height="616" key="find.popup/560.1440.1440.900/0.0.2560.1440@0.0.2560.1440" timestamp="1648576019656" />
   </component>
 </project>
