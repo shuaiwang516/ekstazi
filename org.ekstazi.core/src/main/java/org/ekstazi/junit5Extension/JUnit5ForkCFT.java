@@ -41,15 +41,9 @@ public class JUnit5ForkCFT implements ClassFileTransformer {
         }
     }
 
-    private static Boolean isDepdencyFileExist(String className) {
-        String filePath = Config.CUR_DIR_V + "/" + className.replace("/", ".") + ".clz";
-        File file = new File(filePath);
-        return file.exists();
-    }
-
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-        if (isTestClassTransformNeeded(className) && !Ekstazi.inst().isClassAffected(className.replace("/", ".")) && isDepdencyFileExist(className)) {
+        if (isTestClassTransformNeeded(className) && !Ekstazi.inst().isClassAffected(className.replace("/", "."))) {
             ClassReader classReader = new ClassReader(classfileBuffer);
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             Junit5ForkClassVisitor visitor = new Junit5ForkClassVisitor(classWriter);
