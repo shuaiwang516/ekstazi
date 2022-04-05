@@ -34,7 +34,7 @@ public class ConfigInjector {
                 injectConfigPropertiesAndCFG(configPairs);
                 break;
             default:
-                Log.d2f("[ERROR] Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
+                //Log.d2f("[ERROR] Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
                 Log.e("Failed to inject configuration : Do not support " + fileType.toLowerCase() + " file");
                 break;
         }
@@ -56,12 +56,12 @@ public class ConfigInjector {
                 String configValue = configPair.getValue();
                 bw.write(configName + "=" + configValue);
                 bw.newLine();
-                Log.d2f("[INFO] Inject Config : " + configName + " value = " + configValue);
+                //Log.d2f("[INFO] Inject Config : " + configName + " value = " + configValue);
             }
             bw.close();
             fw.close();
         } catch (IOException e){
-            Log.d2f("[ERROR] Failed to inject configuration " + e.getMessage());
+            //Log.d2f("[ERROR] Failed to inject configuration " + e.getMessage());
             Log.e("Failed to inject configuration " + e.getMessage());
         }
     }
@@ -99,13 +99,13 @@ public class ConfigInjector {
                 value.setTextContent(configPair.getValue());
                 property.appendChild(name);
                 property.appendChild(value);
-                Log.d2f("[INFO] Inject Config : " + configPair.getKey() + " value = " + configPair.getValue());
+                //Log.d2f("[INFO] Inject Config : " + configPair.getKey() + " value = " + configPair.getValue());
             }
             OutputStream os = new FileOutputStream(Config.CONFIG_INJECT_FILE_PATH_V);
             writeXML(doc, os);
             os.close();
         } catch (Exception e) {
-            Log.d2f("[ERROR] Failed to inject configuration " + e.getMessage());
+            //Log.d2f("[ERROR] Failed to inject configuration " + e.getMessage());
             Log.e("Failed to inject configuration " + e.getMessage());
         }
     }

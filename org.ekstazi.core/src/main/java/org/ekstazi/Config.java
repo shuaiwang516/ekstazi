@@ -231,7 +231,7 @@ public final class Config {
             if (text != null) {
                 for (AgentMode b : AgentMode.values()) {
                     if (text.equalsIgnoreCase(b.name())) {
-                        Log.d2f("[INFO] AgenMode Return " + b.name());
+                        //Log.d2f("[INFO] AgenMode Return " + b.name());
                         return b;
                     }
                 }

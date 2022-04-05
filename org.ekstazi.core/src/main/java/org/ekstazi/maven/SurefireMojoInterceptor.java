@@ -197,8 +197,8 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             // Add default excludes as specified by Surefire if excludes is not provided by the user.
             newExcludes.add("**/*$*");
         }
-        Log.d2f("[INFO] Print Exclude Test Name:");
-        Log.d2f(newExcludes);
+        //Log.d2f("[INFO] Print Exclude Test Name:");
+        //Log.d2f(newExcludes);
         setField(EXCLUDES_FIELD, mojo, newExcludes);
 
         List<String> copyDependencyFromPrevList = new ArrayList<>();
@@ -324,7 +324,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                                 Files.move(source, target);
                             }
                         } else {
-                            Log.d2f("[ERROR] CopyFromPrevious: Failed to create test result folder!");
+                            //Log.d2f("[ERROR] CopyFromPrevious: Failed to create test result folder!");
                             throw new IOException("Failed to create test result folder!");
                         }
                     }
@@ -361,7 +361,7 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
                 FileUtil.deleteDirectory(prevDependencyDir);
             }
         } else {
-            Log.d2f("[ERROR] CopyFromPrevious: Can't create new round dependency folder!");
+            //Log.d2f("[ERROR] CopyFromPrevious: Can't create new round dependency folder!");
             throw new IOException("Can't create new round dependency folder!");
         }
     }

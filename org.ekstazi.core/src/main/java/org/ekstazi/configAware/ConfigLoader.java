@@ -144,7 +144,7 @@ public class ConfigLoader {
                 reader.close();
             } else {
                 Log.e("Loading configuration is not successful because no file exists, please check config.file.path");
-                Log.d2f("[ERROR] Loading configuration is not successful because no file exists, please check config.file.path");
+                //Log.d2f("[ERROR] Loading configuration is not successful because no file exists, please check config.file.path");
                 throw new IOException("Loading configuration is not successful because no file exists, please check config.file.path");
             }
         } catch (Exception e) {
@@ -199,11 +199,11 @@ public class ConfigLoader {
         for (String filename : files) {
             filename = filename.trim();
             if (filename == null || filename.isEmpty()) {
-                Log.d2f("[INFO] Load configuration: Continue next file, current filename: " + filename);
+                //Log.d2f("[INFO] Load configuration: Continue next file, current filename: " + filename);
                 continue;
             }
             if (!hasConfigFile(filename)) {
-                Log.d2f("[ERROR] Can't find user's configuration file: " + filename);
+                //Log.d2f("[ERROR] Can't find user's configuration file: " + filename);
                 return;
             }
             try {
@@ -212,7 +212,7 @@ public class ConfigLoader {
                 is.close();
             } catch (IOException e) {
                 Log.e("Loading configuration is not successful", e);
-                Log.d2f("[ERROR] Loading configuration is not successful" + e);
+                //Log.d2f("[ERROR] Loading configuration is not successful" + e);
                 map.clear();
             } finally {
                 FileUtil.closeAndIgnoreExceptions(is);
@@ -265,11 +265,11 @@ public class ConfigLoader {
                         map.put(replaceBlank(configName), replaceBlank(configValue));
                     }
                 } else {
-                    Log.d2f("[ERROR] Incorrectly parse configuration from properties file: configPairs length is too long " + Arrays.toString(configPairs));
+                    //Log.d2f("[ERROR] Incorrectly parse configuration from properties file: configPairs length is too long " + Arrays.toString(configPairs));
                 }
             }
         } catch (IOException e) {
-            Log.d2f("[ERROR] Loading configuration is not successful: " + e.getStackTrace());
+            //Log.d2f("[ERROR] Loading configuration is not successful: " + e.getStackTrace());
             Log.e("Loading configuration is not successful", e);
             map.clear();
         }
@@ -304,7 +304,7 @@ public class ConfigLoader {
                 //System.out.println(configName + " , " + configValue);
             }
         } catch (Exception e) {
-            Log.d2f("[ERROR] Loading configuration is not successful: " + e.getStackTrace());
+            //Log.d2f("[ERROR] Loading configuration is not successful: " + e.getStackTrace());
             Log.e("Loading configuration is not successful", e);
             map.clear();
         }
