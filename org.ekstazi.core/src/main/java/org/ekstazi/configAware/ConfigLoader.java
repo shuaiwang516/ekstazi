@@ -39,7 +39,7 @@ public class ConfigLoader {
                 String configName = configPair.getKey();
                 String curConfigValue = configPair.getValue();
                 if (oldMap.containsKey(configName)) {
-                    if (!oldMap.get(configName).equals(curConfigValue)) {
+                    if (!Objects.equals(oldMap.get(configName), curConfigValue)) {
                         sChangedConfigMap.put(configName, curConfigValue);
                     }
                 } else {
