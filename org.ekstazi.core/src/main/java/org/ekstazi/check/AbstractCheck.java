@@ -61,8 +61,8 @@ abstract class AbstractCheck {
         if (horizontalCompare) {
             return isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
         } else {
-            return isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), dirName, className)
-                    || isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className);
+            return isAffectedByConfig(mStorer.loadConfigData(dirName, className, methodName), dirName, className)
+                    || isAffectedByReg(mStorer.loadRegData(dirName, className, methodName), dirName, className);
         }
     }
 

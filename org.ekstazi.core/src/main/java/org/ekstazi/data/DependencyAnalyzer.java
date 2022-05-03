@@ -111,7 +111,7 @@ public final class DependencyAnalyzer {
         String fullMethodName = name + "." + COV_EXT;
         Set<RegData> regData = mStorer.loadRegData(mCurDir, name, COV_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, name, COV_EXT);
-        boolean isAffected = isAffected(regData, mCurDir, name) || isAffected(configMap, mCurDir, name);
+        boolean isAffected = isAffected(configMap, mCurDir, name) || isAffected(regData, mCurDir, name);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -165,7 +165,7 @@ public final class DependencyAnalyzer {
         String fullMethodName = className + "." + CLASS_EXT;
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, CLASS_EXT);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, CLASS_EXT);
-        isAffected = isAffected(regData, mCurDir, className) || isAffected(configMap, mCurDir, className);
+        isAffected = isAffected(configMap, mCurDir, className) || isAffected(regData, mCurDir, className);
         recordTestAffectedOutcome(fullMethodName, isAffected);
         return isAffected;
     }
@@ -230,7 +230,7 @@ public final class DependencyAnalyzer {
 
         Set<RegData> regData = mStorer.loadRegData(mCurDir, className, methodName);
         Map<String, String> configMap = mStorer.loadConfigData(mCurDir, className, methodName);
-        boolean isAffected = isAffected(regData, mCurDir, className) || isAffected(configMap, mCurDir, className);
+        boolean isAffected = isAffected(configMap, mCurDir, className) || isAffected(regData, mCurDir, className);
         if (isRecordAffectedOutcome) {
             recordTestAffectedOutcome(fullMethodName, isAffected);
         }
