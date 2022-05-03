@@ -151,20 +151,21 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             // the parentdir.
             // Parent dir is ".ekstazi-{}-{}"'s parent dir.
             Config.prepareRound();
-            nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
+
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
             for (String classNameWithRound : nonAffectedClassesFromCurRound) {
                 String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
-                if (!nonAffectedClassesFromPrev.contains(className)) {
+                if (!nonAffectedClassesFromCurRoundResult.contains(className)) {
                     nonAffectedClassesFromCurRoundResult.add(classNameWithRound);
                 }
             }
-
+            nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption(), nonAffectedClassesFromCurRoundResult);
             // Do not exclude recently failing tests if appropriate
             // argument is provided.
             if (getForcefailing()) {
                 List<String> recentlyFailingClasses = AffectedChecker.findRecentlyFailingClasses(parentdir, getRootDirOption());
                 nonAffectedClassesFromPrev.removeAll(recentlyFailingClasses);
+                nonAffectedClassesFromCurRoundResult.removeAll(recentlyFailingClasses);
             }
 
 //            nonAffectedClasses.addAll(nonAffectedClassesFromPrev);
@@ -181,30 +182,33 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         List<String> nonAffectedClasses = new ArrayList<String>();
         List<String> nonAffectedClassesFromPrev = new ArrayList();
         List<String> nonAffectedClassesFromCurRound = new ArrayList();
+        List<String> nonAffectedClassesFromCurRoundResult = new ArrayList();
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
             // Parent dir is ".ekstazi-{}-{}"'s parent dir.
             Config.prepareRound();
-            nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
+
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
 
             for (String classNameWithRound : nonAffectedClassesFromCurRound) {
                 String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
-                if (nonAffectedClassesFromPrev.contains(className)) {
-                    nonAffectedClassesFromCurRound.remove(classNameWithRound);
+                if (!nonAffectedClassesFromCurRoundResult.contains(className)) {
+                    nonAffectedClassesFromCurRoundResult.add(classNameWithRound);
                 }
             }
 
+            nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption(), nonAffectedClassesFromCurRoundResult);
             // Do not exclude recently failing tests if appropriate
             // argument is provided.
             if (getForcefailing()) {
                 List<String> recentlyFailingClasses = AffectedChecker.findRecentlyFailingClasses(parentdir, getRootDirOption());
                 nonAffectedClassesFromPrev.removeAll(recentlyFailingClasses);
+                nonAffectedClassesFromCurRoundResult.removeAll(recentlyFailingClasses);
             }
 
-            nonAffectedClasses.addAll(nonAffectedClassesFromPrev);
-            for (String classNameWithRound : nonAffectedClassesFromCurRound) {
+            nonAffectedClasses.addAll(nonAffectedClassesFromCurRoundResult);
+            for (String classNameWithRound : nonAffectedClassesFromPrev) {
                 String className = classNameWithRound.split(AffectedChecker.ROUND_SEPARATOR)[0];
                 if(!nonAffectedClasses.contains(className)) {
                     nonAffectedClasses.add(className);
@@ -213,7 +217,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
             Collections.sort(nonAffectedClasses);
 
         }
-        return nonAffectedClassesFromPrev;
+        return nonAffectedClasses;
     }
 
 

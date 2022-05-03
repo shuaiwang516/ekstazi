@@ -17,6 +17,7 @@
 package org.ekstazi.check;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.ekstazi.data.Storer;
@@ -40,8 +41,11 @@ class NameBasedCheck extends AbstractCheck {
     }
 
     @Override
-    public String includeAll(String fileName, String fileDir, Boolean horizontalCompare) {
+    public String includeAll(String fileName, String fileDir, Boolean horizontalCompare, List<String> nonAffectedHorizontally) {
         String className = removeExtension(fileName, mExtension).trim();
+        if (nonAffectedHorizontally!= null && !nonAffectedHorizontally.isEmpty() && nonAffectedHorizontally.contains(className)) {
+            return className;
+        }
         if (isAffected(fileDir, className, mExtension, horizontalCompare)) {
             mAffected.add(className);
         }

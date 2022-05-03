@@ -94,7 +94,7 @@ public class AffectedChecker {
             Config.loadConfig();
         }
 
-        List<String> nonAffectedClasses = findNonAffectedClassesFromPrev(coverageDirName, forceCacheUse, allClasses, affectedClasses);
+        List<String> nonAffectedClasses = findNonAffectedClassesFromPrev(coverageDirName, forceCacheUse, allClasses, affectedClasses, null);
 
         // Print non affected classes.
         printNonAffectedClasses(allClasses, affectedClasses, nonAffectedClasses, mode);
@@ -189,11 +189,11 @@ public class AffectedChecker {
                 continue;
             }
             if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
-                className = covCheck.includeAll(fileName, dirName, true);
+                className = covCheck.includeAll(fileName, dirName, true, null);
             } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
-                className = classCheck.includeAll(fileName, dirName, true);
+                className = classCheck.includeAll(fileName, dirName, true, null);
             } else {
-                className = methodCheck.includeAll(fileName, dirName, true);
+                className = methodCheck.includeAll(fileName, dirName, true, null);
             }
             // Reset after some time to free space.
             if (prevClassName != null && className != null && !prevClassName.equals(className)) {
@@ -221,26 +221,26 @@ public class AffectedChecker {
      *            Ekstazi options
      * @return List of non-affected test classes.
      */
-    public static List<String> findNonAffectedClassesFromPrev(File parentDir, String options) {
+    public static List<String> findNonAffectedClassesFromPrev(File parentDir, String options, List<String> nonAffectedHorizontally) {
         // Return if Ekstazi directory does not exist.
         if (!Config.createCurDir(parentDir).exists()) {
             return Collections.<String>emptyList();
         }
         Config.loadConfig(options, true);
-        return findNonAffectedClassesFromPrev(parentDir.getAbsolutePath());
+        return findNonAffectedClassesFromPrev(parentDir.getAbsolutePath(), nonAffectedHorizontally);
     }
 
     /**
      * Returns list of non affected classes as discovered from the given
      * directory with dependencies.
      */
-    private static List<String> findNonAffectedClassesFromPrev(String workingDirectory) {
+    private static List<String> findNonAffectedClassesFromPrev(String workingDirectory, List<String> nonAffectedHorizontally) {
         Set<String> allClasses = new HashSet<String>();
         Set<String> affectedClasses = new HashSet<String>();
         loadConfig(workingDirectory);
         // Find non affected classes.
         List<String> nonAffectedClasses = findNonAffectedClassesFromPrev(Config.CUR_DIR_V, true, allClasses,
-                affectedClasses);
+                affectedClasses,nonAffectedHorizontally);
         // Format list to include class names in expected format for Ant and Maven.
         return formatNonAffectedClassesForAntAndMaven(nonAffectedClasses);
     }
@@ -312,7 +312,7 @@ public class AffectedChecker {
     }
 
     private static List<String> findNonAffectedClassesFromPrev(String depsDirName, boolean forceCacheUse, Set<String> allClasses,
-                                                               Set<String> affectedClasses) {
+                                                               Set<String> affectedClasses, List<String> nonAffectedHorizontally) {
         if (!forceCacheUse) {
             Config.CACHE_SIZES_V = 0;
         }
@@ -325,10 +325,11 @@ public class AffectedChecker {
         }
 
         // Find affected test classes.
-        includeAffectedFromPrev(allClasses, affectedClasses, getSortedFiles(depsDir));
+        includeAffectedFromPrev(allClasses, affectedClasses, getSortedFiles(depsDir), nonAffectedHorizontally);
 
         // Find test classes that are not affected.
         List<String> nonAffectedClasses = new ArrayList<String>(new HashSet<String>(allClasses));
+        nonAffectedClasses.addAll(nonAffectedHorizontally);
         nonAffectedClasses.removeAll(affectedClasses);
         Collections.sort(nonAffectedClasses);
 
@@ -412,7 +413,7 @@ public class AffectedChecker {
     /**
      * Find all non affected classes.
      */
-    private static void includeAffectedFromPrev(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles) {
+    private static void includeAffectedFromPrev(Set<String> allClasses, Set<String> affectedClasses, List<File> sortedFiles, List<String> nonAffectedHorizontally) {
         Storer storer = Config.createStorer();
         Hasher hasher = Config.createHasher();
 
@@ -430,11 +431,11 @@ public class AffectedChecker {
                 continue;
             }
             if (fileName.endsWith(DependencyAnalyzer.COV_EXT)) {
-                className = covCheck.includeAll(fileName, dirName, false);
+                className = covCheck.includeAll(fileName, dirName, false, nonAffectedHorizontally);
             } else if (fileName.endsWith(DependencyAnalyzer.CLASS_EXT)) {
-                className = classCheck.includeAll(fileName, dirName, false);
+                className = classCheck.includeAll(fileName, dirName, false, nonAffectedHorizontally);
             } else {
-                className = methodCheck.includeAll(fileName, dirName, false);
+                className = methodCheck.includeAll(fileName, dirName, false, null);
             }
             // Reset after some time to free space.
             if (prevClassName != null && className != null && !prevClassName.equals(className)) {

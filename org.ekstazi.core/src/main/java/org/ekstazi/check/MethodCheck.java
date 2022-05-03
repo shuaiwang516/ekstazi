@@ -70,7 +70,7 @@ final class MethodCheck extends AbstractCheck {
     }
 
     @Override
-    public String includeAll(String fileName, String fileDir, Boolean horizontalCompare) {
+    public String includeAll(String fileName, String fileDir, Boolean horizontalCompare,List<String> nonAffectedHorizontally) {
         String className = null;
         int index = fileName.lastIndexOf(".");
         if (index == -1) {

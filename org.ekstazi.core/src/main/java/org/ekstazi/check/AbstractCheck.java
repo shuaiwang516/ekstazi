@@ -17,6 +17,7 @@
 package org.ekstazi.check;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ abstract class AbstractCheck {
         this.mHasher = hasher;
     }
 
-    public abstract String includeAll(String fileName, String fileDir, Boolean horizontalCompare);
+    public abstract String includeAll(String fileName, String fileDir, Boolean horizontalCompare, List<String> nonAffectedHorizontally);
 
     public abstract void includeAffectedFromPrev(Set<String> affectedClasses);
 
