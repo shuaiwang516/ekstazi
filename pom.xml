@@ -2,70 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.ekstazi</groupId>
-  <artifactId>org.ekstazi.parent</artifactId>
-  <version>5.3.1</version> <!-- EkstaziVersion -->
+  <groupId>org.urts</groupId>
+  <artifactId>org.urts.parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version> <!-- uRTSVersion -->
   <packaging>pom</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
-  <url>www.ekstazi.org</url>
+  <url>https://sites.google.com/view/urtesting</url>
 
-  <description>Ekstazi: Regression testing tool for Java - parent project</description>
-
-  <scm>
-    <url>https://github.com/gliga/ekstazi</url>
-    <connection>scm:git:git@github.com:gliga/ekstazi.git</connection>
-    <developerConnection>scm:git:git@github.com:gliga/ekstazi.git</developerConnection>
-  </scm>
-
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <id>gliga</id>
-      <name>Milos Gligoric</name>
-      <email>milos.gligoric@gmail.com</email>
-      <url>http://mir.cs.illinois.edu/gliga</url>
-    </developer>
-    <developer>
-      <id>marinov</id>
-      <name>Darko Marinov</name>
-      <email>marinov@illinois.edu</email>
-      <url>http://mir.cs.illinois.edu/marinov</url>
-    </developer>
-    <developer>
-      <id>lamyaa</id>
-      <name>Lamyaa Eloussi</name>
-      <email>lamyaa.eloussi@gmail.com</email>
-      <url>http://mir.cs.illinois.edu/lamyaa</url>
-    </developer>
-  </developers>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-  </distributionManagement>
+  <description>uRTS: Unified Regression testing tool for Java - parent project</description>
 
   <modules>
-    <module>ekstazi-maven-plugin</module>
+    <module>urts-maven-plugin</module>
     <!-- <module>org.ekstazi.ant</module> -->
-    <module>org.ekstazi.core</module>
-    <module>ekstazi-maven-plugin.test</module>
-    <module>org.ekstazi.core.test</module>
-    <!-- <module>org.ekstazi.scalatest</module> -->
-    <!-- <module>org.ekstazi.ant.test</module> -->
+    <module>org.urts.core</module>
   </modules>
 
   <properties>
