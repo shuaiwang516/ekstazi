@@ -18,6 +18,8 @@ package org.ekstazi.junit;
 
 import org.ekstazi.Config;
 import org.ekstazi.Ekstazi;
+import org.ekstazi.configTest.ConfigInjector;
+import org.ekstazi.configTest.ConfigMapping;
 import org.ekstazi.monitor.CoverageMonitor;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.Description;
@@ -47,6 +49,8 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
     /** Set of urls that is used when test classes were instantiated */
     private final String[] mURLs;
 
+    private final boolean injectConfig;
+
     /**
      * Constructor.
      */
@@ -61,6 +65,7 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
         this.mClz = clz;
         this.mWrappedRunner = wrapped;
         this.mURLs = urls;
+        this.injectConfig = false;
     }
     
     @Override
@@ -73,8 +78,12 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
         if (isIgnoreAllTests()) {
             return;
         } else if (isRunWithoutCoverage()) {
+            if (this.injectConfig)
+                ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClz.getName()));
             mWrappedRunner.run(notifier);
         } else {
+            if (this.injectConfig)
+                ConfigInjector.injectConfig(ConfigMapping.getInjectConfigPairs(mClz.getName()));
             Ekstazi.inst().beginClassCoverage(mClz.getName());
             JUnit4OutcomeListener outcomeListener = new JUnit4OutcomeListener();
             notifier.addListener(outcomeListener);

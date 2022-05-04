@@ -249,6 +249,19 @@ public final class Config {
     public static boolean X_IGNORE_ALL_TESTS_V = false;
     protected static final String X_IGNORE_ALL_TESTS_N = "x.ignore.all.tests";
 
+    // CONFIGURATION TEST
+    @Opt(desc = "Inject Configuration File Path")
+    public static String CONFIG_INJECT_FILE_PATH_V = "NonSetConfigInjectionFilePath";
+    protected static final String CONFIG_INJECT_FILE_PATH_N = "config.inject.path";
+
+    @Opt(desc = "ctest mapping file path")
+    public static String CTEST_MAPPING_FILE_PATH_V = "NonSetCtestMappingFilePath";
+    protected static final String CTEST_MAPPING_FILE_PATH_N = "config.mapping.path";
+
+    @Opt(desc = "Production Configuration File Path")
+    public static String CONFIG_PROD_FILE_PATH_V = "NonSetConfigInjectionFilePath";
+    protected static final String CONFIG_PROD_FILE_PATH_N = "config.prod.path";
+
     // INITIALIZE
 
     public static void loadConfig() {
@@ -375,6 +388,9 @@ public final class Config {
         DEPENDENCIES_NIO_V = getBoolean(props, DEPENDENCIES_NIO_N, DEPENDENCIES_NIO_V);
         DEPENDENCIES_NIO_INCLUDES_V = getPattern(props, DEPENDENCIES_NIO_INCLUDES_N, DEPENDENCIES_NIO_INCLUDES_V);
         DEPENDENCIES_NIO_EXCLUDES_V = getPattern(props, DEPENDENCIES_NIO_EXCLUDES_N, DEPENDENCIES_NIO_EXCLUDES_V);
+        CONFIG_INJECT_FILE_PATH_V = getString(props, CONFIG_INJECT_FILE_PATH_N, CONFIG_INJECT_FILE_PATH_V);
+        CTEST_MAPPING_FILE_PATH_V = getString(props, CTEST_MAPPING_FILE_PATH_N, CTEST_MAPPING_FILE_PATH_V);
+        CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
     }
 
     /**

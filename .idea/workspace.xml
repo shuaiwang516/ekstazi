@@ -258,7 +258,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b855330d-5260-4166-b3fe-62fa9a28ab6e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/org.ekstazi.core.test/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core.test/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/junit/CoverageRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/junit/CoverageRunner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/junit5Extension/CoverageExtension.java" beforeDir="false" afterPath="$PROJECT_DIR$/org.ekstazi.core/src/main/java/org/ekstazi/junit5Extension/CoverageExtension.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,6 +326,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="1046" y="372" key="#com.intellij.ide.util.MemberChooser" timestamp="1651700226011">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="1046" y="372" key="#com.intellij.ide.util.MemberChooser/560.1440.1440.900/0.0.2560.1440@0.0.2560.1440" timestamp="1651700226011" />
     <state x="640" y="210" key="SettingsEditor" timestamp="1647994696247">
       <screen x="0" y="0" width="2560" height="1440" />
     </state>
