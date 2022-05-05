@@ -108,7 +108,7 @@ public final class Config {
         Config.preLoadConfigAware();
         String rootDir = rootDirDefault();
         String configName = PRODUCTION_NAME_V;
-        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File dir = new File (rootDir.substring(0, rootDir.length() - 5));
         File files [] = dir.listFiles();
         for(File f : files) {
             if (f.isDirectory() && f.getName().contains(configName)) {
@@ -122,7 +122,7 @@ public final class Config {
 
     private static int getMaxRound() {
         String rootDir = rootDirDefault();
-        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File dir = new File (rootDir.substring(0, rootDir.length() - 5));
         File files [] = dir.listFiles();
         int max = curRound;
         for(File f : files) {
@@ -200,7 +200,7 @@ public final class Config {
         Config.preLoadConfigAware();
         List<File> dirs = new ArrayList<>();
         String rootDir = rootDirDefault();
-        File dir = new File (rootDir.substring(0, rootDir.length() - 8));
+        File dir = new File (rootDir.substring(0, rootDir.length() - 5));
         File files [] = dir.listFiles();
         for(File f : files) {
             if (f.isDirectory() && f.getName().contains("Round" + nextRound) && !f.getName().contains(PRODUCTION_NAME_V)) {
