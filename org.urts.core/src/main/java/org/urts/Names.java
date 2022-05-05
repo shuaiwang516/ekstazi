@@ -20,13 +20,13 @@ package org.urts;
  * Shared constants.
  */
 public final class Names {
-    public static final String TOOL_NAME = "Ekstazi";
-    public static final String TOOL_VERSION = "5.3.1"; // EkstaziVersion
+    public static final String TOOL_NAME = "uRTS";
+    public static final String TOOL_VERSION = "1.0.0-SNAPSHOT"; // uRTSVersion
 
     // Configuration.
     /** Configuration file name (in home/user directory) */
-    public static final String EKSTAZI_CONFIG_FILE = ".ekstazirc";
-    public static final String EKSTAZI_ROOT_DIR_NAME = ".ekstazi";
+    public static final String EKSTAZI_CONFIG_FILE = ".urtsrc";
+    public static final String EKSTAZI_ROOT_DIR_NAME = ".urts";
     public static final String EKSTAZI_CONFIGLOG_DIR_NAME = "configDiffLog";
 
     /** Directory (inside root directory) for test results */
@@ -36,10 +36,10 @@ public final class Names {
     public static final String INSTRUMENTED_CLASSES_DIR_NAME = "bank";
 
     // Packages.
-    public static final String EKSTAZI_PACKAGE_BIN = "org.ekstazi";
+    public static final String EKSTAZI_PACKAGE_BIN = "org.urts";
     public static final String EKSTAZI_PACKAGE_VM = "org/urts";
-    public static final String EKSTAZI_HASH_PACKAGE_BIN = "org.ekstazi.hash";
-    public static final String EKSTAZI_MONITOR_PACKAGE_BIN = "org.ekstazi.monitor";
+    public static final String EKSTAZI_HASH_PACKAGE_BIN = "org.urts.hash";
+    public static final String EKSTAZI_MONITOR_PACKAGE_BIN = "org.urts.monitor";
 
     public static final String JUNIT_FRAMEWORK_PACKAGE_BIN = "junit";
     public static final String JUNIT_FRAMEWORK_PACKAGE_VM = "junit";
@@ -52,10 +52,10 @@ public final class Names {
 
     // Classes.
     public static final String CONFIG_BIN = EKSTAZI_PACKAGE_BIN + "." + "Config";
-    public static final String COVERAGE_MONITOR_BIN = "org.ekstazi.monitor.CoverageMonitor";
+    public static final String COVERAGE_MONITOR_BIN = "org.urts.monitor.CoverageMonitor";
     public static final String COVERAGE_MONITOR_VM = "org/urts/monitor/CoverageMonitor";
-    public static final String DYNAMIC_AGENT_BIN = "org.ekstazi.instrument.DynamicAgent";
-    public static final String EKSTAZI_CLASSLOADER_BIN ="org.ekstazi.cl.EkstaziClassLoader";
+    public static final String DYNAMIC_AGENT_BIN = "org.urts.instrument.DynamicAgent";
+    public static final String EKSTAZI_CLASSLOADER_BIN ="org.urts.cl.EkstaziClassLoader";
 
     // Maven classes.
     public static final String ABSTRACT_SUREFIRE_MOJO_CLASS_VM = "org.apache.maven.plugin.surefire.AbstractSurefireMojo";
@@ -63,7 +63,7 @@ public final class Names {
     public static final String FAILSAFE_PLUGIN_VM = "org/apache/maven/plugin/failsafe/IntegrationTestMojo";
     public static final String TESTMOJO_VM = "org/scalatest/tools/maven/TestMojo";
     // ScalaTest related classes.
-    public static final String SCALATEST_CFT_BIN = "org.ekstazi.scalatest.ScalaTestCFT";
+    public static final String SCALATEST_CFT_BIN = "org.urts.scalatest.ScalaTestCFT";
 
     // Names of several files used by the tool.
     public static final String RUN_INFO_FILE_NAME = "run.info";

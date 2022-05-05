@@ -27,8 +27,8 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
  * to be run before test phase, there is a need for a Mojo that is
  * executed in test phase to active execution of tests.
  */
-@Mojo(name = "ekstazi", defaultPhase = LifecyclePhase.TEST)
-@Execute(goal = "ekstazi", phase = LifecyclePhase.TEST, lifecycle = "ekstazi")
+@Mojo(name = "urts", defaultPhase = LifecyclePhase.TEST)
+@Execute(goal = "urts", phase = LifecyclePhase.TEST, lifecycle = "urts")
 public class EkstaziCycleMojo extends StaticSelectEkstaziMojo {
 
     public void execute() throws MojoExecutionException {

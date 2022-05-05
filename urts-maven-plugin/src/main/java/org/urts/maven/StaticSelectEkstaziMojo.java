@@ -149,7 +149,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
-            // Parent dir is ".ekstazi-{}-{}"'s parent dir.
+            // Parent dir is ".urts-{}-{}"'s parent dir.
             Config.prepareRound();
             nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());
@@ -184,7 +184,7 @@ public class StaticSelectEkstaziMojo extends AbstractEkstaziMojo {
         if (!getForceall()) {
             // Create excludes list; we assume that all files are in
             // the parentdir.
-            // Parent dir is ".ekstazi-{}-{}"'s parent dir.
+            // Parent dir is ".urts-{}-{}"'s parent dir.
             Config.prepareRound();
             nonAffectedClassesFromPrev = AffectedChecker.findNonAffectedClassesFromPrev(parentdir, getRootDirOption());
             nonAffectedClassesFromCurRound = AffectedChecker.findNonAffectedClassesFromCurRound(parentdir, getRootDirOption());

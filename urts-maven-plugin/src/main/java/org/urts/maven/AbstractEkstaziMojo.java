@@ -49,7 +49,7 @@ public abstract class AbstractEkstaziMojo extends AbstractMojo {
     protected static final String SUREFIRE_PLUGIN_KEY = "org.apache.maven.plugins:maven-surefire-plugin";
 
     /** Name of Ekstazi plugin */
-    protected static final String EKSTAZI_PLUGIN_KEY = "org.ekstazi:ekstazi-maven-plugin";
+    protected static final String EKSTAZI_PLUGIN_KEY = "org.urts:urts-maven-plugin";
 
     /** 'exclude' property used by Ekstazi to pass list of classes to exclude */
     protected static final String EKSTAZI_EXCLUDES_PROPERTY = "EkstaziExcludes";
@@ -247,7 +247,7 @@ public abstract class AbstractEkstaziMojo extends AbstractMojo {
         for (String file : files) {
             File checkFile = new File(file);
             if (!checkFile.exists()) {
-                throw new MojoExecutionException("Config-aware file does not exist + " + file + "; Please check your .ekstazirc file ");
+                throw new MojoExecutionException("Config-aware file does not exist + " + file + "; Please check your .urtsrc file ");
             }
         }
     }

@@ -63,7 +63,7 @@ public final class Config {
 
     /**
      *
-     * @return the parent Dir of all .ekstazi-{}-Round{} folder.
+     * @return the parent Dir of all .urts-{}-Round{} folder.
      */
     public static String getCurRoot() {
         String rootDir = System.getProperty("user.dir");
@@ -159,12 +159,12 @@ public final class Config {
     }
 
     /**
-     * Returns a File that describes .ekstazi-{configName}-Round{i} directory. Note that the directory
+     * Returns a File that describes .urts-{configName}-Round{i} directory. Note that the directory
      * is not created with this invocation.
      *
      * @param parentDir
-     *            Parent directory for .ekstazi directory
-     * @return File that describes .ekstazi-{configName}-Round{i} directory
+     *            Parent directory for .urts directory
+     * @return File that describes .urts-{configName}-Round{i} directory
      */
     public static File createCurDir(File parentDir) {
         return new File(parentDir,
@@ -181,18 +181,18 @@ public final class Config {
     }
 
     /**
-     * Returns absolute path to .ekstazi director (URI.toString). Note
+     * Returns absolute path to .urts director (URI.toString). Note
      * that the directory is not created with this invocation.
      *
      * @param parentDir
-     *            Parent directory for .ekstazi directory
-     * @return An absolute path (URI.toString) that describes .ekstazi directory
+     *            Parent directory for .urts directory
+     * @return An absolute path (URI.toString) that describes .urts directory
      */
     public static String getRootDirURI(File parentDir) {
         //String pathAsString = parentDir.getAbsolutePath() + System.getProperty("file.separator") + Names.EKSTAZI_ROOT_DIR_NAME;
         //return new File(pathAsString).toURI().toString();
         File rootDir = createCurDir(parentDir);
-        // rootDir is the full name of the dependency folder, such as "XXX/.ekstazi-default-Round2"
+        // rootDir is the full name of the dependency folder, such as "XXX/.urts-default-Round2"
         return rootDir.toURI().toString();
     }
 
@@ -377,6 +377,15 @@ public final class Config {
     public static Map<String, Set<String>> CONFIG_DEPENDENCY_V = null;
     protected static final String CONFIG_DEPENDENCY_N = "config.dependency";
 
+    // EXPERIMENT
+    @Opt(desc = "Enable/disable analysis time log.")
+    public static boolean LOG_ANALYSIS_V = false;
+    protected static final String LOG_ANALYSIS_N = "log.analysis";
+
+    @Opt(desc = "Enable/disable test number log.")
+    public static boolean LOG_NUMBER_V = false;
+    protected static final String LOG_NUMBER_N = "log.number";
+
     // INCLUDE/EXCLUDE
 
     @Opt(desc = "Force execution of all tests.")
@@ -460,6 +469,8 @@ public final class Config {
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
         CONFIG_EXCLUDES_V = getSet(props, CONFIG_EXCLUDES_N, CONFIG_EXCLUDES_V);
         CONFIG_DEPENDENCY_V = getMapList(props, CONFIG_DEPENDENCY_N, CONFIG_DEPENDENCY_V);
+        LOG_ANALYSIS_V = getBoolean(props, LOG_ANALYSIS_N, LOG_ANALYSIS_V);
+        LOG_NUMBER_V = getBoolean(props, LOG_NUMBER_N, LOG_NUMBER_V);
     }
 
 
@@ -566,6 +577,8 @@ public final class Config {
         CONFIG_PROD_FILE_PATH_V = getString(props, CONFIG_PROD_FILE_PATH_N, CONFIG_PROD_FILE_PATH_V);
         CONFIG_EXCLUDES_V = getSet(props, CONFIG_EXCLUDES_N, CONFIG_EXCLUDES_V);
         CONFIG_DEPENDENCY_V = getMapList(props, CONFIG_DEPENDENCY_N, CONFIG_DEPENDENCY_V);
+        LOG_ANALYSIS_V = getBoolean(props, LOG_ANALYSIS_N, LOG_ANALYSIS_V);
+        LOG_NUMBER_V = getBoolean(props, LOG_NUMBER_N, LOG_NUMBER_V);
     }
 
     /**

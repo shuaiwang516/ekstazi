@@ -1,5 +1,7 @@
 package org.urts.maven;
 
+import org.urts.Config;
+
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,10 +10,10 @@ import java.util.List;
 public class MojoLog {
 
     public static final String MOJO_LOG_FILE = "mojo_debug.txt";
-    public static final String TIMER_FILE = "configaware_ekstazi_analysis_time.txt";
+    public static final String TIMER_FILE = "configaware_urts_analysis_time.txt";
     private static Boolean mojoLogEnabled = false;
-    private static Boolean NONAffectedLogEnabled = false;
-    private static Boolean timerLogEnabled = true;
+    private static Boolean NONAffectedLogEnabled = Config.LOG_NUMBER_V;
+    private static Boolean timerLogEnabled = Config.LOG_ANALYSIS_V;
     private static Boolean firstEnterUnAffectedLog = true;
     public static String NON_Affected_LOG_FOLDER = "NonAffectedLog";
 

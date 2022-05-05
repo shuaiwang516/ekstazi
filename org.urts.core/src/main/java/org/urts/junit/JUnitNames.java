@@ -23,8 +23,8 @@ public final class JUnitNames {
     public static final String RUNNER_BUILDER_VM = "org/junit/runners/model/RunnerBuilder";
     public static final String RUNNER_FOR_CLASS_METHOD = "runnerForClass";
 
-    public static final String JUNIT4_MONITOR_BIN = "org.ekstazi.junit.JUnit4Monitor";
+    public static final String JUNIT4_MONITOR_BIN = "org.urts.junit.JUnit4Monitor";
     public static final String JUNIT4_MONITOR_VM = "org/urts/junit/JUnit4Monitor";
-    public static final String JUNIT3_MONITOR_BIN = "org.ekstazi.junit.JUnit3Monitor";
+    public static final String JUNIT3_MONITOR_BIN = "org.urts.junit.JUnit3Monitor";
     public static final String JUNIT3_MONITOR_VM = "org/urts/junit/JUnit3Monitor";
 }
