@@ -25,6 +25,8 @@ public final class JUnitNames {
 
     public static final String JUNIT4_MONITOR_BIN = "org.urts.junit.JUnit4Monitor";
     public static final String JUNIT4_MONITOR_VM = "org/urts/junit/JUnit4Monitor";
+    public static final String JUNIT4_RETESTALL_BIN = "org.urts.junit.JUnit4ReTestAllMonitor";
+    public static final String JUNIT4_RETESTALL_VM = "org/urts/junit/JUnit4ReTestAllMonitor";
     public static final String JUNIT3_MONITOR_BIN = "org.urts.junit.JUnit3Monitor";
     public static final String JUNIT3_MONITOR_VM = "org/urts/junit/JUnit3Monitor";
 }

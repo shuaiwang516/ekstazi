@@ -25,9 +25,12 @@ import org.urts.Ekstazi;
 import org.urts.Names;
 import org.urts.io.FileRecorder;
 import org.urts.junit.JUnitCFT;
+import org.urts.junit.JUnit4ReTestAllCFT;
 import org.urts.junit5.JUnit5CFT;
 import org.urts.junit5Extension.JUnit5ExtensionCFT;
 import org.urts.junit5Extension.JUnit5ForkCFT;
+import org.urts.junit5Extension.JUnit5ReTestAllCFT;
+import org.urts.log.Log;
 import org.urts.maven.MavenCFT;
 
 public class EkstaziAgent {
@@ -51,58 +54,39 @@ public class EkstaziAgent {
      *            Instrumentation instance.
      */
     public static void premain(String options, Instrumentation instrumentation) { // for `java -javaagent:java -javaagent:org.ekstazi.core-${version}.jar=<options>`
-        // Load options.
-        //Log.d2f("premain-xixi");
-        //System.out.println("====>Shuai_Debug!!!!");
-        //Thread.dumpStack();
         Config.loadConfig(options, false);
 
         if (Config.X_ENABLED_V) {
-            // Initialize instrumentation instance according to the
-            // given mode.
-            //Thread.dumpStack();
-            //System.out.println("In EkstaziAgent.java:line62: -> premain");
             initializeMode(instrumentation);
         }
     }
 
     private static void initializeMode(Instrumentation instrumentation) {
         init(instrumentation);
-        if (Config.MODE_V == Config.AgentMode.MULTI) {
-            // NOTE: Alternative is to set the transformer in main Tool class to
-            // initialize Config.
-            //Thread.dumpStack();
-            //System.out.println("In EkstaziAgent.java:line73: -> MULTI");
+        if (Config.MODE_V == Config.AgentMode.JUNIT4RETESTALL) {
+            initJunit4ReTestAll(instrumentation);
+        } else if (Config.MODE_V == Config.AgentMode.JUNIT5RETESTALL) {
+            initJunit5ReTestAll(instrumentation);
+        } else if (Config.MODE_V == Config.AgentMode.MULTI) {
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initMultiCoverageMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.SINGLE) {
             if (initSingleCoverageMode(Config.SINGLE_NAME_V, instrumentation)) {
-                //Thread.dumpStack();
-                //System.out.println("In EkstaziAgent.java:line79: -> SINGLE");
                 instrumentation.addTransformer(new EkstaziCFT(), true);
             }
         } else if (Config.MODE_V == Config.AgentMode.SINGLEFORK) {
-            //Thread.dumpStack();
-            //System.out.println("In EkstaziAgent.java:line84: -> SINGLEFORK");
             if (initSingleCoverageMode(Config.SINGLE_NAME_V, instrumentation)) {
                 instrumentation.addTransformer(new CollectLoadedCFT(), false);
             }
         } else if (Config.MODE_V == Config.AgentMode.JUNIT5INSERTION) {
-            //Log.d2f("[INFO] JUNIT5_Insertion is enabled");
-            //Thread.dumpStack();
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initJUnit5Mode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT5EXTENSION) {
-            //Log.d2f("[INFO] JUNIT5_Extension is enabled");
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initJUni5ExtensionMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT5FORK) {
-            //Log.d2f("[INFO] JUNIT5 Fork is enabled");
             initJUnit5ForkMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNIT) {
-            //Log.d2f("[INFO] JUNIT4 is enabled");
-            //Thread.dumpStack();
-            //System.out.println("In EkstaziAgent.java:line88: -> JUNIT");
             instrumentation.addTransformer(new EkstaziCFT(), true);
             initJUnitMode(instrumentation);
         } else if (Config.MODE_V == Config.AgentMode.JUNITFORK) {
@@ -145,6 +129,7 @@ public class EkstaziAgent {
      */
     private static void instrumentMaven(Instrumentation instrumentation) {
         try {
+            Log.d2f("In instrumentMaven");
             for (Class<?> clz : instrumentation.getAllLoadedClasses()) {
                 String name = clz.getName();
                 if (name.equals(Names.ABSTRACT_SUREFIRE_MOJO_CLASS_VM)
@@ -173,15 +158,11 @@ public class EkstaziAgent {
 
     private static void initJUnitForkMode(Instrumentation instrumentation) {
         Config.X_INSTRUMENT_CODE_V = false;
-        //Thread.dumpStack();
-        //System.out.println("In EkstaziAgent.java:line160: -> initJUnitForkMode");
         instrumentation.addTransformer(new JUnitCFT(), false);
         instrumentation.addTransformer(new CollectLoadedCFT(), false);
     }
 
     private static void initJUnitMode(Instrumentation instrumentation) {
-        //Thread.dumpStack();
-        //System.out.println("In EkstaziAgent.java:line167: -> initJUnitMode");
         instrumentation.addTransformer(new JUnitCFT(), false);
     }
 
@@ -198,6 +179,14 @@ public class EkstaziAgent {
         instrumentation.addTransformer(new JUnit5ExtensionCFT(), false);
         instrumentation.addTransformer(new CollectLoadedCFT(), false);
         instrumentation.addTransformer(new JUnit5ForkCFT(), false);
+    }
+
+    private static void initJunit4ReTestAll(Instrumentation instrumentation) {
+        instrumentation.addTransformer(new JUnit4ReTestAllCFT(), false);
+    }
+
+    private static void initJunit5ReTestAll(Instrumentation instrumentation) {
+        instrumentation.addTransformer(new JUnit5ReTestAllCFT(), false);
     }
 
 

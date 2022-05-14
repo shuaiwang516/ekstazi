@@ -28,6 +28,7 @@ import java.util.List;
 import org.urts.Config;
 import org.urts.Names;
 import org.urts.check.AffectedChecker;
+import org.urts.log.Log;
 import org.urts.util.FileUtil;
 
 /**
@@ -81,10 +82,9 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
             // Update argLine.
             updateArgLine(mojo);
             // Update excludes.
-            updateExcludes(mojo);
-            //System.out.println("In SurefireMojoInterceptor.java:line78: -> updateExcludes");
-            //Thread.dumpStack();
-            // Update parallel.
+            if (!Boolean.valueOf(System.getProperty("retestall"))) {
+                updateExcludes(mojo);
+            }
             updateParallel(mojo);
         } catch (Exception ex) {
             // This exception should not happen in theory.
@@ -163,6 +163,9 @@ public final class SurefireMojoInterceptor extends AbstractMojoInterceptor {
     private static void updateArgLine(Object mojo) throws Exception {
         Config.AgentMode junitMode = isJupiterInPom() ? (isOneVMPerClass(mojo) ? Config.AgentMode.JUNIT5FORK : Config.AgentMode.JUNIT5EXTENSION) :
                 (isOneVMPerClass(mojo) ? Config.AgentMode.JUNITFORK : Config.AgentMode.JUNIT);
+        if (Boolean.valueOf(System.getProperty("retestall"))) {
+            junitMode = isJupiterInPom()? Config.AgentMode.JUNIT5RETESTALL : Config.AgentMode.JUNIT4RETESTALL;
+        }
         String currentArgLine = (String) getField(ARGLINE_FIELD, mojo);
         String newArgLine = makeArgLine(mojo, junitMode, currentArgLine);
         setField(ARGLINE_FIELD, mojo, newArgLine);

@@ -225,6 +225,8 @@ public final class Config {
         JUNIT5EXTENSION,
         JUNIT5FORK,
         JUNITFORK,
+        JUNIT4RETESTALL,
+        JUNIT5RETESTALL,
         SCALATEST;
 
         public static AgentMode fromString(String text) {
@@ -239,7 +241,6 @@ public final class Config {
             return NONE;
         }
     }
-
 
     @Opt(desc = "Mode")
     public static AgentMode MODE_V = AgentMode.NONE;
