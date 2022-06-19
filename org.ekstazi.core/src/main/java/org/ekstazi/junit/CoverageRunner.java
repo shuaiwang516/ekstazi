@@ -65,7 +65,7 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
         this.mClz = clz;
         this.mWrappedRunner = wrapped;
         this.mURLs = urls;
-        this.injectConfig = false;
+        this.injectConfig = true;
     }
     
     @Override

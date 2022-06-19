@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public class CoverageExtension implements BeforeAllCallback, AfterAllCallback {
     private String[] mURLs = null;
     private String mClassName = null;
-    private boolean injectConfig = false;
+    private boolean injectConfig = true;
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
         mClassName = extensionContext.getRequiredTestClass().getCanonicalName();
