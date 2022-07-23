@@ -32,6 +32,7 @@ import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Suite;
+import java.io.File;
 
 /**
  * Support for collecting coverage for test class granularity level. (Note that
@@ -94,6 +95,10 @@ public class CoverageRunner extends Runner implements Filterable, Sortable {
                 if (mURLs != null) CoverageMonitor.addURLs(mURLs);
                 Ekstazi.inst().endClassCoverage(mClz.getName(), outcomeListener.isFailOrError());
             }
+        }
+        File file = new File(Config.CONFIG_INJECT_FILE_PATH_V);
+        if(file.exists()){
+            file.delete();
         }
     }
 
